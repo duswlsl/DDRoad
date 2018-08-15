@@ -4,14 +4,16 @@
     android:id="@+id/intro_bg"
     android:background="@drawable/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="41dp"
         android:rotation="70"
         android:src="@drawable/bubble1" />
 
@@ -20,10 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="85dp"
         android:text="댕댕로"
         android:textSize="25dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
     <ImageView
         android:id="@+id/introdog"
         android:layout_width="wrap_content"
