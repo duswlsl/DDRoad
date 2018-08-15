@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".intro.IntroActivity" >
+        <activity android:name=".intro.IntroActivity"/>
         <activity android:name=".intro.dustActivity"/>
         <activity android:name=".diary.DiaryActivity" />
         <activity android:name=".board.BoardActivity" />
