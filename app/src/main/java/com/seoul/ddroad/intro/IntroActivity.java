@@ -8,6 +8,8 @@ import android.os.Handler;
 import com.seoul.ddroad.MainActivity;
 import com.seoul.ddroad.R;
 
+import static com.seoul.ddroad.R.layout.activity_dust;
+
 /**
  * Created by guitarhyo on 2018-08-15.
  */
@@ -17,7 +19,7 @@ public class IntroActivity  extends Activity
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(),dustActivity.class);
             startActivity(intent);
             finish();
         }
