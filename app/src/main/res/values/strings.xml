@@ -1,4 +1,5 @@
 <resources>
+    <string name="test">Test</string>
     <string name="app_name">DDRoad</string>
     <string name="activiy_name">액티비티 이동</string>
 </resources>
