@@ -2,4 +2,8 @@
     <string name="app_name">DDRoad</string>
     <string name="activiy_name">액티비티 이동</string>
     <string name="guide_message_4">There is no diary created on that day.</string>
+
+    <string name="customize">Customize</string>
+    <string name="show_dialog">Show Dialog</string>
+    <string name="undo">Undo</string>
 </resources>
