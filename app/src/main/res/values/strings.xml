@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DDRoad</string>
     <string name="activiy_name">액티비티 이동</string>
+    <string name="guide_message_4">There is no diary created on that day.</string>
 </resources>
