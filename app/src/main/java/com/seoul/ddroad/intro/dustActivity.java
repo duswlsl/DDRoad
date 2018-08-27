@@ -35,14 +35,14 @@ public class dustActivity extends AppCompatActivity {
         NetworkTask networkTask = new NetworkTask(url, null);
         networkTask.execute();
 
-//        intro_bt_back.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                startActivity(intent);
-//            }
-//        });
+        intro_bt_back.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public class NetworkTask extends AsyncTask<Void, Void, String> {

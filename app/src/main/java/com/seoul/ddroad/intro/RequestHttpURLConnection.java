@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 public class RequestHttpURLConnection {
     public String request(String _url, ContentValues _params) {
@@ -24,7 +25,27 @@ public class RequestHttpURLConnection {
         if (_params == null)
             sbParams.append(""); //보낼게 없으면 공백
         else {
+            // 파라미터가 2개 이상이면 파라미터 연결에 &가 필요하므로 스위칭할 변수 생성.
+            boolean isAnd = false;
+            // 파라미터 키와 값.
+            String key;
+            String value;
 
+            for(Map.Entry<String, Object> parameter : _params.valueSet()){
+                key = parameter.getKey();
+                value = parameter.getValue().toString();
+
+                // 파라미터가 두개 이상일때, 파라미터 사이에 &를 붙인다.
+                if (isAnd)
+                    sbParams.append("&");
+
+                sbParams.append(key).append("=").append(value);
+
+                // 파라미터가 2개 이상이면 isAnd를 true로 바꾸고 다음 루프부터 &를 붙인다.
+                if (!isAnd)
+                    if (_params.size() >= 2)
+                        isAnd = true;
+            }
         }
 
         /**
