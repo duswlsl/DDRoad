@@ -52,22 +52,12 @@ public class DiaryActivity extends AppCompatActivity {
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
 
-        final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+        final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
-        // Setup caldroid fragment
-        // **** If you want normal CaldroidFragment, use below line ****
         caldroidFragment = new CaldroidFragment();
-
-        // //////////////////////////////////////////////////////////////////////
-        // **** This is to show customized fragment. If you want customized
-        // version, uncomment below line ****
-//		 caldroidFragment = new CaldroidSampleCustomFragment();
-
-        // Setup arguments
 
         // If Activity is created after rotation
         if (savedInstanceState != null) {
@@ -83,15 +73,6 @@ public class DiaryActivity extends AppCompatActivity {
             args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
 
-            // Uncomment this to customize startDayOfWeek
-            // args.putInt(CaldroidFragment.START_DAY_OF_WEEK,
-            // CaldroidFragment.TUESDAY); // Tuesday
-
-            // Uncomment this line to use Caldroid in compact mode
-            // args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false);
-
-            // Uncomment this line to use dark theme
-//            args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
 
             caldroidFragment.setArguments(args);
         }
@@ -140,12 +121,14 @@ public class DiaryActivity extends AppCompatActivity {
         // Setup Caldroid
         caldroidFragment.setCaldroidListener(listener);
 
-     //   final TextView textView = (TextView) findViewById(R.id.textview);
 
-     //   final Button customizeButton = (Button) findViewById(R.id.customize_button);
+
+       final TextView textView = (TextView) findViewById(R.id.emptyInfo);
+
+        final Button customizeButton = (Button) findViewById(R.id.customize_button);
 
         // Customize the calendar
-       /* customizeButton.setOnClickListener(new View.OnClickListener() {
+        customizeButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -226,7 +209,7 @@ public class DiaryActivity extends AppCompatActivity {
                 textView.setText(text);
             }
         });
-*/
+
 
        /*
         Button showDialogButton = (Button) findViewById(R.id.show_dialog_button);

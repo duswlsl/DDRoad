@@ -26,26 +26,31 @@
           android:orientation="vertical">
       </LinearLayout>
 
-      <ListView
-          android:layout_marginTop="@dimen/card_layout_margin"
-          android:dividerHeight="@dimen/card_layout_padding"
-          android:divider="@null"
-          android:id="@+id/selectedList"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-      </ListView>
+       <ListView
+           android:id="@+id/selectedList"
+           android:layout_width="match_parent"
+           android:layout_height="415dp"
+           android:layout_marginTop="@dimen/card_layout_margin"
+           android:divider="@null"
+           android:dividerHeight="@dimen/card_layout_padding"></ListView>
 
-      <LinearLayout
-          android:gravity="center"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-         <TextView
-             android:id="@+id/emptyInfo"
-             android:text="@string/guide_message_4"
-             android:layout_marginTop="5dp"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content">
-         </TextView>
-      </LinearLayout>
+       <LinearLayout
+           android:id="@+id/button_layout"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+
+           <Button
+               android:id="@+id/customize_button"
+               android:layout_width="0dp"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:text="@string/customize" />
+
+           <TextView
+               android:id="@+id/emptyInfo"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"/>
+       </LinearLayout>
    </LinearLayout>
 </RelativeLayout>

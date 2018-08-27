@@ -3,7 +3,7 @@
     <string name="activiy_name">액티비티 이동</string>
     <string name="guide_message_4">There is no diary created on that day.</string>
 
-    <string name="customize">Customize</string>
+    <string name="customize">커스텀</string>
     <string name="show_dialog">Show Dialog</string>
-    <string name="undo">Undo</string>
+    <string name="undo">원래대로</string>
 </resources>
