@@ -44,10 +44,18 @@
         android:text="디이어리" />
 
     <Button
-        android:id="@+id/button4"
+    android:id="@+id/button4"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignStart="@+id/textView"
+    android:layout_below="@+id/button3"
+    android:text="게시판" />
+
+    <Button
+        android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/textView"
-        android:layout_below="@+id/button3"
-        android:text="게시판" />
+        android:layout_below="@+id/button4"
+        android:text="미세미세" />
 </RelativeLayout>

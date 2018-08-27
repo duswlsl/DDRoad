@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.seoul.ddroad.board.BoardActivity;
 import com.seoul.ddroad.diary.DiaryActivity;
 import com.seoul.ddroad.intro.IntroActivity;
+import com.seoul.ddroad.intro.dustActivity;
 import com.seoul.ddroad.map.MapActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         Button b2 = (Button)findViewById(R.id.button2);
         Button b3 = (Button)findViewById(R.id.button3);
         Button b4 = (Button)findViewById(R.id.button4);
+        Button b5 = (Button)findViewById(R.id.button5);
 
         b1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +63,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(
                         getApplicationContext(), // 현재 화면의 제어권자
                         BoardActivity.class); // 다음 넘어갈 클래스 지정
+                startActivity(intent); // 다음 화면으로 넘어간다
+            }
+        });
+
+        b5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(
+                        getApplicationContext(), // 현재 화면의 제어권자
+                        dustActivity.class); // 다음 넘어갈 클래스 지정
                 startActivity(intent); // 다음 화면으로 넘어간다
             }
         });

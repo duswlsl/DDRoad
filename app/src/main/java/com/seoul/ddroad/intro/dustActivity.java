@@ -28,7 +28,7 @@ public class dustActivity extends AppCompatActivity {
         tv = findViewById(R.id.tv);
 
         //url 설정
-        String url = "http://openapi.seoul.go.kr:8088/646a474675686b773132397a4b494264/xml/ForecastWarningUltrafineParticleOfDustService/1/5/";
+        String url = "http://openapi.seoul.go.kr:8088/646a474675686b773132397a4b494264/json/ForecastWarningUltrafineParticleOfDustService/1/5/";
 
 
         // AsyncTask를 통해 HttpURLConnection
