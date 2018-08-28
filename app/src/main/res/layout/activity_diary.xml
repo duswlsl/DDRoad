@@ -19,12 +19,29 @@
        android:padding="@dimen/card_layout_padding"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
+
+       <Button
+           android:id="@+id/customize_button"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:text="@string/customize" />
+
+
+       <TextView
+           android:id="@+id/emptyInfo"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"/>
+
       <LinearLayout
           android:id="@+id/calendar1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:orientation="vertical">
       </LinearLayout>
+
+
 
        <ListView
            android:id="@+id/selectedList"
@@ -34,23 +51,9 @@
            android:divider="@null"
            android:dividerHeight="@dimen/card_layout_padding"></ListView>
 
-       <LinearLayout
-           android:id="@+id/button_layout"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:orientation="horizontal">
 
-           <Button
-               android:id="@+id/customize_button"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               android:text="@string/customize" />
 
-           <TextView
-               android:id="@+id/emptyInfo"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"/>
-       </LinearLayout>
+
+
    </LinearLayout>
 </RelativeLayout>

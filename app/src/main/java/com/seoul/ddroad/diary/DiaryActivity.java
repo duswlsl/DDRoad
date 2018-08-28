@@ -25,8 +25,8 @@ import java.util.Date;
 public class DiaryActivity extends AppCompatActivity {
     private boolean undo = false;
     private CaldroidFragment caldroidFragment;
-    private CaldroidFragment dialogCaldroidFragment;
 
+    //달력에 색깔 입히기
     private void setCustomResourceForDates() {
         Calendar cal = Calendar.getInstance();
 
@@ -55,8 +55,10 @@ public class DiaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
 
+        //날짜포멧 변환
         final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
+        //달력 생성자 생성
         caldroidFragment = new CaldroidFragment();
 
         // If Activity is created after rotation
@@ -210,6 +212,7 @@ public class DiaryActivity extends AppCompatActivity {
             }
 
 
+
             //여기다 리스트 넣어
 
 
@@ -217,41 +220,7 @@ public class DiaryActivity extends AppCompatActivity {
         });
 
 
-       /*
-        Button showDialogButton = (Button) findViewById(R.id.show_dialog_button);
 
-        final Bundle state = savedInstanceState;
-        showDialogButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Setup caldroid to use as dialog
-                dialogCaldroidFragment = new CaldroidFragment();
-                dialogCaldroidFragment.setCaldroidListener(listener);
-
-                // If activity is recovered from rotation
-                final String dialogTag = "CALDROID_DIALOG_FRAGMENT";
-                if (state != null) {
-                    dialogCaldroidFragment.restoreDialogStatesFromKey(
-                            getSupportFragmentManager(), state,
-                            "DIALOG_CALDROID_SAVED_STATE", dialogTag);
-                    Bundle args = dialogCaldroidFragment.getArguments();
-                    if (args == null) {
-                        args = new Bundle();
-                        dialogCaldroidFragment.setArguments(args);
-                    }
-                } else {
-                    // Setup arguments
-                    Bundle bundle = new Bundle();
-                    // Setup dialogTitle
-                    dialogCaldroidFragment.setArguments(bundle);
-                }
-
-                dialogCaldroidFragment.show(getSupportFragmentManager(),
-                        dialogTag);
-            }
-        });
-        */
     }
 
 }
