@@ -44,12 +44,11 @@
 
 
        <ListView
-           android:id="@+id/selectedList"
+           android:id="@+id/listView"
            android:layout_width="match_parent"
-           android:layout_height="415dp"
-           android:layout_marginTop="@dimen/card_layout_margin"
-           android:divider="@null"
-           android:dividerHeight="@dimen/card_layout_padding"></ListView>
+           android:layout_height="match_parent"
+           android:layout_alignParentStart="true"
+           android:layout_below="@+id/linearLayout" />
 
 
 

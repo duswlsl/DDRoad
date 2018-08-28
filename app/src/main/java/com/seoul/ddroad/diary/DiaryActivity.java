@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
 
 /**
  * Created by guitarhyo on 2018-08-15.
@@ -48,6 +52,42 @@ public class DiaryActivity extends AppCompatActivity {
             caldroidFragment.setTextColorForDate(R.color.white, greenDate);
         }
     }
+
+    class SingerAdapter extends BaseAdapter {
+        ArrayList<SingerItem> items = new ArrayList<SingerItem>();
+
+
+        @Override
+        public int getCount() {
+            return items.size();    //리스트 뷰가 몇개 있는지
+        }
+
+        public void addItem(SingerItem item){
+            items.add(item);
+        }
+
+        @Override
+        public Object getItem(int position) {  //몇번째 데이터를 달라
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {  //Id값 넘겨달라
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            SingerItemView view = new SingerItemView(getApplicationContext());
+
+            SingerItem item = items.get(position);
+            view.setName(item.getName());
+            view.setMobile(item.getMobile());
+            view.setImage(item.getResId());
+            return view;
+        }
+    }
+
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -213,14 +253,28 @@ public class DiaryActivity extends AppCompatActivity {
 
 
 
-            //여기다 리스트 넣어
+
 
 
 
         });
+        //여기다 리스트 넣어
+        ListView listView = (ListView) findViewById(R.id.listView);
+
+        SingerAdapter adapter = new SingerAdapter();
+        adapter.addItem(new SingerItem("2018/08/28", "댕댕이와 산책한 날", R.drawable.dog1));
+        adapter.addItem(new SingerItem("2018/08/20", "댕댕이 생일",R.drawable.dog2));
+        adapter.addItem(new SingerItem("2018/08/26", "심장사상충 맞는날",R.drawable.dog3));
+        adapter.addItem(new SingerItem("2018/08/28", "오늘은 비가온다",R.drawable.dog4));
+        adapter.addItem(new SingerItem("2018/08/28", "댕댕이는 잠꾸러기",R.drawable.dog1));
+        listView.setAdapter(adapter);
+
+
 
 
 
     }
+
+
 
 }
