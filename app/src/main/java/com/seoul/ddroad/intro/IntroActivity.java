@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.seoul.ddroad.MainActivity;
 import com.seoul.ddroad.R;
 
-import static com.seoul.ddroad.R.layout.activity_dust;
 
 public class IntroActivity  extends Activity
 {
@@ -16,7 +14,7 @@ public class IntroActivity  extends Activity
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Intent intent = new Intent(getApplicationContext(),dustActivity.class);
+            Intent intent = new Intent(getApplicationContext(),PermissionActivity.class);
             startActivity(intent);
             finish();
         }
