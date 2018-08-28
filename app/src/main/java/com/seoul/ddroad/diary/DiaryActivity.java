@@ -208,6 +208,12 @@ public class DiaryActivity extends AppCompatActivity {
 
                 textView.setText(text);
             }
+
+
+            //여기다 리스트 넣어
+
+
+
         });
 
 
