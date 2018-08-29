@@ -88,7 +88,6 @@ public class DiaryActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
@@ -114,7 +113,6 @@ public class DiaryActivity extends AppCompatActivity {
             args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
             args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
-
 
             caldroidFragment.setArguments(args);
         }
@@ -157,27 +155,20 @@ public class DiaryActivity extends AppCompatActivity {
                             .show();
                 }
             }
-
         };
-
         // Setup Caldroid
         caldroidFragment.setCaldroidListener(listener);
 
-
-
-       final TextView textView = (TextView) findViewById(R.id.emptyInfo);
-
-        final Button customizeButton = (Button) findViewById(R.id.customize_button);
-
-        // Customize the calendar
+/*
+final TextView textView = (TextView) findViewById(R.id.emptyInfo);
+final Button customizeButton = (Button) findViewById(R.id.customize_button);
+// Customize the calendar
         customizeButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
+  @Override
             public void onClick(View v) {
                 if (undo) {
                     customizeButton.setText(getString(R.string.customize));
                     textView.setText("");
-
                     // Reset calendar
                     caldroidFragment.clearDisableDates();
                     caldroidFragment.clearSelectedDates();
@@ -222,7 +213,6 @@ public class DiaryActivity extends AppCompatActivity {
                     cal.add(Calendar.DATE, i);
                     disabledDates.add(cal.getTime());
                 }
-
                 // Customize
                 caldroidFragment.setMinDate(minDate);
                 caldroidFragment.setMaxDate(maxDate);
@@ -250,31 +240,28 @@ public class DiaryActivity extends AppCompatActivity {
 
                 textView.setText(text);
             }
+ });*/
 
 
-
-
-
-
-
-        });
         //여기다 리스트 넣어
         ListView listView = (ListView) findViewById(R.id.listView);
 
+        SingerAdapter adapter =  selectAdapterList(); //함수 추가해서 간단하게 보이게함
+
+        listView.setAdapter(adapter);
+    }
+
+    private SingerAdapter selectAdapterList() {//이부분에 SQL을 넣어도되고~
+
         SingerAdapter adapter = new SingerAdapter();
+
         adapter.addItem(new SingerItem("2018/08/28", "댕댕이와 산책한 날", R.drawable.dog1));
         adapter.addItem(new SingerItem("2018/08/20", "댕댕이 생일",R.drawable.dog2));
         adapter.addItem(new SingerItem("2018/08/26", "심장사상충 맞는날",R.drawable.dog3));
         adapter.addItem(new SingerItem("2018/08/28", "오늘은 비가온다",R.drawable.dog4));
         adapter.addItem(new SingerItem("2018/08/28", "댕댕이는 잠꾸러기",R.drawable.dog1));
-        listView.setAdapter(adapter);
 
-
-
-
-
+        return adapter;
     }
-
-
 
 }
