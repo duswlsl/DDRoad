@@ -8,9 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -21,6 +19,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import static com.seoul.ddroad.FontsOverride.setDefaultFont;
 
 
 /**
@@ -89,8 +89,9 @@ public class DiaryActivity extends AppCompatActivity {
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_diary);
 
         //날짜포멧 변환
@@ -254,11 +255,11 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
 
         SingerAdapter adapter = new SingerAdapter();
 
-        adapter.addItem(new SingerItem("댕댕이와 산책한 날", R.drawable.bichon));
-        adapter.addItem(new SingerItem("댕댕이 생일",R.drawable.bichon2));
-        adapter.addItem(new SingerItem("심장사상충 맞는날",R.drawable.bichon3));
-        adapter.addItem(new SingerItem("오늘은 비가온다",R.drawable.bichon4));
-        adapter.addItem(new SingerItem("댕댕이는 잠꾸러기",R.drawable.bichon));
+        adapter.addItem(new SingerItem("댕댕이와 산책한 날", R.drawable.dog1));
+        adapter.addItem(new SingerItem("댕댕이 생일",R.drawable.dog1));
+        adapter.addItem(new SingerItem("심장사상충 맞는날",R.drawable.dog1));
+        adapter.addItem(new SingerItem("오늘은 비가온다",R.drawable.dog1));
+        adapter.addItem(new SingerItem("댕댕이는 잠꾸러기",R.drawable.dog1));
 
         return adapter;
     }
