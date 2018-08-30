@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.seoul.ddroad.R;
 
 public class SingerItemView extends LinearLayout {
-    TextView textView;
     TextView textView2;
     ImageView imageView;
 
@@ -32,14 +31,11 @@ public class SingerItemView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.diary_item, this, true);
 
-        textView =(TextView) findViewById(R.id.textView);
+
         textView2 = (TextView) findViewById(R.id.textView2);
         imageView= (ImageView) findViewById(R.id.imageView);
     }
 
-    public void setName(String name){
-        textView.setText(name);
-    }
 
     public void setMobile(String mobile){
         textView2.setText(mobile);

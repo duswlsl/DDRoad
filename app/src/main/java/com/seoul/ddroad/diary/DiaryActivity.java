@@ -81,7 +81,6 @@ public class DiaryActivity extends AppCompatActivity {
             SingerItemView view = new SingerItemView(getApplicationContext());
 
             SingerItem item = items.get(position);
-            view.setName(item.getName());
             view.setMobile(item.getMobile());
             view.setImage(item.getResId());
             return view;
@@ -255,11 +254,11 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
 
         SingerAdapter adapter = new SingerAdapter();
 
-        adapter.addItem(new SingerItem("2018/08/28", "댕댕이와 산책한 날", R.drawable.dog1));
-        adapter.addItem(new SingerItem("2018/08/20", "댕댕이 생일",R.drawable.dog2));
-        adapter.addItem(new SingerItem("2018/08/26", "심장사상충 맞는날",R.drawable.dog3));
-        adapter.addItem(new SingerItem("2018/08/28", "오늘은 비가온다",R.drawable.dog4));
-        adapter.addItem(new SingerItem("2018/08/28", "댕댕이는 잠꾸러기",R.drawable.dog1));
+        adapter.addItem(new SingerItem("댕댕이와 산책한 날", R.drawable.bichon));
+        adapter.addItem(new SingerItem("댕댕이 생일",R.drawable.bichon2));
+        adapter.addItem(new SingerItem("심장사상충 맞는날",R.drawable.bichon3));
+        adapter.addItem(new SingerItem("오늘은 비가온다",R.drawable.bichon4));
+        adapter.addItem(new SingerItem("댕댕이는 잠꾸러기",R.drawable.bichon));
 
         return adapter;
     }
