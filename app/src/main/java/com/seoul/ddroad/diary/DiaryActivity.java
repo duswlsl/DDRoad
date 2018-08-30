@@ -27,70 +27,16 @@ import static com.seoul.ddroad.FontsOverride.setDefaultFont;
  * Created by guitarhyo on 2018-08-15.
  */
 public class DiaryActivity extends AppCompatActivity {
-    private boolean undo = false;
+
     private CaldroidFragment caldroidFragment;
-
-    //달력에 색깔 입히기
-    private void setCustomResourceForDates() {
-        Calendar cal = Calendar.getInstance();
-
-        // Min date is last 7 days
-        cal.add(Calendar.DATE, -7);
-        Date blueDate = cal.getTime();
-
-        // Max date is next 7 days
-        cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 7);
-        Date greenDate = cal.getTime();
-
-        if (caldroidFragment != null) {
-            ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.blue));
-            ColorDrawable green = new ColorDrawable(Color.GREEN);
-            caldroidFragment.setBackgroundDrawableForDate(blue, blueDate);
-            caldroidFragment.setBackgroundDrawableForDate(green, greenDate);
-            caldroidFragment.setTextColorForDate(R.color.white, blueDate);
-            caldroidFragment.setTextColorForDate(R.color.white, greenDate);
-        }
-    }
-
-    class SingerAdapter extends BaseAdapter {
-        ArrayList<SingerItem> items = new ArrayList<SingerItem>();
-
-
-        @Override
-        public int getCount() {
-            return items.size();    //리스트 뷰가 몇개 있는지
-        }
-
-        public void addItem(SingerItem item){
-            items.add(item);
-        }
-
-        @Override
-        public Object getItem(int position) {  //몇번째 데이터를 달라
-            return items.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {  //Id값 넘겨달라
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            SingerItemView view = new SingerItemView(getApplicationContext());
-
-            SingerItem item = items.get(position);
-            view.setMobile(item.getMobile());
-            view.setImage(item.getResId());
-            return view;
-        }
-    }
+    private Date mCurrentDate;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mCurrentDate = Calendar.getInstance().getTime();
+        Date currentDate = Calendar.getInstance().getTime();
 
         setContentView(R.layout.activity_diary);
 
@@ -117,7 +63,8 @@ public class DiaryActivity extends AppCompatActivity {
             caldroidFragment.setArguments(args);
         }
 
-        setCustomResourceForDates();
+        caldroidFragment.setSelectedDate(currentDate);
+        //setCustomResourceForDates();
 
         // Attach to the activity
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -251,6 +198,63 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
         listView.setAdapter(adapter);
     }
 
+
+    //달력에 색깔 입히기
+    private void setCustomResourceForDates() {
+        Calendar cal = Calendar.getInstance();
+
+        // Min date is last 7 days
+        cal.add(Calendar.DATE, -7);
+        Date blueDate = cal.getTime();
+
+        // Max date is next 7 days
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 7);
+        Date greenDate = cal.getTime();
+
+        if (caldroidFragment != null) {
+            ColorDrawable blue = new ColorDrawable(getResources().getColor(R.color.blue));
+            ColorDrawable green = new ColorDrawable(Color.GREEN);
+            caldroidFragment.setBackgroundDrawableForDate(blue, blueDate);
+            caldroidFragment.setBackgroundDrawableForDate(green, greenDate);
+            caldroidFragment.setTextColorForDate(R.color.white, blueDate);
+            caldroidFragment.setTextColorForDate(R.color.white, greenDate);
+        }
+    }
+
+    class SingerAdapter extends BaseAdapter {
+        ArrayList<SingerItem> items = new ArrayList<SingerItem>();
+
+
+        @Override
+        public int getCount() {
+            return items.size();    //리스트 뷰가 몇개 있는지
+        }
+
+        public void addItem(SingerItem item){
+            items.add(item);
+        }
+
+        @Override
+        public Object getItem(int position) {  //몇번째 데이터를 달라
+            return items.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {  //Id값 넘겨달라
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            SingerItemView view = new SingerItemView(getApplicationContext());
+
+            SingerItem item = items.get(position);
+            view.setMobile(item.getMobile());
+            view.setImage(item.getResId());
+            return view;
+        }
+    }
     private SingerAdapter selectAdapterList() {//이부분에 SQL을 넣어도되고~
 
         SingerAdapter adapter = new SingerAdapter();
