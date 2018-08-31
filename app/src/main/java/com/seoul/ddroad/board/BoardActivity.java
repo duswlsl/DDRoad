@@ -33,7 +33,29 @@ public class BoardActivity extends AppCompatActivity {
         mWebView = (WebView) findViewById(R.id.webView);
 
         WebSettings settings=mWebView.getSettings();
-        settings.setJavaScriptEnabled(true);
+        //웹뷰 셋팅
+        settings.setJavaScriptEnabled(true);                         //자바스크립트 허용
+        //  settings.setSupportZoom(true);                           //줌 관련
+        //  settings.setBuiltInZoomControls(true)                     //줌 관련;
+        //  settings.setDisplayZoomControls(false);                   //줌 관련
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);     //window.open() 동작하려면 필요
+        settings.setLoadsImagesAutomatically(true);                 // 웹뷰가 앱에 등록되어 있는 이미지 리로스를 자동으로 로드 하는속성
+
+        settings.setUseWideViewPort(true);                           //html 컨텐츠가 웹뷰에 맞게 나타남
+        settings.setLoadWithOverviewMode(true);
+
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        /*LOAD_CACHE_ELSE_NETWORK 기간이 만료돼 캐시를 사용할 수 없을 경우 네트워크를 사용합니다.
+        LOAD_CACHE_ONLY 네트워크를 사용하지 않고 캐시를 불러옵니다.
+        LOAD_DEFAULT 기본적인 모드로 캐시를 사용하고 만료된 경우 네트워크를 사용해 로드합니다.
+        LOAD_NORMAL 기본적인 모드로 캐시를 사용합니다.
+        LOAD_NO_CACHE 캐시모드를 사용하지 않고 네트워크를 통해서만 호출합니다.*/
+
+        settings.setAppCacheEnabled(false);     //앱 내부 캐시 사용여부
+        //settings.setDomStorageEnabled(true);    //하루동안 보지않기 기능에 사용
+        //settings.setAllowFileAccess(true);     //웹뷰 내에서 파일 액세스 활성화
+
+        //settings.setGeolocationEnabled(true); // GeoLocation를 사용하도록 설정
 
         mWebView.loadUrl("http://guitarhyo.freehongs.net"); // 접속 URL
 
