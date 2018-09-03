@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,8 +38,11 @@ public class DiaryActivity extends AppCompatActivity {
 
         mCurrentDate = Calendar.getInstance().getTime();
         Date currentDate = Calendar.getInstance().getTime();
-
         setContentView(R.layout.activity_diary);
+
+        //액션바 사용
+        ActionBar ab = getSupportActionBar() ;
+        ab.setTitle("캘린더") ;
 
         //날짜포멧 변환
         final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
@@ -76,22 +80,22 @@ public class DiaryActivity extends AppCompatActivity {
 
             @Override
             public void onSelectDate(Date date, View view) {
-                Toast.makeText(getApplicationContext(), formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
+                caldroidFragment.clearSelectedDates();
+                caldroidFragment.setSelectedDate(date);
+                caldroidFragment.refreshView();
+                mCurrentDate = date;
+
+                //refreshList(date)리스트리셋
             }
 
             @Override
             public void onChangeMonth(int month, int year) {
-                String text = "month: " + month + " year: " + year;
-                Toast.makeText(getApplicationContext(), text,
-                        Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onLongClickDate(Date date, View view) {
-                Toast.makeText(getApplicationContext(),
-                        "Long click " + formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
+
             }
 
             @Override

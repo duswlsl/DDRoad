@@ -19,6 +19,12 @@
         <item name="android:padding">1dp</item>
         <item name="android:verticalSpacing">1dp</item>
     </style>
+    <style name="CaldroidDefaultCalendarViewLayout">
+        <item name="android:padding">5dp</item>
+        <item name="android:background">@drawable/bg_card_diary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
 
    <!-- <style name="CaldroidDefaultArrowButton">
         <item name="android:layout_width">42dp</item>
@@ -33,7 +39,7 @@
         <item name="android:background">@drawable/arrow_3_b</item>
     </style> -->
     <style name="CaldroidDefaultMonthNameLand">
-        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColor">#FF9800</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
