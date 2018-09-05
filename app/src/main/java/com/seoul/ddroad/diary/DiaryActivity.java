@@ -1,5 +1,7 @@
 package com.seoul.ddroad.diary;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,8 +25,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 import static com.seoul.ddroad.FontsOverride.setDefaultFont;
+import static java.sql.DriverManager.println;
 
 
 /**
@@ -34,6 +40,11 @@ public class DiaryActivity extends AppCompatActivity {
 
     private CaldroidFragment caldroidFragment;
     private Date mCurrentDate;
+    private String diaryTableName = "diary";
+    private String diaryDatabaseName = "diary.db";
+
+    SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
+
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -55,8 +66,12 @@ public class DiaryActivity extends AppCompatActivity {
         //날짜포멧 변환
         final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
+        initDBTable();//액티비티 생성시 디비를 생성
+
         //달력 생성자 생성
         caldroidFragment = new CaldroidFragment();
+
+
 
         // If Activity is created after rotation
         if (savedInstanceState != null) {
@@ -93,6 +108,14 @@ public class DiaryActivity extends AppCompatActivity {
                 caldroidFragment.refreshView();
                 mCurrentDate = date;
 
+
+
+                ListView listView = (ListView) findViewById(R.id.listView);
+
+                SingerAdapter adapter =  selectAdapterList(); //함수 추가해서 간단하게 보이게함
+
+                listView.setAdapter(adapter);
+
                 //refreshList(date)리스트리셋
             }
 
@@ -103,7 +126,20 @@ public class DiaryActivity extends AppCompatActivity {
 
             @Override
             public void onLongClickDate(Date date, View view) {
+                Toast.makeText(getApplicationContext(),
+                        "길게", Toast.LENGTH_SHORT)
+                        .show();
+                if(database != null){
+                    Random randomGenerator = new Random();
+                    int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
+                    String title = "title"+randomInteger;
+                    String content = "content"+randomInteger;
 
+                    String sql = "insert into diary(title, content) values(?, ?)";
+                    Object[] params = { title, content};
+                    database.execSQL(sql, params);
+                    println("데이터 추가함.");
+                }
             }
 
             @Override
@@ -202,12 +238,6 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
  });*/
 
 
-        //여기다 리스트 넣어
-        ListView listView = (ListView) findViewById(R.id.listView);
-
-        SingerAdapter adapter =  selectAdapterList(); //함수 추가해서 간단하게 보이게함
-
-        listView.setAdapter(adapter);
     }
 
 
@@ -269,13 +299,13 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
     }
     private SingerAdapter selectAdapterList() {//이부분에 SQL을 넣어도되고~
 
+        List<HashMap<String,Object>> diaryList = selectDiaryData();
+
         SingerAdapter adapter = new SingerAdapter();
 
-        adapter.addItem(new SingerItem("댕댕이와 산책한 날", R.drawable.dog1));
-        adapter.addItem(new SingerItem("댕댕이 생일",R.drawable.dog1));
-        adapter.addItem(new SingerItem("심장사상충 맞는날",R.drawable.dog1));
-        adapter.addItem(new SingerItem("오늘은 비가온다",R.drawable.dog1));
-        adapter.addItem(new SingerItem("댕댕이는 잠꾸러기",R.drawable.dog1));
+        for(int i=0; i< diaryList.size();i++){
+            adapter.addItem(new SingerItem("댕댕이와 산책한 날", R.drawable.dog1));
+        }
 
         return adapter;
     }
@@ -306,6 +336,48 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    public void initDBTable(){
+        // 액티비티가 켜지면 데이터베이스 생성
+        database = openOrCreateDatabase(diaryDatabaseName,MODE_PRIVATE,null);  //없으면 생성하고 있으면 그대로
+        if(database != null){
+            String sql = "CREATE  TABLE IF NOT EXISTS " + diaryTableName + "(diaryId integer PRIMARY KEY autoincrement, title text, content text)"; //테이블 확인후 생성
+            database.execSQL(sql);
+
+            println("테이블 생성됨.");
+        }else{
+            println("먼저 데이터베이스를 오픈하세요.");
+        }
+    }
+
+    public List<HashMap<String,Object>> selectDiaryData(){   // 항상 DB문을 쓸때는 예외처리(try-catch)를 해야한다. 이름으로 값을 찾는것
+        println("selectData() 호출됨.");
+        List<HashMap<String,Object>> diaryList = new ArrayList<HashMap<String,Object>>();// 리스트로 받기위함 선언을 한다
+        HashMap<String,Object> diaryObj = null; //MAP형태로 저장하기위한 객채 선언
+
+        if(database !=null){
+            String sql = "select diaryId, title, content from " + diaryTableName;
+            Cursor cursor = database.rawQuery(sql, null);   // select 사용시 사용(sql문, where조건 줬을 때 넣는 값)
+            println("조회된 데이터 개수 : " + cursor.getCount());   // db에 저장된 행 개수를 읽어온다
+
+            for(int i=0; i< cursor.getColumnCount();i++){
+                cursor.moveToNext();    // 첫번째에서 다음 레코드가 없을때까지 읽음
+                int diaryId = cursor.getInt(0);   // 첫번째 속성
+                String title = cursor.getString(1); // 두번째 속성
+                String content = cursor.getString(2);    // 세번째 속성
+
+                diaryObj = new HashMap<String,Object>(); //데이터를 넣기 위해 생성자 생성
+                diaryObj.put("diaryId",diaryId);
+                diaryObj.put("title",title);
+                diaryObj.put("content",content);
+
+                diaryList.add(diaryObj);
+            }
+            cursor.close();
+
+        }
+        return diaryList;//최종 데이터를 리턴 한다
     }
 
 }
