@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -43,6 +46,11 @@ public class DiaryActivity extends AppCompatActivity {
         //액션바 사용
         ActionBar ab = getSupportActionBar() ;
         ab.setTitle("캘린더") ;
+
+        //메뉴바에 '<' 버튼이 생긴다.(두개는 항상 같이다닌다)
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeButtonEnabled(true);
+        // 출처: http://ande226.tistory.com/141 [안디스토리]
 
         //날짜포멧 변환
         final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
@@ -270,6 +278,34 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
         adapter.addItem(new SingerItem("댕댕이는 잠꾸러기",R.drawable.dog1));
 
         return adapter;
+    }
+
+    /**
+     * Action Bar에 메뉴를 생성한다.
+     * @param menu
+     * @return
+     */
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.list_menu, menu);
+        return true;
+    }
+
+    /**
+     * 메뉴 아이템을 클릭했을 때 발생되는 이벤트...
+     * @param item
+     * @return
+     */
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if( id == R.id.newPost ){
+
+            Toast.makeText(DiaryActivity.this, "새 글 등록 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
 }
