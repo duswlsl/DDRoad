@@ -25,7 +25,10 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-
+        <activity android:name=".diary.DiaryRegActivity" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".diary.DiaryActivity" />
+        </activity>
         <activity android:name=".board.BoardActivity" />
         <activity android:name=".map.MapActivity" />
     </application>

@@ -1,5 +1,6 @@
 package com.seoul.ddroad.diary;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -41,9 +42,9 @@ public class DiaryActivity extends AppCompatActivity {
     private CaldroidFragment caldroidFragment;//달력 선언
     private Date mCurrentDate; //전역 현재날짜 선언
     private String diaryTableName = "diary"; //테이블 이름
-    private String diaryDatabaseName = "diary.db"; //데이터베이스 이름
+    private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
     private ListView listView; //다이어리 리스트뷰
-    SingerAdapter adapter; //다이어리 어뎁터 선언
+    SqlLiteOpenHelper helper;
 
     SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
 
@@ -125,14 +126,15 @@ public class DiaryActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         "길게", Toast.LENGTH_SHORT)
                         .show();
+                database = helper.getWritableDatabase();
                 if(database != null){
                     Random randomGenerator = new Random();
                     int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
                     String title = "title"+randomInteger;
                     String content = "content"+randomInteger;
-
-                    String sql = "insert into diary(title, content,regdt) values(?, ?)";
-                    Object[] params = { title, content};
+                    String imgstr = "@drawable/dog1";
+                    String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";
+                    Object[] params = { title, content,imgstr,"datetime('now','localtime')"};
                     database.execSQL(sql, params);
                     println("데이터 추가함.");
                 }
@@ -216,7 +218,11 @@ public class DiaryActivity extends AppCompatActivity {
         SingerAdapter adapter = new SingerAdapter();
 
         for(int i=0; i< diaryList.size();i++){
-            adapter.addItem(new SingerItem("댕댕이와 산책한 날", R.drawable.dog1));
+            String resName = "@drawable/dog1";
+            String packName = this.getPackageName(); // 패키지명
+            int resID = getResources().getIdentifier(resName, "drawable", packName);
+            //출처: http://kheru.tistory.com/54
+            adapter.addItem(new SingerItem("댕댕이와 산책한 날", resID));
         }
         listView.setAdapter(adapter);
     }
@@ -242,7 +248,11 @@ public class DiaryActivity extends AppCompatActivity {
         int id = item.getItemId();
         if( id == R.id.newPost ){
 
-            Toast.makeText(DiaryActivity.this, "새 글 등록 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(DiaryActivity.this, "새 글 등록 버튼을 클릭했습니다.", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(
+                    getApplicationContext(), // 현재 화면의 제어권자
+                    DiaryRegActivity.class); // 다음 넘어갈 클래스 지정
+            startActivity(intent); // 다음 화면으로 넘어간다
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -251,9 +261,15 @@ public class DiaryActivity extends AppCompatActivity {
 
     public void initDBTable(){
         // 액티비티가 켜지면 데이터베이스 생성
-        database = openOrCreateDatabase(diaryDatabaseName,MODE_PRIVATE,null);  //없으면 생성하고 있으면 그대로
+        helper = new SqlLiteOpenHelper(this, // 현재 화면의 context
+                diaryDatabaseName, // 파일명
+                null, // 커서 팩토리
+                1); // 버전 번호
+       // database = openOrCreateDatabase(diaryDatabaseName,MODE_PRIVATE,null);  //없으면 생성하고 있으면 그대로
+        database = helper.getWritableDatabase();
         if(database != null){
-            String sql = "CREATE  TABLE IF NOT EXISTS " + diaryTableName + "(diaryId integer PRIMARY KEY autoincrement, title text, content text)"; //테이블 확인후 생성
+
+            String sql = "CREATE  TABLE IF NOT EXISTS " + diaryTableName + "(diaryId integer PRIMARY KEY autoincrement, title text, content text,imgstr text,regdt text)"; //테이블 확인후 생성
             database.execSQL(sql);
 
             println("테이블 생성됨.");
@@ -266,29 +282,34 @@ public class DiaryActivity extends AppCompatActivity {
         println("selectData() 호출됨.");
         List<HashMap<String,Object>> diaryList = new ArrayList<HashMap<String,Object>>();// 리스트로 받기위함 선언을 한다
         HashMap<String,Object> diaryObj = null; //MAP형태로 저장하기위한 객채 선언
-
+        database = helper.getWritableDatabase();
         if(database !=null){
-            String sql = "select diaryId, title, content from " + diaryTableName;
+            String sql = "select diaryId, title, content, imgstr, regdt from " + diaryTableName;
             Cursor cursor = database.rawQuery(sql, null);   // select 사용시 사용(sql문, where조건 줬을 때 넣는 값)
             println("조회된 데이터 개수 : " + cursor.getCount());   // db에 저장된 행 개수를 읽어온다
 
-            for(int i=0; i< cursor.getColumnCount();i++){
-                cursor.moveToNext();    // 첫번째에서 다음 레코드가 없을때까지 읽음
-                int diaryId = cursor.getInt(0);   // 첫번째 속성
-                String title = cursor.getString(1); // 두번째 속성
-                String content = cursor.getString(2);    // 세번째 속성
+            if (cursor != null && cursor.moveToFirst()){
+                do {
 
+                    int diaryId = cursor.getInt(0);   // 첫번째 속성
+                    String title = cursor.getString(1); // 두번째 속성
+                    String content = cursor.getString(2);    // 세번째 속성
+                    String imgstr = cursor.getString(3);    // 세번째 속성
+                    String regdt = cursor.getString(4);    // 세번째 속성
 
-                diaryObj = new HashMap<String,Object>(); //데이터를 넣기 위해 생성자 생성
-                diaryObj.put("diaryId",diaryId);
-                diaryObj.put("title",title);
-                diaryObj.put("content",content);
+                    diaryObj = new HashMap<String,Object>(); //데이터를 넣기 위해 생성자 생성
+                    diaryObj.put("diaryId",diaryId);
+                    diaryObj.put("title",title);
+                    diaryObj.put("content",content);
+                    diaryObj.put("imgstr",imgstr);
+                    diaryObj.put("regdt",regdt);
 
+                    diaryList.add(diaryObj);
 
-                diaryList.add(diaryObj);
+                } while (cursor.moveToNext());
             }
-            cursor.close();
 
+            cursor.close();
         }
         return diaryList;//최종 데이터를 리턴 한다
     }
