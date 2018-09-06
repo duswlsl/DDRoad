@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static com.seoul.ddroad.FontsOverride.setDefaultFont;
@@ -69,7 +70,7 @@ public class DiaryActivity extends AppCompatActivity {
 
 //왜 전역 변수와 지역 변수를 쓰는지 알아볼것~
         mCurrentDate = Calendar.getInstance().getTime();  //현재 날짜를 가져온다
-        Date currentDate = Calendar.getInstance().getTime(); //지역 변수로 현재 날짜를 가져온다.
+        Date currentDate = Calendar.getInstance().getTime(); //지역 변수로 현재 날짜를 가져온다. 이 변수는 디비에 넣을때 필요해서?
 
 //Date 타입 변수를 알아보고 시작하세요~
 //selectDiaryListView() 함수 먼저 완성 하고 시작하세요  ---> selectDiaryListView(Date타입 파라미터); 로 호출 하면 현재 날짜로 리스트 뿌리겠지?
@@ -218,11 +219,14 @@ public class DiaryActivity extends AppCompatActivity {
         SingerAdapter adapter = new SingerAdapter();
 
         for(int i=0; i< diaryList.size();i++){
-            String resName = "@drawable/dog1";
+            Map<String, Object> map = diaryList.get(i);
+            String title = (String)map.get("title");
+            String imgstr = (String)map.get("imgstr");
+            String resName = imgstr;
             String packName = this.getPackageName(); // 패키지명
             int resID = getResources().getIdentifier(resName, "drawable", packName);
             //출처: http://kheru.tistory.com/54
-            adapter.addItem(new SingerItem("댕댕이와 산책한 날", resID));
+            adapter.addItem(new SingerItem(title, resID));
         }
         listView.setAdapter(adapter);
     }
