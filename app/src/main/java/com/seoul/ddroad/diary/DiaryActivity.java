@@ -38,39 +38,43 @@ import static java.sql.DriverManager.println;
  */
 public class DiaryActivity extends AppCompatActivity {
 
-    private CaldroidFragment caldroidFragment;
-    private Date mCurrentDate;
-    private String diaryTableName = "diary";
-    private String diaryDatabaseName = "diary.db";
+    private CaldroidFragment caldroidFragment;//달력 선언
+    private Date mCurrentDate; //전역 현재날짜 선언
+    private String diaryTableName = "diary"; //테이블 이름
+    private String diaryDatabaseName = "diary.db"; //데이터베이스 이름
+    private ListView listView; //다이어리 리스트뷰
+    SingerAdapter adapter; //다이어리 어뎁터 선언
 
     SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
-
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mCurrentDate = Calendar.getInstance().getTime();
-        Date currentDate = Calendar.getInstance().getTime();
         setContentView(R.layout.activity_diary);
+        listView = (ListView) findViewById(R.id.listView); //다이어리 리스트 뷰 선언
 
         //액션바 사용
         ActionBar ab = getSupportActionBar() ;
         ab.setTitle("캘린더") ;
-
         //메뉴바에 '<' 버튼이 생긴다.(두개는 항상 같이다닌다)
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setHomeButtonEnabled(true);
         // 출처: http://ande226.tistory.com/141 [안디스토리]
 
-        //날짜포멧 변환
-        final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
         initDBTable();//액티비티 생성시 디비를 생성
 
-        //달력 생성자 생성
-        caldroidFragment = new CaldroidFragment();
+        caldroidFragment = new CaldroidFragment(); //달력 생성자 생성
 
+//왜 전역 변수와 지역 변수를 쓰는지 알아볼것~
+        mCurrentDate = Calendar.getInstance().getTime();  //현재 날짜를 가져온다
+        Date currentDate = Calendar.getInstance().getTime(); //지역 변수로 현재 날짜를 가져온다.
+
+//Date 타입 변수를 알아보고 시작하세요~
+//selectDiaryListView() 함수 먼저 완성 하고 시작하세요  ---> selectDiaryListView(Date타입 파라미터); 로 호출 하면 현재 날짜로 리스트 뿌리겠지?
+//여기에 현재 날짜 받아서 최초 한번 리스트 한번 출력 해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start
+        selectDiaryListView();
+//여기에 현재 날짜 받아서 최초 리스트 한번 출력 해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~end
 
 
         // If Activity is created after rotation
@@ -91,7 +95,6 @@ public class DiaryActivity extends AppCompatActivity {
         }
 
         caldroidFragment.setSelectedDate(currentDate);
-        //setCustomResourceForDates();
 
         // Attach to the activity
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -99,8 +102,7 @@ public class DiaryActivity extends AppCompatActivity {
         t.commit();
 
         // Setup listener
-        final CaldroidListener listener = new CaldroidListener() {
-
+        final CaldroidListener listener = new CaldroidListener() { //달력 이벤트 관련 리스너
             @Override
             public void onSelectDate(Date date, View view) {
                 caldroidFragment.clearSelectedDates();
@@ -108,15 +110,9 @@ public class DiaryActivity extends AppCompatActivity {
                 caldroidFragment.refreshView();
                 mCurrentDate = date;
 
-
-
-                ListView listView = (ListView) findViewById(R.id.listView);
-
-                SingerAdapter adapter =  selectAdapterList(); //함수 추가해서 간단하게 보이게함
-
-                listView.setAdapter(adapter);
-
-                //refreshList(date)리스트리셋
+//여기에 선택한 날짜로 리스트뷰 클리어 후 출력 해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start
+                selectDiaryListView();
+//여기에 선택한 날짜로 리스트뷰 클리어 후 출력 해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start
             }
 
             @Override
@@ -135,7 +131,7 @@ public class DiaryActivity extends AppCompatActivity {
                     String title = "title"+randomInteger;
                     String content = "content"+randomInteger;
 
-                    String sql = "insert into diary(title, content) values(?, ?)";
+                    String sql = "insert into diary(title, content,regdt) values(?, ?)";
                     Object[] params = { title, content};
                     database.execSQL(sql, params);
                     println("데이터 추가함.");
@@ -153,90 +149,6 @@ public class DiaryActivity extends AppCompatActivity {
         };
         // Setup Caldroid
         caldroidFragment.setCaldroidListener(listener);
-
-/*
-final TextView textView = (TextView) findViewById(R.id.emptyInfo);
-final Button customizeButton = (Button) findViewById(R.id.customize_button);
-// Customize the calendar
-        customizeButton.setOnClickListener(new View.OnClickListener() {
-  @Override
-            public void onClick(View v) {
-                if (undo) {
-                    customizeButton.setText(getString(R.string.customize));
-                    textView.setText("");
-                    // Reset calendar
-                    caldroidFragment.clearDisableDates();
-                    caldroidFragment.clearSelectedDates();
-                    caldroidFragment.setMinDate(null);
-                    caldroidFragment.setMaxDate(null);
-                    caldroidFragment.setShowNavigationArrows(true);
-                    caldroidFragment.setEnableSwipe(true);
-                    caldroidFragment.refreshView();
-                    undo = false;
-                    return;
-                }
-
-                // Else
-                undo = true;
-                customizeButton.setText(getString(R.string.undo));
-                Calendar cal = Calendar.getInstance();
-
-                // Min date is last 7 days
-                cal.add(Calendar.DATE, -7);
-                Date minDate = cal.getTime();
-
-                // Max date is next 7 days
-                cal = Calendar.getInstance();
-                cal.add(Calendar.DATE, 14);
-                Date maxDate = cal.getTime();
-
-                // Set selected dates
-                // From Date
-                cal = Calendar.getInstance();
-                cal.add(Calendar.DATE, 2);
-                Date fromDate = cal.getTime();
-
-                // To Date
-                cal = Calendar.getInstance();
-                cal.add(Calendar.DATE, 3);
-                Date toDate = cal.getTime();
-
-                // Set disabled dates
-                ArrayList<Date> disabledDates = new ArrayList<Date>();
-                for (int i = 5; i < 8; i++) {
-                    cal = Calendar.getInstance();
-                    cal.add(Calendar.DATE, i);
-                    disabledDates.add(cal.getTime());
-                }
-                // Customize
-                caldroidFragment.setMinDate(minDate);
-                caldroidFragment.setMaxDate(maxDate);
-                caldroidFragment.setDisableDates(disabledDates);
-                caldroidFragment.setSelectedDates(fromDate, toDate);
-                caldroidFragment.setShowNavigationArrows(false);
-                caldroidFragment.setEnableSwipe(false);
-
-                caldroidFragment.refreshView();
-
-                // Move to date
-                // cal = Calendar.getInstance();
-                // cal.add(Calendar.MONTH, 12);
-                // caldroidFragment.moveToDate(cal.getTime());
-
-                String text = "Today: " + formatter.format(new Date()) + "\n";
-                text += "Min Date: " + formatter.format(minDate) + "\n";
-                text += "Max Date: " + formatter.format(maxDate) + "\n";
-                text += "Select From Date: " + formatter.format(fromDate)
-                        + "\n";
-                text += "Select To Date: " + formatter.format(toDate) + "\n";
-                for (Date date : disabledDates) {
-                    text += "Disabled Date: " + formatter.format(date) + "\n";
-                }
-
-                textView.setText(text);
-            }
- });*/
-
 
     }
 
@@ -297,7 +209,7 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
             return view;
         }
     }
-    private SingerAdapter selectAdapterList() {//이부분에 SQL을 넣어도되고~
+    private void selectDiaryListView() {//이부분에 SQL을 넣어도되고~
 
         List<HashMap<String,Object>> diaryList = selectDiaryData();
 
@@ -306,8 +218,7 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
         for(int i=0; i< diaryList.size();i++){
             adapter.addItem(new SingerItem("댕댕이와 산책한 날", R.drawable.dog1));
         }
-
-        return adapter;
+        listView.setAdapter(adapter);
     }
 
     /**
@@ -367,10 +278,12 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
                 String title = cursor.getString(1); // 두번째 속성
                 String content = cursor.getString(2);    // 세번째 속성
 
+
                 diaryObj = new HashMap<String,Object>(); //데이터를 넣기 위해 생성자 생성
                 diaryObj.put("diaryId",diaryId);
                 diaryObj.put("title",title);
                 diaryObj.put("content",content);
+
 
                 diaryList.add(diaryObj);
             }
@@ -380,4 +293,11 @@ final Button customizeButton = (Button) findViewById(R.id.customize_button);
         return diaryList;//최종 데이터를 리턴 한다
     }
 
+    //혹시 몰라서 추가함
+    private String getNow(){//현재 날짜를 아래 포팻 형태로 String 출력
+        // set the format to sql date time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 }
