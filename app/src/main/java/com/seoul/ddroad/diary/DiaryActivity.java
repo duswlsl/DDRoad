@@ -144,9 +144,7 @@ public class DiaryActivity extends AppCompatActivity {
             @Override
             public void onCaldroidViewCreated() {
                 if (caldroidFragment.getLeftArrowButton() != null) {
-                    Toast.makeText(getApplicationContext(),
-                            "Caldroid view is created", Toast.LENGTH_SHORT)
-                            .show();
+                   //달력만들기 성공이면
                 }
             }
         };

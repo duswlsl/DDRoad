@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.seoul.ddroad.R;
 
@@ -38,6 +39,11 @@ public class DiaryRegActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setHomeButtonEnabled(true);
         // 출처: http://ande226.tistory.com/141 [안디스토리]
+
+        helper = new SqlLiteOpenHelper(this, // 현재 화면의 context
+                diaryDatabaseName, // 파일명
+                null, // 커서 팩토리
+                1); // 버전 번호
 
     }
 
@@ -73,10 +79,14 @@ public class DiaryRegActivity extends AppCompatActivity {
 
                 String imgstr = "@drawable/dog1";
                 String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";
-                Object[] params = { diaryTitle, diaryContent,imgstr,"datetime('now','localtime')"};
+                Object[] params = { diaryTitle.getText(), diaryContent.getText(),imgstr,"datetime('now','localtime')"};
                 database.execSQL(sql, params);
                 println("데이터 추가함.");
             }
+
+            Toast.makeText(getApplicationContext(),
+                    "등록 되었습니다.", Toast.LENGTH_SHORT)
+                    .show();
 
             Intent intent = new Intent(
                     getApplicationContext(), // 현재 화면의 제어권자
