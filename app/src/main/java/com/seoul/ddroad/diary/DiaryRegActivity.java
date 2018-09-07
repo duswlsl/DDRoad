@@ -1,18 +1,30 @@
 package com.seoul.ddroad.diary;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.seoul.ddroad.R;
+
+import java.util.Random;
+
+import static java.sql.DriverManager.println;
 
 /**
  * Created by guitarhyo on 2018-08-15.
  */
 public class DiaryRegActivity extends AppCompatActivity {
+
+    private String diaryTableName = "diary"; //테이블 이름
+    private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
+    SqlLiteOpenHelper helper;
+    SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
+
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
@@ -26,6 +38,7 @@ public class DiaryRegActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setHomeButtonEnabled(true);
         // 출처: http://ande226.tistory.com/141 [안디스토리]
+
     }
 
     /**
@@ -47,7 +60,23 @@ public class DiaryRegActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if( id == R.id.regPost ){
+        if( id == R.id.regPost ){//글 등록 누르면?
+
+
+            final EditText diaryTitle=(EditText)findViewById(R.id.diaryTitle);
+            final EditText diaryContent=(EditText)findViewById(R.id.diaryContent);
+
+            database = helper.getWritableDatabase();
+            if(database != null){
+                Random randomGenerator = new Random();
+                int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
+
+                String imgstr = "@drawable/dog1";
+                String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";
+                Object[] params = { diaryTitle, diaryContent,imgstr,"datetime('now','localtime')"};
+                database.execSQL(sql, params);
+                println("데이터 추가함.");
+            }
 
             Intent intent = new Intent(
                     getApplicationContext(), // 현재 화면의 제어권자

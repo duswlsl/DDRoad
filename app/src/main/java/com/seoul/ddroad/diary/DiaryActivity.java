@@ -42,11 +42,11 @@ public class DiaryActivity extends AppCompatActivity {
 
     private CaldroidFragment caldroidFragment;//달력 선언
     private Date mCurrentDate; //전역 현재날짜 선언
+    private ListView listView; //다이어리 리스트뷰
+
     private String diaryTableName = "diary"; //테이블 이름
     private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
-    private ListView listView; //다이어리 리스트뷰
     SqlLiteOpenHelper helper;
-
     SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
 
     @Override
