@@ -408,8 +408,6 @@ public class dustActivity_cool extends AppCompatActivity {
             JSONObject obj = new JSONObject(item.get(dustLocation).toString());
             //미세먼지만 가져옴 초미세먼지의경우 "pm25Value" 가져오기
             dustResult = obj.getInt("pm10Value");
-            //여기
-            dustResult = 100;
             return dustResult;
         } catch (JSONException e) {
 
