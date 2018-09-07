@@ -14,4 +14,5 @@
     <dimen name="spacing_double">16dp</dimen>
     <dimen name="spacing_normal">8dp</dimen>
     <dimen name="spacing_treble">24dp</dimen>
+
 </resources>

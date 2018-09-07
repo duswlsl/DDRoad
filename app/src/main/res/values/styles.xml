@@ -26,18 +26,6 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-   <!-- <style name="CaldroidDefaultArrowButton">
-        <item name="android:layout_width">42dp</item>
-        <item name="android:layout_height">42dp</item>
-    </style>
-    <style name="CaldroidDefaultLeftButton" parent="CaldroidDefaultArrowButton">
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:background">@drawable/arrow_94_b</item>
-    </style>
-    <style name="CaldroidDefaultRightButton" parent="CaldroidDefaultArrowButton">
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:background">@drawable/arrow_3_b</item>
-    </style> -->
     <style name="CaldroidDefaultMonthNameLand">
         <item name="android:textColor">#FF9800</item>
         <item name="android:layout_width">0dp</item>
@@ -47,4 +35,11 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">17sp</item>
     </style>
-</resources>
+
+    <style name="LinearLayoutHorizontal">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+ </resources>
