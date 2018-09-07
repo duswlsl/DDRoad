@@ -49,7 +49,7 @@ public class dustActivity_cool extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        inputDate =""; inputTime =""; inputNx = ""; inputNy = ""; location = "용산구"; dustLocation = 0; temperature = 0.0; fineDust=0; myDog ="콩이"; findDustResult="";
+        inputDate =""; inputTime =""; inputNx = ""; inputNy = ""; location = "금천구"; dustLocation = 0; temperature = 0.0; fineDust=0; myDog ="콩이"; findDustResult="";
         findDustColor="";
 
         super.onCreate(savedInstanceState);
@@ -332,6 +332,7 @@ public class dustActivity_cool extends AppCompatActivity {
 
 
                 }else {
+
                     fineDust = dustJsonParser(result);
                     if(fineDust!=0){
                         findDustResult = setFineDustResult(fineDust);
@@ -345,10 +346,17 @@ public class dustActivity_cool extends AppCompatActivity {
                             if(temperature==100.0){
                                 text_finddust.setText("재설정해주세요");
                                 text_finddust.setTextColor(Color.parseColor("#FF0000"));
+                                mainDogImg.setImageResource(R.drawable.dogface3);
                             }else {
                                 text_finddust.setText("미세먼지 " + findDustResult);
                                 text_finddust.setTextColor(Color.parseColor(findDustColor));
-                                mainDogImg.setImageResource(R.drawable.dogface3);
+                                if(findDustResult.equals("나쁨")||findDustResult.equals("매우나쁨")){
+                                    mainDogImg.setImageResource(R.drawable.dogface2);
+                                }else if(findDustResult.equals("좋음")||findDustResult.equals("보통")){
+                                    mainDogImg.setImageResource(R.drawable.dogface1);
+                                }
+
+
                             }
                         }
 
@@ -400,7 +408,8 @@ public class dustActivity_cool extends AppCompatActivity {
             JSONObject obj = new JSONObject(item.get(dustLocation).toString());
             //미세먼지만 가져옴 초미세먼지의경우 "pm25Value" 가져오기
             dustResult = obj.getInt("pm10Value");
-
+            //여기
+            dustResult = 100;
             return dustResult;
         } catch (JSONException e) {
 
@@ -416,7 +425,7 @@ public class dustActivity_cool extends AppCompatActivity {
         //미세먼지 ~30도 좋음
         if(fineDust<31){
             result = "좋음";
-            findDustColor="#0BC904";
+            findDustColor="#2BA5BA";
 
         //미세먼지 ~80도 보통
         }else if(fineDust<81){
