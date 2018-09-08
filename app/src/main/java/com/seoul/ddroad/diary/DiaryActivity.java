@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -14,8 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
@@ -75,7 +78,7 @@ public class DiaryActivity extends AppCompatActivity {
 //Date 타입 변수를 알아보고 시작하세요~
 //selectDiaryListView() 함수 먼저 완성 하고 시작하세요  ---> selectDiaryListView(Date타입 파라미터); 로 호출 하면 현재 날짜로 리스트 뿌리겠지?
 //여기에 현재 날짜 받아서 최초 한번 리스트 한번 출력 해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start
-        selectDiaryListView();
+        selectDiaryListView(mCurrentDate);
 //여기에 현재 날짜 받아서 최초 리스트 한번 출력 해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~end
 
 
@@ -103,9 +106,9 @@ public class DiaryActivity extends AppCompatActivity {
         t.replace(R.id.calendar1, caldroidFragment);
         t.commit();
 
-        // Setup listener
-        final CaldroidListener listener = new CaldroidListener() { //달력 이벤트 관련 리스너
-            @Override
+        //달력 이벤트 관련 리스너
+        final CaldroidListener listener = new CaldroidListener() {
+            @Override //달력 일 클릭 시
             public void onSelectDate(Date date, View view) {
                 caldroidFragment.clearSelectedDates();
                 caldroidFragment.setSelectedDate(date);
@@ -113,18 +116,19 @@ public class DiaryActivity extends AppCompatActivity {
                 mCurrentDate = date;
 
 //여기에 선택한 날짜로 리스트뷰 클리어 후 출력 해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start
-                selectDiaryListView();
+                selectDiaryListView(date);
 //여기에 선택한 날짜로 리스트뷰 클리어 후 출력 해야함~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~start
             }
 
-            @Override
+            @Override //달력 년도월 변경될때
             public void onChangeMonth(int month, int year) {
 
             }
 
-            @Override
+            @Override //달력 일 길게 클릭 시
             public void onLongClickDate(Date date, View view) {
-                Toast.makeText(getApplicationContext(),
+               //test용임
+                /* Toast.makeText(getApplicationContext(),
                         "길게", Toast.LENGTH_SHORT)
                         .show();
                 database = helper.getWritableDatabase();
@@ -134,14 +138,14 @@ public class DiaryActivity extends AppCompatActivity {
                     String title = "title"+randomInteger;
                     String content = "content"+randomInteger;
                     String imgstr = "@drawable/dog1";
-                    String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";
-                    Object[] params = { title, content,imgstr,"datetime('now','localtime')"};
+                    String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,datetime('now','localtime'))";
+                    Object[] params = { title, content,imgstr};
                     database.execSQL(sql, params);
-                    println("데이터 추가함.");
                 }
+                */
             }
 
-            @Override
+            @Override //달력 그리기 완성 되고
             public void onCaldroidViewCreated() {
                 if (caldroidFragment.getLeftArrowButton() != null) {
                    //달력만들기 성공이면
@@ -205,14 +209,20 @@ public class DiaryActivity extends AppCompatActivity {
             SingerItemView view = new SingerItemView(getApplicationContext());
 
             SingerItem item = items.get(position);
-            view.setMobile(item.getMobile());
+            view.setTitle(item.getTitle());
             view.setImage(item.getResId());
             return view;
         }
     }
-    private void selectDiaryListView() {//이부분에 SQL을 넣어도되고~
+    private void selectDiaryListView(Date date) {//DB 조회 후 리스트뷰에 담기
 
-        List<HashMap<String,Object>> diaryList = selectDiaryData();
+        List<HashMap<String,Object>> diaryList = selectDiaryData(date); //DB 조회 후 해시 맵 리스트에 담는다
+
+        //데이터 확인 test용임
+      //  for(int i=0; i< diaryList.size();i++){
+      //      TextView textView = findViewById(R.id.textView3);
+      //      textView.setText((String)diaryList.get(i).get("regdt"));
+      //  }
 
         SingerAdapter adapter = new SingerAdapter();
 
@@ -220,13 +230,38 @@ public class DiaryActivity extends AppCompatActivity {
             Map<String, Object> map = diaryList.get(i);
             String title = (String)map.get("title");
             String imgstr = (String)map.get("imgstr");
+            int diaryId = (int)map.get("diaryId");
             String resName = imgstr;
             String packName = this.getPackageName(); // 패키지명
             int resID = getResources().getIdentifier(resName, "drawable", packName);
             //출처: http://kheru.tistory.com/54
-            adapter.addItem(new SingerItem(title, resID));
+            adapter.addItem(new SingerItem( title, diaryId,  resID));
         }
+
         listView.setAdapter(adapter);
+
+        //리스트뷰의 아이템을 클릭시 해당 아이템의 문자열을 가져오기 위한 처리
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+
+            public void onItemClick(AdapterView<?> adapterView,
+                                    View view, int position, long id) {
+
+                //클릭한 아이템을 가져옵니다.
+                SingerItem item = (SingerItem) adapterView.getItemAtPosition(position) ;
+
+                int diaryId = item.getListId();
+//////////////////////////////////
+ //여기가 리스트를 클릭해서 다이어리 아이디를 가져옵니다.
+ ////상세 액티비티에서 DB로 조회 후 데이터를 가져와 뿌려주면 될듯? 레이아웃도 만들어야겠지?
+
+
+
+
+
+            }
+        });
+
     }
 
     /**
@@ -274,19 +309,21 @@ public class DiaryActivity extends AppCompatActivity {
             String sql = "CREATE  TABLE IF NOT EXISTS " + diaryTableName + "(diaryId integer PRIMARY KEY autoincrement, title text, content text,imgstr text,regdt text)"; //테이블 확인후 생성
             database.execSQL(sql);
 
-            println("테이블 생성됨.");
         }else{
             println("먼저 데이터베이스를 오픈하세요.");
         }
     }
 
-    public List<HashMap<String,Object>> selectDiaryData(){   // 항상 DB문을 쓸때는 예외처리(try-catch)를 해야한다. 이름으로 값을 찾는것
-        println("selectData() 호출됨.");
+    public List<HashMap<String,Object>> selectDiaryData(Date date){   // 항상 DB문을 쓸때는 예외처리(try-catch)를 해야한다. 이름으로 값을 찾는것
+        String dateStr = getDateFormat("yyyy-MM-dd",date);
+        //Toast.makeText(DiaryActivity.this, dateStr, Toast.LENGTH_SHORT).show();
+
+
         List<HashMap<String,Object>> diaryList = new ArrayList<HashMap<String,Object>>();// 리스트로 받기위함 선언을 한다
         HashMap<String,Object> diaryObj = null; //MAP형태로 저장하기위한 객채 선언
         database = helper.getWritableDatabase();
         if(database !=null){
-            String sql = "select diaryId, title, content, imgstr, regdt from " + diaryTableName;
+            String sql = "select diaryId, title, content, imgstr, regdt from " + diaryTableName + " where DATE(regdt)='"+dateStr+"'";
             Cursor cursor = database.rawQuery(sql, null);   // select 사용시 사용(sql문, where조건 줬을 때 넣는 값)
             println("조회된 데이터 개수 : " + cursor.getCount());   // db에 저장된 행 개수를 읽어온다
 
@@ -317,10 +354,23 @@ public class DiaryActivity extends AppCompatActivity {
     }
 
     //혹시 몰라서 추가함
-    private String getNow(){//현재 날짜를 아래 포팻 형태로 String 출력
-        // set the format to sql date time
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private String getNow(String format){//현재 날짜를 포팻 형태로 String 출력
+
+        if(format == null || format ==""){
+            format  = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
         Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    private String getDateFormat(String format,Date date){//입력 Date를 날짜를  포팻 형태로 String 출력
+
+        if(format == null || format ==""){
+            format  = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+
         return dateFormat.format(date);
     }
 }

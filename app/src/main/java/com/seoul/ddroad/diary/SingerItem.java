@@ -3,21 +3,40 @@ package com.seoul.ddroad.diary;
 public class SingerItem {
 
 
-    String mobile;
+    String title;
+    String content;
+    int listId;
     int resId;
 
-    public SingerItem(String mobile, int resId) {
-        this.mobile = mobile;
+    public SingerItem(){}
+    public SingerItem(String title,int listId, int resId) {
+        this.listId = listId;
+        this.title = title;
+        this.resId = resId;
+    }
+
+    public SingerItem(String title,String content,int listId, int resId) {
+        this.listId = listId;
+        this.title = title;
+        this.content = content;
         this.resId = resId;
     }
 
 
-    public String getMobile() {
-        return mobile;
+    public String getTitle() {
+        return title;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public int getResId() {
@@ -26,5 +45,13 @@ public class SingerItem {
 
     public void setResId(int resId) {
         this.resId = resId;
+    }
+
+    public int getListId() {
+        return listId;
+    }
+
+    public void setListId(int listId) {
+        this.listId = listId;
     }
 }

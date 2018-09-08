@@ -37,8 +37,8 @@ public class SingerItemView extends LinearLayout {
     }
 
 
-    public void setMobile(String mobile){
-        textView2.setText(mobile);
+    public void setTitle(String title){
+        textView2.setText(title);
     }
 
     public void setImage(int resId){
