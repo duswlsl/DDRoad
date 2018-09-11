@@ -109,6 +109,19 @@ public class dustActivity_cool extends AppCompatActivity {
         nDogDate = countDday(nYear, nMonth, nDay);
         text_dog_date.setText(myDog + "♡ " + nDogDate + " D-Days");
 
+
+        try{
+            setSpinner();
+        }
+        catch (Exception e)
+        {
+
+        }
+
+    }
+
+    public void setSpinner()
+    {
         //input array data
         final ArrayList<String> list = new ArrayList<>();
         list.add("서울시");
@@ -124,7 +137,7 @@ public class dustActivity_cool extends AppCompatActivity {
 
         //배열 어답터 사용
         ArrayAdapter spinnerAdater;
-        spinnerAdater = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, list);
+        spinnerAdater = new ArrayAdapter(this, R.layout.custom_simple_dropdown_item_1line, list);
         spinner.setAdapter(spinnerAdater);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -133,6 +146,17 @@ public class dustActivity_cool extends AppCompatActivity {
                 Toast.makeText(dustActivity_cool.this,"선택된 아이템 :" +spinner.getItemAtPosition(position), Toast.LENGTH_LONG).show();
                 location = spinner.getItemAtPosition(position).toString();
                 text_location.setText(location);
+
+                //날짜시간설정
+                setDateTime();
+
+                //임의로 주소입력
+                setNxNy(location);
+
+                //온도API
+                setTempApi(inputDate, inputTime, inputNx, inputNy);
+
+                setDustApi();
             }
 
             @Override
@@ -141,7 +165,6 @@ public class dustActivity_cool extends AppCompatActivity {
             }
         });
     }
-
     public void fontChange() {
         Typeface typeface = Typeface.createFromAsset(getAssets(), "BMJUA_ttf.ttf");
 
@@ -150,6 +173,8 @@ public class dustActivity_cool extends AppCompatActivity {
         text_dog_date.setTypeface(typeface);
         text_location.setTypeface(typeface);
     }
+
+
 
     public void setDateTime() {
         Calendar c = Calendar.getInstance();
