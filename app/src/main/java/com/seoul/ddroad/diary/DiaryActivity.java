@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -247,6 +248,7 @@ public class DiaryActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView,
                                     View view, int position, long id) {
 
+
                 //클릭한 아이템을 가져옵니다.
                 SingerItem item = (SingerItem) adapterView.getItemAtPosition(position) ;
 
@@ -255,14 +257,16 @@ public class DiaryActivity extends AppCompatActivity {
  //여기가 리스트를 클릭해서 다이어리 아이디를 가져옵니다.
  ////상세 액티비티에서 DB로 조회 후 데이터를 가져와 뿌려주면 될듯? 레이아웃도 만들어야겠지?
 
-
-
-
+                Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+                intent.putExtra("diaryId", diaryId);
+                startActivity(intent);
 
             }
         });
 
     }
+
+
 
     /**
      * Action Bar에 메뉴를 생성한다.
