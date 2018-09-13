@@ -77,7 +77,7 @@ public class DiaryRegActivity extends AppCompatActivity {
                 Random randomGenerator = new Random();
                 int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
 
-                String imgstr = "@drawable/dog1";
+                String imgstr = "@drawable/bichon1";
                 String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,datetime('now','localtime'))";
                 Object[] params = { diaryTitle.getText(), diaryContent.getText(),imgstr};
                 database.execSQL(sql, params);
