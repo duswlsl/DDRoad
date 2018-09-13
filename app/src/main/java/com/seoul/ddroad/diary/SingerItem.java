@@ -9,6 +9,11 @@ public class SingerItem {
     int resId;
 
     public SingerItem(){}
+
+    public SingerItem(int resId) {
+        this.resId = resId;
+    }
+
     public SingerItem(String title,int listId, int resId) {
         this.listId = listId;
         this.title = title;

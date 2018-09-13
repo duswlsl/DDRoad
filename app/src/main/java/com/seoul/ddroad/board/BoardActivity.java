@@ -1,14 +1,19 @@
 package com.seoul.ddroad.board;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
@@ -35,10 +40,12 @@ public class BoardActivity extends AppCompatActivity {
         WebSettings settings=mWebView.getSettings();
         //웹뷰 셋팅
         settings.setJavaScriptEnabled(true);                         //자바스크립트 허용
-        //  settings.setSupportZoom(true);                           //줌 관련
-        //  settings.setBuiltInZoomControls(true)                     //줌 관련;
-        //  settings.setDisplayZoomControls(false);                   //줌 관련
+        settings.setSupportZoom(true);                           //줌 관련
+        settings.setBuiltInZoomControls(true);                    //줌 관련;
+        settings.setDisplayZoomControls(false);                   //줌 관련
         settings.setJavaScriptCanOpenWindowsAutomatically(true);     //window.open() 동작하려면 필요
+        //settings.setSupportMultipleWindows(true);
+
         settings.setLoadsImagesAutomatically(true);                 // 웹뷰가 앱에 등록되어 있는 이미지 리로스를 자동으로 로드 하는속성
 
         settings.setUseWideViewPort(true);                           //html 컨텐츠가 웹뷰에 맞게 나타남
@@ -53,7 +60,7 @@ public class BoardActivity extends AppCompatActivity {
 
         settings.setAppCacheEnabled(false);     //앱 내부 캐시 사용여부
         //settings.setDomStorageEnabled(true);    //하루동안 보지않기 기능에 사용
-        //settings.setAllowFileAccess(true);     //웹뷰 내에서 파일 액세스 활성화
+        settings.setAllowFileAccess(true);     //웹뷰 내에서 파일 액세스 활성화
 
         //settings.setGeolocationEnabled(true); // GeoLocation를 사용하도록 설정
 
@@ -157,6 +164,7 @@ public class BoardActivity extends AppCompatActivity {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
           //  Toast t=Toast.makeText(BoardActivity.this, url, Toast.LENGTH_SHORT) ;
           //  t.show();
+            Log.d("ddroad","msg: "+url);
             view.loadUrl(url);
             return true;
         }
@@ -188,7 +196,21 @@ public class BoardActivity extends AppCompatActivity {
 
             return true;
         }
+
+      /*  public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
+            WebView newWebView = new WebView(BoardActivity.this);
+            WebSettings webSettings = newWebView.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            final Dialog dialog = new Dialog(BoardActivity.this);
+            dialog.setContentView(newWebView); dialog.show();
+
+            newWebView.setWebChromeClient(new WebChromeClient() {
+
+                @Override public void onCloseWindow(WebView window) { dialog.dismiss(); } });
+            ((WebView.WebViewTransport)resultMsg.obj).setWebView(newWebView); resultMsg.sendToTarget();
+            return true; }*/
     }
+
 
 
 }

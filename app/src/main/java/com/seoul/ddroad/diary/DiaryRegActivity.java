@@ -8,10 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.seoul.ddroad.R;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import static java.sql.DriverManager.println;
@@ -84,6 +86,20 @@ public class DiaryRegActivity extends AppCompatActivity {
                 println("데이터 추가함.");
             }
 
+            //날씨 이미지
+         /*   ArrayList<Integer> list=new ArrayList<>();
+            String resName = "@drawable/bichon1";
+            String packName = this.getPackageName(); // 패키지명
+            int resID = getResources().getIdentifier(resName, "drawable", packName);
+
+            list.add(resID);
+            list.add(resID);
+            list.add(resID);
+
+            Spinner sp=(Spinner)findViewById(R.id.weatherSpinner);*/
+
+
+
             Toast.makeText(getApplicationContext(),
                     "등록 되었습니다.", Toast.LENGTH_SHORT)
                     .show();
@@ -97,4 +113,6 @@ public class DiaryRegActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
 
     }
+
+
 }
