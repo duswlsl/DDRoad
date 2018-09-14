@@ -1,5 +1,6 @@
 package com.seoul.ddroad.diary;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -7,6 +8,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -27,12 +30,14 @@ public class DiaryRegActivity extends AppCompatActivity {
     private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
     SqlLiteOpenHelper helper;
     SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
+    Spinner spinner;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diaryreg);
+        spinner =(Spinner)findViewById(R.id.weatherSpinner);
 
         //액션바 사용
         ActionBar ab = getSupportActionBar() ;
@@ -46,6 +51,30 @@ public class DiaryRegActivity extends AppCompatActivity {
                 diaryDatabaseName, // 파일명
                 null, // 커서 팩토리
                 1); // 버전 번호
+
+
+        //날씨 이미지 스피너
+        String[] arr = getResources().getStringArray(R.array.weather_item_array);
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i=0; i < arr.length ; i++){
+            list.add(arr[i]);
+        }
+
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, R.layout.weather_spinner_item,list);
+        spinner.setAdapter(spinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                Toast.makeText(DiaryRegActivity.this,"선택된 아이템 : "+spinner.getItemAtPosition(position),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
     }
 
@@ -86,28 +115,16 @@ public class DiaryRegActivity extends AppCompatActivity {
                 println("데이터 추가함.");
             }
 
-            //날씨 이미지
-         /*   ArrayList<Integer> list=new ArrayList<>();
-            String resName = "@drawable/bichon1";
-            String packName = this.getPackageName(); // 패키지명
-            int resID = getResources().getIdentifier(resName, "drawable", packName);
-
-            list.add(resID);
-            list.add(resID);
-            list.add(resID);
-
-            Spinner sp=(Spinner)findViewById(R.id.weatherSpinner);*/
-
-
-
             Toast.makeText(getApplicationContext(),
                     "등록 되었습니다.", Toast.LENGTH_SHORT)
                     .show();
 
-            Intent intent = new Intent(
+            /*Intent intent = new Intent(
                     getApplicationContext(), // 현재 화면의 제어권자
                     DiaryActivity.class); // 다음 넘어갈 클래스 지정
-            startActivity(intent); // 다음 화면으로 넘어간다
+            startActivity(intent); // 다음 화면으로 넘어간다*/
+            onBackPressed();
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -314,7 +315,7 @@ public class DiaryActivity extends AppCompatActivity {
             database.execSQL(sql);
 
         }else{
-            println("먼저 데이터베이스를 오픈하세요.");
+            Log.d("ddroad","먼저 데이터베이스를 오픈하세요.");
         }
     }
 
@@ -329,7 +330,7 @@ public class DiaryActivity extends AppCompatActivity {
         if(database !=null){
             String sql = "select diaryId, title, content, imgstr, regdt from " + diaryTableName + " where DATE(regdt)='"+dateStr+"'";
             Cursor cursor = database.rawQuery(sql, null);   // select 사용시 사용(sql문, where조건 줬을 때 넣는 값)
-            println("조회된 데이터 개수 : " + cursor.getCount());   // db에 저장된 행 개수를 읽어온다
+            Log.d("ddroad","조회된 데이터 개수 : " + cursor.getCount());   // db에 저장된 행 개수를 읽어온다
 
             if (cursor != null && cursor.moveToFirst()){
                 do {
@@ -377,4 +378,12 @@ public class DiaryActivity extends AppCompatActivity {
 
         return dateFormat.format(date);
     }
+
+    public void onResume() {
+        super.onResume();
+        selectDiaryListView(mCurrentDate);
+        caldroidFragment.refreshView();
+    }
+
+
 }
