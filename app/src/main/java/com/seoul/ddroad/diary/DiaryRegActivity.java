@@ -34,6 +34,7 @@ public class DiaryRegActivity extends AppCompatActivity {
     SqlLiteOpenHelper helper;
     SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
     Spinner spinner;
+    String mImgStr="";
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -71,7 +72,21 @@ public class DiaryRegActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                Toast.makeText(DiaryRegActivity.this,"선택된 아이템 : "+spinner.getItemAtPosition(position),Toast.LENGTH_SHORT).show();
+               // Toast.makeText(DiaryRegActivity.this,"선택된 아이템 : "+spinner.getItemAtPosition(position),Toast.LENGTH_SHORT).show();
+               // Toast.makeText(DiaryRegActivity.this,"선택된 아이템 : "+position,Toast.LENGTH_SHORT).show();
+                if(position == 1 ){
+                    mImgStr = "@drawable/bichon1";
+                }else if(position == 2){
+                    mImgStr = "@drawable/bichon2";
+                }else if(position == 3){
+                    mImgStr = "@drawable/bichon3";
+                }else if(position == 4){
+                    mImgStr = "@drawable/bichon4";
+                }else if(position == 5){
+                    mImgStr = "@drawable/bichon5";
+                }else{
+                    mImgStr = "";
+                }
             }
 
             @Override
@@ -113,9 +128,8 @@ public class DiaryRegActivity extends AppCompatActivity {
                 Random randomGenerator = new Random();
                 int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
 
-                String imgstr = "@drawable/bichon1";
                 String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,datetime('now','localtime'))";
-                Object[] params = { diaryTitle.getText(), diaryContent.getText(),imgstr};
+                Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr};
                 database.execSQL(sql, params);
                 println("데이터 추가함.");
             }
