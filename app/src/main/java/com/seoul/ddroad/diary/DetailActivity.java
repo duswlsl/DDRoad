@@ -19,11 +19,11 @@ import java.util.HashMap;
 
 public class DetailActivity extends AppCompatActivity {
 
-    private TextView comeOn; //상세화면 텍스트뷰
-    private TextView textView4;
-    private TextView textView5;
-    private ImageView imageView2;
-    private ScrollView content;
+  //  private TextView comeOn; //상세화면 텍스트뷰
+    private TextView diaryDetailDate; //날짜
+    private TextView diaryDetailTitle; //title
+    private ImageView diaryDetailImage;
+    private TextView diaryDetailContent;
 
     private String diaryTableName = "diary"; //테이블 이름
     private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
@@ -50,15 +50,24 @@ public class DetailActivity extends AppCompatActivity {
         diaryMap = selectDiary(diaryId); //메서드에서 데이터를 가져옵니다.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!원래 이거 만들었어야함
 
 
-        comeOn = (TextView) findViewById(R.id.comeOn); //상세화면 텍스트 뷰 선언
-        textView4 = (TextView) findViewById(R.id.textView4);
-        textView5 = (TextView) findViewById(R.id.textView5);
-        imageView2 = (ImageView) findViewById(R.id.imageView2);
-        content = (ScrollView) findViewById(R.id.content);
+       // comeOn = (TextView) findViewById(R.id.comeOn); //상세화면 텍스트 뷰 선언
+        diaryDetailDate = (TextView) findViewById(R.id.diaryDetailDate);
+        diaryDetailTitle = (TextView) findViewById(R.id.diaryDetailTitle);
+        diaryDetailImage = (ImageView) findViewById(R.id.diaryDetailImage);
+        diaryDetailContent = (TextView) findViewById(R.id.diaryDetailContent);
 
 
-        comeOn.setText("권바보야 MAP이 뭐냐~~!!" + diaryMap.toString()); //데이터 확인합니다.
-
+        //comeOn.setText("권바보야 MAP이 뭐냐~~!!" + diaryMap.toString()); //데이터 확인합니다.
+        String redgt = (String)diaryMap.get("regdt");
+        String content = (String)diaryMap.get("content");
+        String title = (String)diaryMap.get("title");
+        diaryDetailDate.setText(redgt);
+        diaryDetailContent.setText(content);
+        diaryDetailTitle.setText(title);
+        String resName = (String)diaryMap.get("imgstr");;
+        String packName = this.getPackageName(); // 패키지명
+        int resID = getResources().getIdentifier(resName, "drawable", packName);
+        diaryDetailImage.setImageResource(resID);
 
         //데이터 확인이되면 화면을 만들고 각각 view 레이아웃에 뿌려줍니다.
         //diaryId, title, content, imgstr, regdt 의 데이터를 뿌려야겠죠?????????????
