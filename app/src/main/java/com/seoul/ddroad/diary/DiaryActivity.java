@@ -70,7 +70,7 @@ public class DiaryActivity extends AppCompatActivity {
 
         initDBTable();//액티비티 생성시 디비를 생성
 
-        caldroidFragment = new CaldroidFragment(); //달력 생성자 생성
+        caldroidFragment = new CalendarFragment(); //달력 생성자 생성
 
 //왜 전역 변수와 지역 변수를 쓰는지 알아볼것~
         mCurrentDate = Calendar.getInstance().getTime();  //현재 날짜를 가져온다
