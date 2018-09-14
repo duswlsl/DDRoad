@@ -4,5 +4,6 @@
     <item
         android:id="@+id/newPost"
         android:title="새 글 등록"
+        android:icon="@drawable/diary_write"
         app:showAsAction="always" />
 </menu>

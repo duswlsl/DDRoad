@@ -16,7 +16,10 @@ import android.widget.Toast;
 
 import com.seoul.ddroad.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
 import static java.sql.DriverManager.println;
@@ -38,10 +41,12 @@ public class DiaryRegActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diaryreg);
         spinner =(Spinner)findViewById(R.id.weatherSpinner);
-
+        Date currentDate = Calendar.getInstance().getTime(); //지역 변수로 현재 날짜를 가져온다. 이 변수는 디비에 넣을때 필요해서?
+        String dateStr = getDateFormat("",currentDate);
         //액션바 사용
         ActionBar ab = getSupportActionBar() ;
-        ab.setTitle("캘린더 등록하기") ;
+        ab.setTitle("등록하기("+dateStr+")") ;
+
         //메뉴바에 '<' 버튼이 생긴다.(두개는 항상 같이다닌다)
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setHomeButtonEnabled(true);
@@ -131,5 +136,13 @@ public class DiaryRegActivity extends AppCompatActivity {
 
     }
 
+    private String getDateFormat(String format,Date date){//입력 Date를 날짜를  포팻 형태로 String 출력
 
+        if(format == null || format ==""){
+            format  = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+
+        return dateFormat.format(date);
+    }
 }
