@@ -96,6 +96,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             }
         };
         fusedLocClient = LocationServices.getFusedLocationProviderClient(this.getContext());
+
+
     }
 
     @Override
