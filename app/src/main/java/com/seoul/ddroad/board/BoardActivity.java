@@ -1,11 +1,8 @@
 package com.seoul.ddroad.board;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
@@ -16,7 +13,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 import com.seoul.ddroad.R;
 
@@ -29,7 +25,7 @@ public class BoardActivity extends AppCompatActivity {
     public void onCreate( Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_board);
+        setContentView(R.layout.fragment_board);
         mWebView = (WebView) findViewById(R.id.webView);
 
         WebSettings settings=mWebView.getSettings();
