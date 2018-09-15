@@ -101,6 +101,8 @@
             android:layout_gravity="center"
             android:textColor="#AB4A12"
             android:textSize="80px" />
+
+
     </LinearLayout>
 
 

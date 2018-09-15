@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
         android:largeHeap="true">
 
-        <activity android:name=".intro.IntroActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".intro.PermissionActivity" />
-
+        <activity android:name=".intro.IntroActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA4oG50dxooInZ2ueURq-7XvPNOrLvgqf4" />
@@ -45,6 +45,7 @@
                 android:value=".diary.DiaryActivity" />
         </activity>
         <activity android:name=".board.BoardActivity" />
+        <activity android:name=".intro.dustActivity_cool" />
 
     </application>
 
