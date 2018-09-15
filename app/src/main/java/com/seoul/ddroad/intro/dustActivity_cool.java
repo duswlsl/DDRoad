@@ -110,13 +110,9 @@ public class dustActivity_cool extends AppCompatActivity {
         text_dog_date.setText(myDog + "♡ " + nDogDate + " D-Days");
 
 
-        try{
-            setSpinner();
-        }
-        catch (Exception e)
-        {
 
-        }
+        setSpinner();
+
 
     }
 
@@ -130,10 +126,26 @@ public class dustActivity_cool extends AppCompatActivity {
         list.add("용산구");
         list.add("성동구");
         list.add("광진구");
+        list.add("동대문구");
+        list.add("성북구");
+        list.add("강북구");
+        list.add("도봉구");
+        list.add("노원구");
+        list.add("서대문구");
+        list.add("마포구");
+        list.add("양천구");
+        list.add("강서구");
+        list.add("구로구");
+        list.add("금천구");
+        list.add("영등포구");
+        list.add("동작구");
+        list.add("관악구");
+        list.add("서초구");
+        list.add("강남구");
+        list.add("송파구");
+        list.add("강남구");
 
-        String[] list2 = new String[2];
-        list2[0] = "안녕";
-        list2[1] = "하세요";
+
 
         //배열 어답터 사용
         ArrayAdapter spinnerAdater;
@@ -163,6 +175,8 @@ public class dustActivity_cool extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
+
+
         });
     }
     public void fontChange() {
