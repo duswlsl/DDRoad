@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/diaryregLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.seoul.ddroad.diary.DetailActivity">
+
+    <LinearLayout
+        android:id="@+id/main_holder"
+        android:orientation="vertical"
+        android:padding="@dimen/card_layout_padding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            card_view:cardElevation="0dp"
+            card_view:contentPadding="15dp"
+            card_view:cardCornerRadius="3dp"
+            card_view:contentPaddingTop="5dp"
+            card_view:contentPaddingBottom="5dp">
+            <LinearLayout
+                style="@style/LinearLayoutHorizontal">
+
+                <ImageView
+                    android:id="@+id/diaryDetailImage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:minHeight="45dp"
+                    card_view:srcCompat="@drawable/arrow_24" />
+
+                <TextView
+                    android:id="@+id/diaryDetailTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:gravity="center_vertical"
+                    android:padding="2dp"
+                    android:layout_marginLeft="15dp"
+                    android:text="TextView" />
+
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/card_layout_margin"
+            android:layout_marginBottom="@dimen/card_layout_margin"
+            style="@style/AppCard">
+            <ScrollView
+                android:fillViewport="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/diaryDetailContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="#00000000"
+                    android:gravity="top"
+                    android:padding="2dp" />
+            </ScrollView>
+
+            <TextView
+                android:id="@+id/diaryDetailDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="right"
+                android:text="TextView" />
+
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+
+</RelativeLayout>

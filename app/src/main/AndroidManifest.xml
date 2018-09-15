@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +29,22 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA4oG50dxooInZ2ueURq-7XvPNOrLvgqf4" />
+
+        <activity android:name=".intro.IntroActivity"/>
+        <activity android:name=".intro.dustActivity"/>
+        <activity android:name=".diary.DiaryActivity" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".diary.DiaryRegActivity" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".diary.DiaryActivity" />
+        </activity>
+        <activity android:name=".diary.DetailActivity" >
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".diary.DiaryActivity" />
+        </activity>
+        <activity android:name=".board.BoardActivity" />
 
     </application>
 
