@@ -16,7 +16,7 @@ public class IntroActivity  extends Activity
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Intent intent = new Intent(getApplicationContext(),dustActivity_cool.class);
+            Intent intent = new Intent(getApplicationContext(),PermissionActivity.class);
             startActivity(intent);
             finish();
         }

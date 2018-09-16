@@ -1,6 +1,7 @@
 package com.seoul.ddroad.board;
 
-import android.support.v4.app.Fragment;
+
+import android.app.Fragment;
 
 public class BoardFragment extends Fragment {
 }

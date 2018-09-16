@@ -25,7 +25,6 @@ public class RestAPI {
 
         try {
 
-
             // 영화 제목을 UTF-8형식으로 인코딩
             String text = "";
             if (type.equals("cafe")) {
