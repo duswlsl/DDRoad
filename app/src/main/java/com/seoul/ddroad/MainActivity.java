@@ -6,16 +6,20 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.seoul.ddroad.board.BoardFragment;
 import com.seoul.ddroad.diary.DiaryFragment;
 import com.seoul.ddroad.intro.DustFragment;
+import com.seoul.ddroad.map.APIData;
 import com.seoul.ddroad.map.MapFragment;
+import com.seoul.ddroad.map.RestAPI;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+    RelativeLayout relativeLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         callFragment(1);
         ButterKnife.bind(this);
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                RestAPI api = new RestAPI();
+                APIData apiData = new APIData();
+                apiData = api.getinfo(apiData, "cafe");
+
+//                for(int i=0;i<1000;i++) {
+//                    System.out.println(i + " : " + apiData.cafe[i].getTitle());
+//                }
+
+            }
+        }).start();
     }
 
     @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board})
