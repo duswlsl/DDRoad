@@ -1,5 +1,6 @@
 package com.seoul.ddroad.map;
 
+// APIData
 public class APIData {
     public Data cafe[] = new Data[1000];
     public Data hospital[] = new Data[1000];
