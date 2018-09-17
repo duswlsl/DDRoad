@@ -56,6 +56,7 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     private LocationCallback locCallback, locCallback_walk;
     private Marker marker;
 
+
     @BindView(R.id.btn_walk)
     Button btn_walk;
 
@@ -105,6 +106,7 @@ public class MapFragment extends android.app.Fragment implements LocationListene
             dialog.setTargetFragment(this, 2);
             dialog.show(getActivity().getFragmentManager(), "tag");
             polyline.remove();
+
         }
     }
 
@@ -187,7 +189,6 @@ public class MapFragment extends android.app.Fragment implements LocationListene
         locCallback_walk = new LocationCallback() { // 산책
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Log.d("test", "walk");
                 if (locationResult == null)
                     return;
                 latLngList.add(curLatlng);
@@ -208,25 +209,10 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        // if (!googleApiCheck())
-        //   return;
         setDefaultLoc(this.getContext());
         setMarker();
     }
 
-    /*
-    //api 체크
-    private boolean googleApiCheck() {
-        GoogleApiAvailability api = GoogleApiAvailability.getInstance();
-        int code = api.isGooglePlayServicesAvailable(this.getContext());
-        if (code == ConnectionResult.SUCCESS)
-            return true;
-        else {
-            api.getErrorDialog(this.getActivity(), code, 0).show();
-            return false;
-        }
-    }
-    */
 
     //초기 위치 설정
     public void setDefaultLoc(Context context) {
@@ -286,6 +272,5 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     public void onProviderDisabled(String s) {
 
     }
-
 
 }

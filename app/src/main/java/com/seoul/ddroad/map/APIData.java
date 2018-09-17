@@ -1,11 +1,11 @@
 package com.seoul.ddroad.map;
 
 public class APIData {
-    Data cafe[] = new Data[1000];
-    Data hospital[] = new Data[1000];
-    Data hotel[] = new Data[1000];
-    Data salon[] = new Data[1000];
-    Data trail[] = new Data[1000];
+    public Data cafe[] = new Data[1000];
+    public Data hospital[] = new Data[1000];
+    public Data hotel[] = new Data[1000];
+    public Data salon[] = new Data[1000];
+    public Data trail[] = new Data[1000];
 
     public static int cafeTotal = 0;
     public static int salonTotal = 0;
@@ -13,7 +13,7 @@ public class APIData {
     public static int trailTotal = 0;
     public static int hospitalTotal = 0;
 
-    APIData() {
+    public APIData() {
         for (int i = 0; i < 1000; i++) {
             cafe[i] = new Data();
             hospital[i] = new Data();

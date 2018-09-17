@@ -1,29 +1,64 @@
 package com.seoul.ddroad.map;
 
-public class Data {
-    String title;
-    String address;
-    String roadAddress;
+import java.io.Serializable;
 
-    // get 메소드
+public class Data {
+    public int num;
+    public String title;
+    public String address;
+    public String roadAddress;
+    public double latitude;
+    public double longitude;
+
+    public Data() {
+
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
     public String getTitle() {
         return title;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getAddress() {
         return address;
     }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getRoadAddress() {
         return roadAddress;
     }
 
-    // set 메소드
-    public void setTitle(String title) {
-        this.title = title;
-    }
-    public void setAddress(String address) {
-        this.address = address;
-    }
     public void setRoadAddress(String roadAddress) {
         this.roadAddress = roadAddress;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

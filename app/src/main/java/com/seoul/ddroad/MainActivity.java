@@ -4,22 +4,25 @@ import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
 import com.seoul.ddroad.board.BoardFragment;
 import com.seoul.ddroad.diary.DiaryFragment;
 import com.seoul.ddroad.intro.DustFragment;
 import com.seoul.ddroad.map.MapFragment;
+import com.seoul.ddroad.map.RestAPI;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         callFragment(1);
         ButterKnife.bind(this);
+
+        runThread();
     }
 
     @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board})
@@ -49,5 +52,44 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         transaction.commit();
+    }
+
+
+    private void runThread() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RestAPI restAPI = new RestAPI();
+                restAPI.getinfo("trail");
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RestAPI restAPI = new RestAPI();
+                restAPI.getinfo("hospital");
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RestAPI restAPI = new RestAPI();
+                restAPI.getinfo("hotel");
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RestAPI restAPI = new RestAPI();
+                restAPI.getinfo("cafe");
+            }
+        }).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RestAPI restAPI = new RestAPI();
+                restAPI.getinfo("salon");
+            }
+        }).start();
     }
 }
