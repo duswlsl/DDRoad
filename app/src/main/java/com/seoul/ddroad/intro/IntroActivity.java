@@ -30,7 +30,7 @@ public class IntroActivity  extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-        handler.postDelayed(runnable, 4000);
+        handler.postDelayed(runnable, 1000);
     }
 
     @Override

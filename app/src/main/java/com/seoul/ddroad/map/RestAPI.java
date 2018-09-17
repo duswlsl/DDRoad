@@ -29,7 +29,7 @@ public class RestAPI {
             // 영화 제목을 UTF-8형식으로 인코딩
             String text = "";
             if (type.equals("cafe")) {
-                text = URLEncoder.encode("서울애견카페", "UTF-8");
+                text = URLEncoder.encode("애견카페", "UTF-8");
             } else if (type.equals("hospital")) {
                 text = URLEncoder.encode("동물병원", "UTF-8");
             } else if (type.equals("salon")) {
