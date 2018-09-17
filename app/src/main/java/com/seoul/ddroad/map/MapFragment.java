@@ -72,7 +72,6 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     private Polyline polyline;
     private LocationRequest locRequest;
     private FusedLocationProviderClient fusedLocClient;
-    private LocationCallback locCallback;
     Bitmap captureView;
     private LocationCallback locCallback, locCallback_walk;
     private Marker marker;
@@ -163,6 +162,13 @@ public class MapFragment extends android.app.Fragment implements LocationListene
         if (resultCode == Activity.RESULT_OK) { // 경로 저장
             latLngList = data.getExtras().getParcelableArrayList("pointList");
             drawPolyline(latLngList);
+            GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+                @Override
+                public void onSnapshotReady(Bitmap bitmap) {
+                    screenshot(bitmap);
+                }
+            };
+            googleMap.snapshot(callback);
             Toast.makeText(this.getContext(), "저장되었습니다", Toast.LENGTH_LONG).show();
         }
     }
@@ -172,7 +178,7 @@ public class MapFragment extends android.app.Fragment implements LocationListene
             polyline.remove();
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.color(Color.RED);
-        polylineOptions.width(5);
+        polylineOptions.width(15);
         polylineOptions.addAll(pointList);
         polyline = googleMap.addPolyline(polylineOptions);
     }
@@ -314,7 +320,7 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     public void screenshot(Bitmap captureBitmap) {
         FileOutputStream fos;
         File file = new File(this.getContext().getFilesDir(), "CaptureDir"); // 폴더 경로
-
+        Log.d("file", this.getContext().getFilesDir().toString());
         if (!file.exists()) {  // 해당 폴더 없으면 만들어라
             file.mkdirs();
         }
@@ -324,6 +330,7 @@ public class MapFragment extends android.app.Fragment implements LocationListene
         try {
             fos = new FileOutputStream(fileCacheItem);
             captureBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            polyline.remove();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
