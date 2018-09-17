@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -14,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -35,6 +38,7 @@ public class DiaryFragment extends Fragment {
     private CaldroidFragment caldroidFragment;//달력 선언
     private Date mCurrentDate; //전역 현재날짜 선언
     private ListView listView; //다이어리 리스트뷰
+    private FloatingActionButton fab;
 
     private String diaryTableName = "diary"; //테이블 이름
     private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
@@ -43,6 +47,7 @@ public class DiaryFragment extends Fragment {
 
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
@@ -56,6 +61,17 @@ public class DiaryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         listView = (ListView) getView().findViewById(R.id.listView); //다이어리 리스트 뷰 선언
+
+        fab =  getView().findViewById(R.id.diaryFab);//등록액티비티 이동
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(
+                        getActivity().getApplicationContext(), // 현재 화면의 제어권자
+                        DiaryRegActivity.class); // 다음 넘어갈 클래스 지정
+                startActivity(intent); // 다음 화면으로 넘어간다
+            }
+        });
 
         initDBTable();//액티비티 생성시 디비를 생성
 
@@ -236,21 +252,17 @@ public class DiaryFragment extends Fragment {
 
     /**
      * Action Bar에 메뉴를 생성한다.
-     * @param menu
-     * @return
      */
-
+/*
     public boolean onCreateOptionsMenu(Menu menu) {
         getActivity().getMenuInflater().inflate(R.menu.list_menu, menu);
         return true;
     }
-
+*/
     /**
      * 메뉴 아이템을 클릭했을 때 발생되는 이벤트...
-     * @param item
-     * @return
      */
-
+/*
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if( id == R.id.newPost ){
@@ -265,7 +277,7 @@ public class DiaryFragment extends Fragment {
         return super.onOptionsItemSelected(item);
 
     }
-
+*/
     public void initDBTable(){
         // 액티비티가 켜지면 데이터베이스 생성
         helper = new SqlLiteOpenHelper(getActivity().getApplicationContext(), // 현재 화면의 context

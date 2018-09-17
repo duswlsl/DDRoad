@@ -141,8 +141,9 @@ public class CalendarAdapter extends CaldroidGridAdapter {
                 String sql = "select diaryId, title, content, imgstr, regdt from " + diaryTableName + " where DATE(regdt)='"+dateString+"'";
                 Cursor cursor = database.rawQuery(sql, null);   // select 사용시 사용(sql문, where조건 줬을 때 넣는 값)
 
-                count =  cursor.getCount();
                 if (cursor != null && cursor.moveToFirst()){
+                    count =  cursor.getCount();
+
                     do {
 
                         int diaryId = cursor.getInt(0);   // 첫번째 속성

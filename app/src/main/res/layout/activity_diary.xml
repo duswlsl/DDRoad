@@ -33,5 +33,14 @@
             android:layout_below="@+id/linearLayout"
             android:listSelector="@color/colorPrimary"/>
 
+
     </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/diaryFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/edit"/>
 </RelativeLayout>
