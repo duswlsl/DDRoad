@@ -38,7 +38,7 @@ public class RestAPI {
 
             String text = "";
             if (type.equals("cafe")) {
-                text = URLEncoder.encode("서울애견카페", "UTF-8");
+                text = URLEncoder.encode("애견카페", "UTF-8");
             } else if (type.equals("hospital")) {
                 text = URLEncoder.encode("서울동물병원", "UTF-8");
             } else if (type.equals("salon")) {

@@ -1,5 +1,8 @@
 package com.seoul.ddroad.map;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -15,11 +18,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -29,6 +37,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,8 +49,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,6 +72,8 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     private Polyline polyline;
     private LocationRequest locRequest;
     private FusedLocationProviderClient fusedLocClient;
+    private LocationCallback locCallback;
+    Bitmap captureView;
     private LocationCallback locCallback, locCallback_walk;
     private Marker marker;
 
@@ -82,6 +103,22 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, view);
+
+//        Button btn = (Button)view.findViewById(R.id.captureBtn);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+//                    @Override
+//                    public void onSnapshotReady(Bitmap bitmap) {
+//                        screenshot(bitmap);
+//                    }
+//                };
+//                googleMap.snapshot(callback);
+//
+//            }
+//        });
+
         return view;
     }
 
@@ -271,6 +308,25 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+
+    public void screenshot(Bitmap captureBitmap) {
+        FileOutputStream fos;
+        File file = new File(this.getContext().getFilesDir(), "CaptureDir"); // 폴더 경로
+
+        if (!file.exists()) {  // 해당 폴더 없으면 만들어라
+            file.mkdirs();
+        }
+
+        String strFilePath = file + "/" + "test" + ".png";
+        File fileCacheItem = new File(strFilePath);
+        try {
+            fos = new FileOutputStream(fileCacheItem);
+            captureBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }
