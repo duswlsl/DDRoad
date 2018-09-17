@@ -67,7 +67,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private LocationRequest locRequest;
     private FusedLocationProviderClient fusedLocClient;
     private LocationCallback locCallback;
-    RelativeLayout relativeLayout;
     Bitmap captureView;
 
     public MapFragment() {
