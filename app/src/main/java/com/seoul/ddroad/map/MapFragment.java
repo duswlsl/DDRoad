@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -15,12 +16,18 @@ import com.seoul.ddroad.R;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -29,6 +36,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +48,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MapFragment extends Fragment implements LocationListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMapClickListener {
     private GoogleMap googleMap;
@@ -49,7 +67,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private LocationRequest locRequest;
     private FusedLocationProviderClient fusedLocClient;
     private LocationCallback locCallback;
-
+    RelativeLayout relativeLayout;
+    Bitmap captureView;
 
     public MapFragment() {
 
@@ -64,6 +83,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         createLocationRequest();
     }
 
@@ -72,13 +92,30 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
+
+        Button btn = (Button)view.findViewById(R.id.captureBtn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+                    @Override
+                    public void onSnapshotReady(Bitmap bitmap) {
+                        screenshot(bitmap);
+                    }
+                };
+                googleMap.snapshot(callback);
+
+            }
+        });
+
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mapView = (MapView) getView().findViewById(R.id.map);
+
+        mapView = (MapView)getView().findViewById(R.id.map);
         if (mapView != null) {
             mapView.onCreate(savedInstanceState);
             mapView.getMapAsync(this);
@@ -90,14 +127,19 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 if (locationResult == null)
                     return;
                 for (Location location : locationResult.getLocations()) {
-                    Log.d("map2",String.valueOf(location.getLatitude()));
+                    Log.d("map2", String.valueOf(location.getLatitude()));
                 }
                 super.onLocationResult(locationResult);
             }
         };
         fusedLocClient = LocationServices.getFusedLocationProviderClient(this.getContext());
 
+        mapView.setDrawingCacheEnabled(true);
+        mapView.buildDrawingCache();
 
+
+
+        captureView = mapView.getDrawingCache();
     }
 
     @Override
@@ -216,5 +258,23 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     }
 
+
+    public void screenshot(Bitmap captureBitmap) {
+        FileOutputStream fos;
+        File file = new File(this.getContext().getFilesDir(), "CaptureDir"); // 폴더 경로
+
+        if (!file.exists()) {  // 해당 폴더 없으면 만들어라
+            file.mkdirs();
+        }
+
+        String strFilePath = file + "/" + "test" + ".png";
+        File fileCacheItem = new File(strFilePath);
+        try {
+            fos = new FileOutputStream(fileCacheItem);
+            captureBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
