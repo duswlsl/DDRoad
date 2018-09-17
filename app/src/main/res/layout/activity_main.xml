@@ -6,23 +6,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn_intro"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="인트로" />
 
-    <Button
-        android:id="@+id/btn_board2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="게시판" />
-
-    <Button
-        android:id="@+id/btn_diary2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="다이어리" />
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -30,6 +14,29 @@
         android:layout_height="0dp"
         android:layout_weight="6">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btn_intro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="인트로" />
+
+            <Button
+                android:id="@+id/btn_board2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="게시판" />
+
+            <Button
+                android:id="@+id/btn_diary2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="다이어리" />
+        </LinearLayout>
     </FrameLayout>
 
     <LinearLayout
