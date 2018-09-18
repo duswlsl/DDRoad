@@ -39,6 +39,13 @@ public class CalendarAdapter extends CaldroidGridAdapter {
                            Map<String, Object> caldroidData,
                            Map<String, Object> extraData) {
         super(context, month, year, caldroidData, extraData);
+
+        //DB 선언
+        helper = new SqlLiteOpenHelper(context, // 현재 화면의 context
+                diaryDatabaseName, // 파일명
+                null, // 커서 팩토리
+                1); // 버전 번호
+        database = helper.getWritableDatabase();
     }
 
 
@@ -53,7 +60,7 @@ public class CalendarAdapter extends CaldroidGridAdapter {
             if (convertView == null) {
                 cellView = inflater.inflate(R.layout.calendar_item, null);
             }
-            FontsOverride.setDefaultFont(context, "MONOSPACE", "font/nanumpen.ttf");
+          //  FontsOverride.setDefaultFont(context, "MONOSPACE", "font/nanumpen.ttf");
            /* 폰트바꾸는거같음
             if (cellView is  ViewGroup) {
 //            context?.updateTextColors(cellView)
@@ -131,18 +138,14 @@ public class CalendarAdapter extends CaldroidGridAdapter {
 
             List<HashMap<String,Object>> diaryList = new ArrayList<HashMap<String,Object>>();// 리스트로 받기위함 선언을 한다
             HashMap<String,Object> diaryObj = null; //MAP형태로 저장하기위한 객채 선언
-            //DB 선언
-            helper = new SqlLiteOpenHelper(context, // 현재 화면의 context
-                    diaryDatabaseName, // 파일명
-                    null, // 커서 팩토리
-                    1); // 버전 번호
-            database = helper.getWritableDatabase();
+
             if(database !=null){
                 String sql = "select diaryId, title, content, imgstr, regdt from " + diaryTableName + " where DATE(regdt)='"+dateString+"'";
                 Cursor cursor = database.rawQuery(sql, null);   // select 사용시 사용(sql문, where조건 줬을 때 넣는 값)
 
-                count =  cursor.getCount();
                 if (cursor != null && cursor.moveToFirst()){
+                    count =  cursor.getCount();
+
                     do {
 
                         int diaryId = cursor.getInt(0);   // 첫번째 속성
