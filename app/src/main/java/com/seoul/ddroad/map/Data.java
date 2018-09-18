@@ -2,8 +2,7 @@ package com.seoul.ddroad.map;
 
 import java.io.Serializable;
 
-public class Data {
-    public int num;
+public class Data implements Serializable{
     public String title;
     public String address;
     public String roadAddress;
@@ -12,14 +11,6 @@ public class Data {
 
     public Data() {
 
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
     }
 
     public String getTitle() {

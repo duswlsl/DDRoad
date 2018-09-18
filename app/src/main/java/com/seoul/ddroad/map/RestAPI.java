@@ -22,15 +22,15 @@ public class RestAPI {
     private String arr[];
 
     public RestAPI() {
+    }
+
+
+    public void getinfo(String type) {
         cafeList = new ArrayList<Data>();
         hotelList = new ArrayList<Data>();
         hospitalList = new ArrayList<Data>();
         salonList = new ArrayList<Data>();
         trailList = new ArrayList<Data>();
-    }
-
-
-    public void getinfo(String type) {
         int num = 0;
         Log.d("RestAPI", "start" + type);
 
@@ -75,15 +75,10 @@ public class RestAPI {
                 }
 
                 // 원하는 정보를 모두 받아온다. 하지만 가장 최신의 하나것만 사용하기 때문에 break;를 사용
-                br.readLine();
-                br.readLine();
-                Log.d("data2", type+br.readLine());
-                Log.d("data2", type+br.readLine());
 
                 while ((inputLine = br.readLine()) != null) {
                     if (inputLine.contains("title")) {
                         data = new Data();
-                        data.setNum(num++);
 
                         arr = inputLine.split("\"", 5);
                         data.setTitle(arr[3]);

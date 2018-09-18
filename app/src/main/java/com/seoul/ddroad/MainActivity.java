@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         callFragment(1);
         ButterKnife.bind(this);
-
         runThread();
     }
 
@@ -61,35 +60,41 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 RestAPI restAPI = new RestAPI();
                 restAPI.getinfo("trail");
-            }
-        }).start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RestAPI restAPI = new RestAPI();
                 restAPI.getinfo("hospital");
+//                restAPI.getinfo("hotel");
+//                restAPI.getinfo("cafe");
+//                restAPI.getinfo("salon");
             }
         }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                RestAPI restAPI = new RestAPI();
+//                restAPI.getinfo("hospital");
+//            }
+//        }).start();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 RestAPI restAPI = new RestAPI();
                 restAPI.getinfo("hotel");
-            }
-        }).start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RestAPI restAPI = new RestAPI();
                 restAPI.getinfo("cafe");
-            }
-        }).start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RestAPI restAPI = new RestAPI();
                 restAPI.getinfo("salon");
             }
         }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                RestAPI restAPI = new RestAPI();
+//                restAPI.getinfo("cafe");
+//            }
+//        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                RestAPI restAPI = new RestAPI();
+//                restAPI.getinfo("salon");
+//            }
+//        }).start();
     }
 }

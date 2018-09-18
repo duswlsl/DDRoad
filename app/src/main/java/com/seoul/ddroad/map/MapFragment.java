@@ -1,13 +1,12 @@
 package com.seoul.ddroad.map;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -20,14 +19,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -36,10 +32,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -52,18 +44,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MapFragment extends android.app.Fragment implements LocationListener, OnMapReadyCallback {
+public class MapFragment extends android.app.Fragment implements LocationListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private GoogleMap googleMap;
     private LatLng SEOUL = new LatLng(37.56, 126.97);
     private MapView mapView;
@@ -72,13 +61,25 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     private Polyline polyline;
     private LocationRequest locRequest;
     private FusedLocationProviderClient fusedLocClient;
-    Bitmap captureView;
     private LocationCallback locCallback, locCallback_walk;
     private Marker marker;
+    private HashMap<Marker, Data> markerMap = new HashMap<>();
 
 
     @BindView(R.id.btn_walk)
     Button btn_walk;
+    @BindView(R.id.btn_cafe)
+    Button btn_cafe;
+    @BindView(R.id.btn_hospital)
+    Button btn_hospital;
+    @BindView(R.id.btn_hotel)
+    Button btn_hotel;
+    @BindView(R.id.btn_salon)
+    Button btn_salon;
+    @BindView(R.id.btn_trail)
+    Button btn_trail;
+    @BindView(R.id.btn_all)
+    Button btn_all;
 
     public MapFragment() {
 
@@ -103,21 +104,6 @@ public class MapFragment extends android.app.Fragment implements LocationListene
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, view);
 
-//        Button btn = (Button)view.findViewById(R.id.captureBtn);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
-//                    @Override
-//                    public void onSnapshotReady(Bitmap bitmap) {
-//                        screenshot(bitmap);
-//                    }
-//                };
-//                googleMap.snapshot(callback);
-//
-//            }
-//        });
-
         return view;
     }
 
@@ -127,11 +113,13 @@ public class MapFragment extends android.app.Fragment implements LocationListene
         if (state.equals("OFF")) { //산책 시작
             latLngList = new ArrayList<>();
             btn_walk.setTag("ON");
-            btn_walk.setText("끝");
+            //btn_walk.setText("끝");
+            btn_walk.setBackgroundResource(R.drawable.btn_end);
             changeCallback(locCallback, locCallback_walk, true);
         } else { //산책 끝
             btn_walk.setTag("OFF");
-            btn_walk.setText("시작");
+            //btn_walk.setText("시작");
+            btn_walk.setBackgroundResource(R.drawable.btn_walk);
             changeCallback(locCallback_walk, locCallback, false);
 
             //다이얼로그
@@ -141,7 +129,8 @@ public class MapFragment extends android.app.Fragment implements LocationListene
             dialog.setArguments(args);
             dialog.setTargetFragment(this, 2);
             dialog.show(getActivity().getFragmentManager(), "tag");
-            polyline.remove();
+            if (polyline != null)
+                polyline.remove();
 
         }
     }
@@ -252,8 +241,9 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        googleMap.setOnInfoWindowClickListener(this);
         setDefaultLoc(this.getContext());
-        setMarker();
+        setCurMarker();
     }
 
 
@@ -277,17 +267,17 @@ public class MapFragment extends android.app.Fragment implements LocationListene
     @Override
     public void onLocationChanged(Location location) {
         curLatlng = new LatLng(location.getLatitude(), location.getLongitude());
-        setMarker();
+        setCurMarker();
     }
 
     // set current latlng
     public void setCurLatlng(Location location) {
         curLatlng = new LatLng(location.getLatitude(), location.getLongitude());
-        setMarker();
+        setCurMarker();
     }
 
-    // update marker position
-    public void setMarker() {
+    // update current marker position
+    public void setCurMarker() {
         if (marker != null)
             marker.setPosition(curLatlng);
         else {
@@ -334,6 +324,92 @@ public class MapFragment extends android.app.Fragment implements LocationListene
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @OnClick({R.id.btn_cafe, R.id.btn_hotel, R.id.btn_hospital, R.id.btn_salon, R.id.btn_trail})
+    void clickSearch(View view) {
+        String state = view.getTag().toString();
+        if (state.equals("X")) { // 버튼 off -> on
+            btn_all.setTag("X");
+            view.setTag("O");
+        } else // 버튼 on -> off
+            view.setTag("X");
+        showMarker(btn_cafe.getTag().toString(), btn_hotel.getTag().toString(), btn_hospital.getTag().toString(), btn_salon.getTag().toString(), btn_trail.getTag().toString());
+    }
+
+    @OnClick(R.id.btn_all)
+    void clickSearchAll(View view) {
+        String state = view.getTag().toString();
+        if (state.equals("X")) { // 버튼 off -> on
+            btn_all.setTag("O");
+            btn_cafe.setTag("X");
+            btn_hotel.setTag("X");
+            btn_hospital.setTag("X");
+            btn_salon.setTag("X");
+            btn_trail.setTag("X");
+            showMarker("O", "O", "O", "O", "O");
+        } else { // 버튼 on -> of
+            btn_all.setTag("X");
+            showMarker("X", "X", "X", "X", "X");
+        }
+    }
+
+    private void showMarker(String cafe, String hotel, String hospital, String salon, String trail) { //버튼 클릭했을 때
+        googleMap.clear();
+        marker = null;
+        setCurMarker();
+        if (latLngList != null)
+            drawPolyline(latLngList);
+
+        if (cafe.equals("O"))
+            for (Data data : DataSet.cafeList)
+                addMarker(data, "marker_cafe");
+        if (hotel.equals("O"))
+            for (Data data : DataSet.hotelList)
+                addMarker(data, "marker_hotel");
+        if (hospital.equals("O"))
+            for (Data data : DataSet.hospitalList)
+                addMarker(data, "marker_hospital");
+        if (salon.equals("O"))
+            for (Data data : DataSet.salonList)
+                addMarker(data, "marker_salon");
+        if (trail.equals("O"))
+            for (Data data : DataSet.trailList)
+                addMarker(data, "marker_tree");
+    }
+
+
+    private void addMarker(Data data, String imgname) { //마커 추가
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(imgname, "drawable", getContext().getPackageName()));
+        Bitmap bitmap_resize = Bitmap.createScaledBitmap(bitmap, 120, 120, false);
+
+        LatLng position = new LatLng(data.getLatitude(), data.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions()
+                .title(data.getTitle())
+                .position(position)
+                .icon(BitmapDescriptorFactory.fromBitmap(bitmap_resize));
+        Marker marker = googleMap.addMarker(markerOptions);
+        marker.setTag(data);
+
+
+        // markerMap.put(marker, data);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        DataDialog dialog = new DataDialog();
+        Bundle args = new Bundle();
+        args.putSerializable("data", (Data)(marker.getTag()));
+        dialog.setArguments(args);
+        dialog.show(getActivity().getFragmentManager(), "tag");
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        CameraUpdate center = CameraUpdateFactory.newLatLng(marker.getPosition());
+        googleMap.animateCamera(center);
+        return false;
     }
 
 }
