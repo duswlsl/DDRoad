@@ -77,10 +77,11 @@ public class DiaryRegActivity extends AppCompatActivity{
                                 }
 
                                 dateStr = ""+year;
-                                if(month > 9){
-                                    dateStr += "-"+month;
+                                int monthf = month+1;//1적게 들어오기때문에 더해야함
+                                if(monthf > 9){
+                                    dateStr += "-"+monthf;
                                 }else{
-                                    dateStr += "-0"+month;
+                                    dateStr += "-0"+monthf;
                                 }
 
                                 if(dayOfMonth > 9){
@@ -220,11 +221,11 @@ public class DiaryRegActivity extends AppCompatActivity{
 
             database = helper.getWritableDatabase();
             if(database != null){
-                Random randomGenerator = new Random();
-                int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
-
-                String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";//datetime('now','localtime')
-                Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr,"datetime("+weatherDateStr+":00,'localtime')"};
+               // Random randomGenerator = new Random();
+               // int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
+                //datetime('now','localtime')
+                String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";
+                Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr,weatherDateStr};
                 database.execSQL(sql, params);
                 println("데이터 추가함.");
             }

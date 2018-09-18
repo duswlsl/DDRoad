@@ -199,6 +199,7 @@ public class DiaryFragment extends Fragment {
             adapter.addItem(new SingerItem( title, diaryId,  resID));
         }
 
+
         listView.setAdapter(adapter);
 
         //리스트뷰의 아이템을 클릭시 해당 아이템의 문자열을 가져오기 위한 처리
