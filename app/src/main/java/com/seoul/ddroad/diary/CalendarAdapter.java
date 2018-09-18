@@ -53,7 +53,7 @@ public class CalendarAdapter extends CaldroidGridAdapter {
             if (convertView == null) {
                 cellView = inflater.inflate(R.layout.calendar_item, null);
             }
-            FontsOverride.setDefaultFont(context, "MONOSPACE", "font/nanumpen.ttf");
+          //  FontsOverride.setDefaultFont(context, "MONOSPACE", "font/nanumpen.ttf");
            /* 폰트바꾸는거같음
             if (cellView is  ViewGroup) {
 //            context?.updateTextColors(cellView)

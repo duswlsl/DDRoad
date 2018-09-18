@@ -133,22 +133,6 @@ public class DiaryFragment extends Fragment {
 
             @Override //달력 일 길게 클릭 시
             public void onLongClickDate(Date date, View view) {
-                //test용임
-                /* Toast.makeText(getApplicationContext(),
-                        "길게", Toast.LENGTH_SHORT)
-                        .show();
-                database = helper.getWritableDatabase();
-                if(database != null){
-                    Random randomGenerator = new Random();
-                    int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
-                    String title = "title"+randomInteger;
-                    String content = "content"+randomInteger;
-                    String imgstr = "@drawable/dog1";
-                    String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,datetime('now','localtime'))";
-                    Object[] params = { title, content,imgstr};
-                    database.execSQL(sql, params);
-                }
-                */
             }
 
             @Override //달력 그리기 완성 되고
@@ -200,12 +184,6 @@ public class DiaryFragment extends Fragment {
     private void selectDiaryListView(Date date) {//DB 조회 후 리스트뷰에 담기
 
         List<HashMap<String,Object>> diaryList = selectDiaryData(date); //DB 조회 후 해시 맵 리스트에 담는다
-
-        //데이터 확인 test용임
-        //  for(int i=0; i< diaryList.size();i++){
-        //      TextView textView = findViewById(R.id.textView3);
-        //      textView.setText((String)diaryList.get(i).get("regdt"));
-        //  }
 
         DiaryFragment.SingerAdapter adapter = new DiaryFragment.SingerAdapter();
 

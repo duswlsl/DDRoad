@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -37,32 +38,61 @@ public class DiaryRegActivity extends AppCompatActivity{
 
     private String diaryTableName = "diary"; //테이블 이름
     private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
-    SqlLiteOpenHelper helper;
-    SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
-    Spinner spinner;
-    String mImgStr="";
-
+    private SqlLiteOpenHelper helper;
+    private SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
+    private Spinner spinner;
+    private String mImgStr="";
+    private TextView weatherDate;
+    private Date mCurrentDate; //전역 현재날짜 선언
+    private Calendar now;
+    private String dateStr = "";
+    private String timeStr = "";
+    private String weatherDateStr = "";
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diaryreg);
         spinner =(Spinner)findViewById(R.id.weatherSpinner);
-        Date currentDate = Calendar.getInstance().getTime(); //지역 변수로 현재 날짜를 가져온다. 이 변수는 디비에 넣을때 필요해서?
-        String dateStr = getDateFormat("",currentDate);
 
+
+        now = Calendar.getInstance();
+        mCurrentDate = now.getTime();  //현재 날짜를 가져온다
+        weatherDateStr = getDateFormat("yyyy-MM-dd HH:mm",mCurrentDate);
+        weatherDate = (TextView)findViewById(R.id.weatherDate);
+        weatherDate.setText(weatherDateStr);
 
         Button btnDate  = (Button)findViewById(R.id.regBtnDate);
         btnDate.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Calendar now = Calendar.getInstance();
+
                 new android.app.DatePickerDialog(
                         DiaryRegActivity.this,
                         new android.app.DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                Log.d("Orignal", "Got clicked");
+                                if(timeStr == ""){
+                                    timeStr = getDateFormat("HH:mm",mCurrentDate);
+                                }
+
+                                dateStr = ""+year;
+                                if(month > 9){
+                                    dateStr += "-"+month;
+                                }else{
+                                    dateStr += "-0"+month;
+                                }
+
+                                if(dayOfMonth > 9){
+                                    dateStr += "-"+dayOfMonth;
+                                }else{
+                                    dateStr += "-0"+dayOfMonth;
+                                }
+
+                                weatherDate.setText(dateStr+" "+timeStr);
+                                weatherDateStr=dateStr+" "+timeStr;
+
+                                Log.d("Orignal", weatherDateStr);
                             }
                         },
                         now.get(Calendar.YEAR),
@@ -76,13 +106,29 @@ public class DiaryRegActivity extends AppCompatActivity{
         btnTime.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-        Calendar now = Calendar.getInstance();
+
         new android.app.TimePickerDialog(
                 DiaryRegActivity.this,
                 new android.app.TimePickerDialog.OnTimeSetListener(){
                     @Override
                     public void onTimeSet(TimePicker view, int hour, int minute) {
-                        Log.d("Original", "Got clicked");
+                        if(dateStr == ""){
+                            dateStr = getDateFormat("yyyy-MM-dd",mCurrentDate);
+                        }
+                        if(hour > 9){
+                            timeStr = ""+hour;
+                        }else{
+                            timeStr = "0"+hour;
+                        }
+
+                        if(minute > 9){
+                            timeStr += ":"+minute;
+                        }else{
+                            timeStr += ":0"+minute;
+                        }
+                        weatherDate.setText(dateStr+" "+timeStr);
+                        weatherDateStr=dateStr+" "+timeStr;
+                        Log.d("Original", weatherDateStr);
                     }
                 },
                 now.get(Calendar.HOUR_OF_DAY),
@@ -95,7 +141,7 @@ public class DiaryRegActivity extends AppCompatActivity{
 
         //액션바 사용
         ActionBar ab = getSupportActionBar() ;
-        ab.setTitle("등록하기("+dateStr+")") ;
+        ab.setTitle("등록하기");
 
         //메뉴바에 '<' 버튼이 생긴다.(두개는 항상 같이다닌다)
         ab.setDisplayHomeAsUpEnabled(true);
@@ -177,8 +223,8 @@ public class DiaryRegActivity extends AppCompatActivity{
                 Random randomGenerator = new Random();
                 int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
 
-                String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,datetime('now','localtime'))";
-                Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr};
+                String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";//datetime('now','localtime')
+                Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr,"datetime("+weatherDateStr+":00,'localtime')"};
                 database.execSQL(sql, params);
                 println("데이터 추가함.");
             }
