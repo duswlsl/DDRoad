@@ -1,11 +1,15 @@
 package com.seoul.ddroad.diary;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,16 +23,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.fxn.pix.Pix;
+import com.fxn.utility.PermUtil;
 import com.seoul.ddroad.R;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Random;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 import static java.sql.DriverManager.println;
 
 /**
@@ -48,6 +51,9 @@ public class DiaryRegActivity extends AppCompatActivity{
     private String dateStr = "";
     private String timeStr = "";
     private String weatherDateStr = "";
+    private RecyclerView recyclerView;
+    private MyAdapter myAdapter;
+    private FloatingActionButton fab;
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
@@ -61,6 +67,21 @@ public class DiaryRegActivity extends AppCompatActivity{
         weatherDateStr = getDateFormat("yyyy-MM-dd HH:mm",mCurrentDate);
         weatherDate = (TextView)findViewById(R.id.weatherDate);
         weatherDate.setText(weatherDateStr);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        myAdapter = new MyAdapter(this);
+        recyclerView.setAdapter(myAdapter);
+
+        fab = findViewById(R.id.diaryImgFab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Pix.start(DiaryRegActivity.this, 100, 5);
+            }
+        });
+
+
 
         Button btnDate  = (Button)findViewById(R.id.regBtnDate);
         btnDate.setOnClickListener(new Button.OnClickListener() {
@@ -246,6 +267,43 @@ public class DiaryRegActivity extends AppCompatActivity{
 
     }
 
+    //카메라
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //Log.e("val", "requestCode ->  " + requestCode+"  resultCode "+resultCode);
+        switch (requestCode) {
+            case (100): {
+                if (resultCode == Activity.RESULT_OK) {
+                    ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+                    myAdapter.addImage(returnValue);
+                    /*for (String s : returnValue) {
+                        Log.e("val", " ->  " + s);
+                    }*/
+                }
+            }
+            break;
+        }
+    }
+
+    //카메라
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Pix.start(DiaryRegActivity.this, 100, 5);
+                } else {
+                    Toast.makeText(DiaryRegActivity.this, "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
     private String getDateFormat(String format,Date date){//입력 Date를 날짜를  포팻 형태로 String 출력
 
         if(format == null || format ==""){
