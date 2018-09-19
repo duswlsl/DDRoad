@@ -32,7 +32,7 @@ public class CalendarAdapter extends CaldroidGridAdapter {
 
     private String diaryTableName = "diary"; //테이블 이름
     private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
-    SqlLiteOpenHelper helper;
+    SqlLiteHelper helper;
     SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
 
     public CalendarAdapter(Context context, int month, int year,
@@ -41,10 +41,10 @@ public class CalendarAdapter extends CaldroidGridAdapter {
         super(context, month, year, caldroidData, extraData);
 
         //DB 선언
-        helper = new SqlLiteOpenHelper(context, // 현재 화면의 context
+        helper = new SqlLiteHelper(context, // 현재 화면의 context
                 diaryDatabaseName, // 파일명
                 null, // 커서 팩토리
-                1); // 버전 번호
+                2); // 버전 번호
         database = helper.getWritableDatabase();
     }
 

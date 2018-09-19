@@ -3,8 +3,10 @@ package com.seoul.ddroad.diary;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,12 @@ import com.fxn.pix.Pix;
 import com.fxn.utility.PermUtil;
 import com.seoul.ddroad.R;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,10 +47,6 @@ import static java.sql.DriverManager.println;
  */
 public class DiaryRegActivity extends AppCompatActivity{
 
-    private String diaryTableName = "diary"; //테이블 이름
-    private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
-    private SqlLiteOpenHelper helper;
-    private SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
     private Spinner spinner;
     private String mImgStr="";
     private TextView weatherDate;
@@ -54,13 +58,16 @@ public class DiaryRegActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private MyAdapter myAdapter;
     private FloatingActionButton fab;
+    private String imgDirStr = "";
+    private SqlLiteDao sqlLiteImgDao;
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diaryreg);
-        spinner =(Spinner)findViewById(R.id.weatherSpinner);
 
+        sqlLiteImgDao = new SqlLiteDao(DiaryRegActivity.this);
+        spinner =(Spinner)findViewById(R.id.weatherSpinner);
 
         now = Calendar.getInstance();
         mCurrentDate = now.getTime();  //현재 날짜를 가져온다
@@ -77,7 +84,7 @@ public class DiaryRegActivity extends AppCompatActivity{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Pix.start(DiaryRegActivity.this, 100, 5);
+                Pix.start(DiaryRegActivity.this, 100, 1);//선택 개수 정할수있음 일단 1개
             }
         });
 
@@ -170,11 +177,6 @@ public class DiaryRegActivity extends AppCompatActivity{
         ab.setHomeButtonEnabled(true);
         // 출처: http://ande226.tistory.com/141 [안디스토리]
 
-        helper = new SqlLiteOpenHelper(this, // 현재 화면의 context
-                diaryDatabaseName, // 파일명
-                null, // 커서 팩토리
-                1); // 버전 번호
-
 
         //날씨 이미지 스피너
         String[] arr = getResources().getStringArray(R.array.weather_item_array);
@@ -240,16 +242,21 @@ public class DiaryRegActivity extends AppCompatActivity{
             final EditText diaryTitle=(EditText)findViewById(R.id.diaryTitle);
             final EditText diaryContent=(EditText)findViewById(R.id.diaryContent);
 
-            database = helper.getWritableDatabase();
-            if(database != null){
-               // Random randomGenerator = new Random();
-               // int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
-                //datetime('now','localtime')
-                String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";
+
                 Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr,weatherDateStr};
-                database.execSQL(sql, params);
-                println("데이터 추가함.");
+                sqlLiteImgDao.insertDiary(params);
+
+
+            //이미지 들어갈 다이어리 번호 가져와서 파일 만들구 디비에 넣기
+            int diaryId  = sqlLiteImgDao.getLastDiaryId();
+            String imgDir = imgFIleWrite();
+            if(imgDir != null && imgDir != ""){
+                Toast.makeText(getApplicationContext(),
+                        imgDir, Toast.LENGTH_SHORT)
+                        .show();
+                sqlLiteImgDao.insertDiaryImg(diaryId,imgDir);
             }
+
 
             Toast.makeText(getApplicationContext(),
                     "등록 되었습니다.", Toast.LENGTH_SHORT)
@@ -267,6 +274,48 @@ public class DiaryRegActivity extends AppCompatActivity{
 
     }
 
+
+
+    public String imgFIleWrite(){
+        String returnDirStr = "";
+        FileOutputStream outStream = null;
+
+        if(imgDirStr != null && imgDirStr != "") {
+            try {
+                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES), "ddroad");
+                Toast.makeText(getApplicationContext(),
+                        mediaStorageDir.getPath(), Toast.LENGTH_LONG).show();
+                if (!mediaStorageDir.exists()) { //폴더 있는지 확인하고 없으면 만든다
+                    if (!mediaStorageDir.mkdirs()) {
+                        Log.d("ddroad", "failed to create directory");
+
+                    }
+                }
+
+                returnDirStr = String.format(mediaStorageDir.getPath() + "/ddroad%d.png",
+                        System.currentTimeMillis());
+
+                File mediaFile;
+                Log.d("ddroad", returnDirStr);
+                mediaFile = new File(returnDirStr);
+                outStream = new FileOutputStream(mediaFile);
+
+                //카메라에서 가져온 경로로 파일 만듬
+                File tmpFile = new File(imgDirStr);
+                byte[] data = convertFileToByteArray(tmpFile);
+
+                outStream.write(data);
+                outStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                returnDirStr = "";
+            } finally {
+            }
+        }
+
+         return returnDirStr;
+    }
     //카메라
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -277,9 +326,12 @@ public class DiaryRegActivity extends AppCompatActivity{
                 if (resultCode == Activity.RESULT_OK) {
                     ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
                     myAdapter.addImage(returnValue);
-                    /*for (String s : returnValue) {
+
+                    for (String s : returnValue) {
+                        imgDirStr = s;
                         Log.e("val", " ->  " + s);
-                    }*/
+
+                    }
                 }
             }
             break;
@@ -293,9 +345,9 @@ public class DiaryRegActivity extends AppCompatActivity{
             case PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Pix.start(DiaryRegActivity.this, 100, 5);
+                    Pix.start(DiaryRegActivity.this, 100, 1);
                 } else {
-                    Toast.makeText(DiaryRegActivity.this, "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
+                    Toast.makeText(DiaryRegActivity.this, "권한 설정을 해야 카메라 기능을 사용할 수있습니다.", Toast.LENGTH_LONG).show();
                 }
                 return;
             }
@@ -304,6 +356,32 @@ public class DiaryRegActivity extends AppCompatActivity{
             // permissions this app might request.
         }
     }
+
+    public byte[] convertFileToByteArray(File f)
+    {
+        byte[] byteArray = null;
+        try
+        {
+            InputStream inputStream = new FileInputStream(f);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            byte[] b = new byte[1024*8];
+            int bytesRead =0;
+
+            while ((bytesRead = inputStream.read(b)) != -1)
+            {
+                bos.write(b, 0, bytesRead);
+            }
+
+            byteArray = bos.toByteArray();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return byteArray;
+    }
+
+
     private String getDateFormat(String format,Date date){//입력 Date를 날짜를  포팻 형태로 String 출력
 
         if(format == null || format ==""){
