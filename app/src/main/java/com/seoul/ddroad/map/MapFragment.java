@@ -26,6 +26,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,7 +53,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MapFragment extends android.app.Fragment implements LocationListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+public class MapFragment extends Fragment implements LocationListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
     private GoogleMap googleMap;
     private LatLng SEOUL = new LatLng(37.56, 126.97);
     private MapView mapView;
@@ -128,7 +129,7 @@ public class MapFragment extends android.app.Fragment implements LocationListene
             args.putParcelableArrayList("pointList", latLngList);
             dialog.setArguments(args);
             dialog.setTargetFragment(this, 2);
-            dialog.show(getActivity().getFragmentManager(), "tag");
+            dialog.show(getActivity().getSupportFragmentManager(), "tag");
             if (polyline != null)
                 polyline.remove();
 

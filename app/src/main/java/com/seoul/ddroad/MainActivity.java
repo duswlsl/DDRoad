@@ -1,6 +1,7 @@
 package com.seoul.ddroad;
 
-import android.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void callFragment(int fragment_no) {
-        android.app.FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch (fragment_no) {
             case 1:
                 Fragment fragment1 = new DustFragment();
