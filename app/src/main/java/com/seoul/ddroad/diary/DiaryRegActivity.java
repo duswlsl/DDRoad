@@ -32,7 +32,6 @@ import com.seoul.ddroad.R;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,10 +47,6 @@ import static java.sql.DriverManager.println;
  */
 public class DiaryRegActivity extends AppCompatActivity{
 
-    private String diaryTableName = "diary"; //테이블 이름
-    private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
-    private SqlLiteOpenHelper helper;
-    private SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
     private Spinner spinner;
     private String mImgStr="";
     private TextView weatherDate;
@@ -64,19 +59,14 @@ public class DiaryRegActivity extends AppCompatActivity{
     private MyAdapter myAdapter;
     private FloatingActionButton fab;
     private String imgDirStr = "";
-    private SqlLiteImgDao sqlLiteImgDao;
+    private SqlLiteDao sqlLiteImgDao;
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diaryreg);
 
-        helper = new SqlLiteOpenHelper(this, // 현재 화면의 context
-                diaryDatabaseName, // 파일명
-                null, // 커서 팩토리
-                1); // 버전 번호
-
-        sqlLiteImgDao = new SqlLiteImgDao(DiaryRegActivity.this);
+        sqlLiteImgDao = new SqlLiteDao(DiaryRegActivity.this);
         spinner =(Spinner)findViewById(R.id.weatherSpinner);
 
         now = Calendar.getInstance();
@@ -252,19 +242,13 @@ public class DiaryRegActivity extends AppCompatActivity{
             final EditText diaryTitle=(EditText)findViewById(R.id.diaryTitle);
             final EditText diaryContent=(EditText)findViewById(R.id.diaryContent);
 
-            database = helper.getWritableDatabase();
-            if(database != null){
-               // Random randomGenerator = new Random();
-               // int randomInteger = randomGenerator.nextInt(100); //0 ~ 99 사이의 int를 랜덤으로 생성
-                //datetime('now','localtime')
-                String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";
+
                 Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr,weatherDateStr};
-                database.execSQL(sql, params);
-                println("데이터 추가함.");
-            }
+                sqlLiteImgDao.insertDiary(params);
+
 
             //이미지 들어갈 다이어리 번호 가져와서 파일 만들구 디비에 넣기
-            int diaryId  = getLastDiaryId();
+            int diaryId  = sqlLiteImgDao.getLastDiaryId();
             String imgDir = imgFIleWrite();
             if(imgDir != null && imgDir != ""){
                 Toast.makeText(getApplicationContext(),
@@ -290,17 +274,7 @@ public class DiaryRegActivity extends AppCompatActivity{
 
     }
 
-    public int getLastDiaryId() {
-        int ID = 0;
-        database = helper.getWritableDatabase();
-        if(database != null){
-        final String MY_QUERY = "SELECT MAX(diaryId) FROM " + diaryTableName;
-        Cursor cur = database.rawQuery(MY_QUERY, null);
-        cur.moveToFirst();
-        ID = cur.getInt(0);
-        cur.close();}
-        return ID;
-    }
+
 
     public String imgFIleWrite(){
         String returnDirStr = "";
