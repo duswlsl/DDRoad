@@ -64,16 +64,16 @@ public class DustFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = getLayoutInflater().inflate(R.layout.custom_simple_dropdown_item_1line,null);
+
     }
 
     //inflater 사용한다
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-
-
+        
+        View view = getLayoutInflater().inflate(R.layout.custom_simple_dropdown_item_1line,null);
+        return view;
     }
 
     @Override
@@ -457,7 +457,7 @@ public class DustFragment extends Fragment {
                     temperature = tempJsonParser(result);
                     if (temperature != null) {
 
-                        runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
 
                             public void run() {
 
@@ -482,7 +482,7 @@ public class DustFragment extends Fragment {
 
                     }
 
-                    runOnUiThread(new Runnable() {
+                 getActivity().runOnUiThread(new Runnable() {
 
                         public void run() {
 
