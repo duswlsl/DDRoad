@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -24,6 +25,9 @@ public class DetailActivity extends AppCompatActivity {
     private TextView diaryDetailTitle; //title
     private ImageView diaryDetailImage;
     private TextView diaryDetailContent;
+    private Button diaryDetailEdit;
+    private Button diaryDetailDelete;
+
 
     private String diaryTableName = "diary"; //테이블 이름
     private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
@@ -55,6 +59,27 @@ public class DetailActivity extends AppCompatActivity {
         diaryDetailTitle = (TextView) findViewById(R.id.diaryDetailTitle);
         diaryDetailImage = (ImageView) findViewById(R.id.diaryDetailImage);
         diaryDetailContent = (TextView) findViewById(R.id.diaryDetailContent);
+
+        diaryDetailEdit = (Button) findViewById(R.id.diaryDetailEdit);
+        diaryDetailDelete = (Button) findViewById(R.id.diaryDetailDelete);
+
+        diaryDetailEdit.setOnClickListener(
+                new Button.OnClickListener(){
+                    @Override
+                    public  void  onClick(View view){
+                        Toast.makeText(getApplicationContext(),"수정.",Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+
+        diaryDetailDelete.setOnClickListener(
+                new Button.OnClickListener(){
+                    @Override
+                    public  void  onClick(View view){
+                        Toast.makeText(getApplicationContext(),"삭제.",Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
 
 
         //comeOn.setText("권바보야 MAP이 뭐냐~~!!" + diaryMap.toString()); //데이터 확인합니다.
