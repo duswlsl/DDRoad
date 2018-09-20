@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_y"
     android:orientation="vertical"
-    tools:context=".intro.dustActivity_cool">
+    tools:context=".intro.dustActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
