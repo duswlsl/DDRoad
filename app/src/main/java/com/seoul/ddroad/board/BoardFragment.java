@@ -1,33 +1,47 @@
 package com.seoul.ddroad.board;
 
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.location.Location;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.HttpAuthHandler;
-import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.MapView;
 import com.seoul.ddroad.R;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
 
 public class BoardFragment extends Fragment {
     private WebView mWebView;
+    private static final String TYPE_IMAGE = "image/*";
+    private static final int INPUT_FILE_REQUEST_CODE = 1;
+
+    private ValueCallback<Uri> mUploadMessage;
+    private ValueCallback<Uri[]> mFilePathCallback;
+    private String mCameraPhotoPath;
+
+
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -48,7 +62,14 @@ public class BoardFragment extends Fragment {
         settings.setJavaScriptEnabled(true);                         //자바스크립트 허용
         settings.setSupportZoom(true);                           //줌 관련
         settings.setBuiltInZoomControls(true);                    //줌 관련;
-        settings.setDisplayZoomControls(false);                   //줌 관련
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+            // Hide the zoom controls for HONEYCOMB+
+            settings.setDisplayZoomControls(false);
+        }
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH){
+            settings.setTextZoom(100);}
+
         settings.setJavaScriptCanOpenWindowsAutomatically(true);     //window.open() 동작하려면 필요
         //settings.setSupportMultipleWindows(true);
 
@@ -70,27 +91,221 @@ public class BoardFragment extends Fragment {
 
         //settings.setGeolocationEnabled(true); // GeoLocation를 사용하도록 설정
 
+
+
+        mWebView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onCloseWindow(WebView w) {
+                super.onCloseWindow(w);
+                getActivity().finish();
+            }
+
+            @Override
+            public boolean onCreateWindow(WebView view, boolean dialog, boolean userGesture, Message resultMsg) {
+                final WebSettings settings = view.getSettings();
+                settings.setDomStorageEnabled(true);
+                settings.setJavaScriptEnabled(true);
+                settings.setAllowFileAccess(true);
+                settings.setAllowContentAccess(true);
+                view.setWebChromeClient(this);
+                WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+                transport.setWebView(view);
+                resultMsg.sendToTarget();
+                return false;
+            }
+
+            // For Android Version < 3.0
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+                //System.out.println("WebViewActivity OS Version : " + Build.VERSION.SDK_INT + "\t openFC(VCU), n=1");
+                mUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType(TYPE_IMAGE);
+                startActivityForResult(intent, INPUT_FILE_REQUEST_CODE);
+            }
+
+            // For 3.0 <= Android Version < 4.1
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
+                //System.out.println("WebViewActivity 3<A<4.1, OS Version : " + Build.VERSION.SDK_INT + "\t openFC(VCU,aT), n=2");
+                openFileChooser(uploadMsg, acceptType, "");
+            }
+
+            // For 4.1 <= Android Version < 5.0
+            public void openFileChooser(ValueCallback<Uri> uploadFile, String acceptType, String capture) {
+                Log.d(getClass().getName(), "openFileChooser : "+acceptType+"/"+capture);
+                mUploadMessage = uploadFile;
+                imageChooser();
+            }
+
+            // For Android Version 5.0+
+            // Ref: https://github.com/GoogleChrome/chromium-webview-samples/blob/master/input-file-example/app/src/main/java/inputfilesample/android/chrome/google/com/inputfilesample/MainFragment.java
+            public boolean onShowFileChooser(WebView webView,
+                                             ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                System.out.println("WebViewActivity A>5, OS Version : " + Build.VERSION.SDK_INT + "\t onSFC(WV,VCUB,FCP), n=3");
+                if (mFilePathCallback != null) {
+                    mFilePathCallback.onReceiveValue(null);
+                }
+                mFilePathCallback = filePathCallback;
+                imageChooser();
+                return true;
+            }
+
+            private void imageChooser() {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                        takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                        Log.e(getClass().getName(), "Unable to create Image File", ex);
+                    }
+
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        mCameraPhotoPath = "file:"+photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                Uri.fromFile(photoFile));
+                    } else {
+                        takePictureIntent = null;
+                    }
+                }
+
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType(TYPE_IMAGE);
+
+                Intent[] intentArray;
+                if(takePictureIntent != null) {
+                    intentArray = new Intent[]{takePictureIntent};
+                } else {
+                    intentArray = new Intent[0];
+                }
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+
+                startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
+            }
+
+            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+
+                //Toast t=Toast.makeText(BoardActivity.this, message, Toast.LENGTH_SHORT);
+                //t.show();
+                //result.confirm();
+
+                new AlertDialog.Builder(view.getContext())
+                        .setTitle("댕댕로드")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok,
+                                new AlertDialog.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                       result.confirm();
+                                    }
+                                })
+                        .setCancelable(false)
+                        .create()
+                        .show();
+
+                return true;
+            }
+        });
+        mWebView.setWebViewClient(new WebViewClient());
+
+
+
+
         mWebView.loadUrl("http://guitarhyo.freehongs.net"); // 접속 URL
 
-        mWebView.addJavascriptInterface(new BoardFragment.JavascriptTest(), "android");
-        mWebView.setWebViewClient(new BoardFragment.MyWebClient());
-        mWebView.setWebChromeClient(new BoardFragment.MyWebChrome());
-
     }
 
-    class JavascriptTest {
-        @JavascriptInterface
-        public String getChartData(){
-            StringBuffer buffer=new StringBuffer();
-            buffer.append("[");
-            for(int i=0; i<14; i++){
-                buffer.append("["+i+","+Math.sin(i)+"]");
-                if(i<13) buffer.append(",");
+
+    /**
+     * More info this method can be found at
+     * http://developer.android.com/training/camera/photobasics.html
+     *
+     * @return
+     * @throws IOException
+     */
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File imageFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        return imageFile;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == INPUT_FILE_REQUEST_CODE && resultCode == getActivity().RESULT_OK) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                if (mFilePathCallback == null) {
+                    super.onActivityResult(requestCode, resultCode, data);
+                    return;
+                }
+                Uri[] results = new Uri[]{getResultUri(data)};
+
+                mFilePathCallback.onReceiveValue(results);
+                mFilePathCallback = null;
+            } else {
+                if (mUploadMessage == null) {
+                    super.onActivityResult(requestCode, resultCode, data);
+                    return;
+                }
+                Uri result = getResultUri(data);
+
+                Log.d(getClass().getName(), "openFileChooser : "+result);
+                mUploadMessage.onReceiveValue(result);
+                mUploadMessage = null;
             }
-            buffer.append("]");
-            return buffer.toString();
+        } else {
+            if (mFilePathCallback != null) mFilePathCallback.onReceiveValue(null);
+            if (mUploadMessage != null) mUploadMessage.onReceiveValue(null);
+            mFilePathCallback = null;
+            mUploadMessage = null;
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    private Uri getResultUri(Intent data) {
+        Uri result = null;
+        if(data == null || TextUtils.isEmpty(data.getDataString())) {
+            // If there is not data, then we may have taken a photo
+            if(mCameraPhotoPath != null) {
+                result = Uri.parse(mCameraPhotoPath);
+            }
+        } else {
+            String filePath = "";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                filePath = data.getDataString();
+            } else {
+                filePath = "file:" + RealPathUtil.getRealPath(getActivity().getApplicationContext(), data.getData());
+            }
+            result = Uri.parse(filePath);
+        }
+
+        return result;
+    }
+
+
+
+
+
+
+
+
+
+    /*
 
     class MyWebClient extends WebViewClient {
         // 로딩이 시작될 때
@@ -202,4 +417,5 @@ public class BoardFragment extends Fragment {
             return true;
         }
     }
+    */
 }
