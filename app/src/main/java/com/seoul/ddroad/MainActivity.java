@@ -1,11 +1,16 @@
 package com.seoul.ddroad;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatCallback;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.seoul.ddroad.board.BoardActivity;
@@ -27,37 +32,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         callFragment(1);
+
         ButterKnife.bind(this);
-
-
-        Button button1 = (Button) findViewById(R.id.btn_intro) ;
-        button1.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),IntroActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        Button button2 = (Button) findViewById(R.id.btn_board2) ;
-        button2.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),BoardActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-        Button button3 = (Button) findViewById(R.id.btn_diary2) ;
-        button3.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),DiaryActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board})
