@@ -98,10 +98,18 @@
             android:layout_marginTop="@dimen/card_layout_margin"
             android:layout_marginBottom="@dimen/card_layout_margin"
             style="@style/AppCard">
+
+
+
+
             <ScrollView
-                android:fillViewport="true"
+                android:id="@+id/diaryDetailScroll"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+               >
+
+
 
                 <TextView
                     android:id="@+id/diaryDetailContent"
@@ -110,8 +118,16 @@
                     android:layout_gravity="center_vertical"
                     android:background="#00000000"
                     android:gravity="top"
-                    android:padding="2dp" />
+                    android:padding="2dp"
+                    />
             </ScrollView>
+
+            <TableLayout
+                android:id="@+id/diaryDetailImg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></TableLayout>
+
 
 
         </android.support.v7.widget.CardView>

@@ -35,6 +35,16 @@ public class SqlLiteDao {
         }
     }
 
+    public void deleteDiary(int diaryId){
+        database = helper.getWritableDatabase();
+        if(database != null){
+            String sql = "delete from diary where diaryId = ?";
+            Object[] params = { diaryId};
+            database.execSQL(sql, params);
+
+        }
+    }
+
     public int getLastDiaryId() {
         int ID = 0;
         database = helper.getWritableDatabase();
@@ -133,7 +143,7 @@ public class SqlLiteDao {
     }
 
     public HashMap<String,Object> selectDiaryImg(int diaryId){
-        HashMap<String,Object> map = null;
+        HashMap<String,Object> map = new HashMap<String,Object>();
         database = helper.getWritableDatabase();
         if(database != null){
             String sql = "select diaryId, imgDir from diaryimg where diaryId = "+diaryId+";";
@@ -141,10 +151,10 @@ public class SqlLiteDao {
 
             if(result.moveToFirst()){ //커서가 처음지점이 값이있으면,
                 int id = result.getInt(0);
-                String title = result.getString(1); // 두번째 속성
+                String imgDir = result.getString(1); // 두번째 속성
 
-                map.put("diaryId",diaryId);
-                map.put("imgDir",title);
+                map.put("diaryId",id);
+                map.put("imgDir",imgDir);
             }
             result.close();
         }
