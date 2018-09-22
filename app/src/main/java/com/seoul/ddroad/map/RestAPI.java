@@ -10,6 +10,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class RestAPI {
+    private static String TAG = RestAPI.class.getSimpleName();
+
     // 네이버 API 키값
     String clientId = "5diZho3PLVF6IvUkDN0a";
     String clientSecret = "Wie3JCCLC5";
@@ -20,6 +22,7 @@ public class RestAPI {
     private ArrayList<Data> cafeList, hospitalList, hotelList, salonList, trailList;
     private Data data;
     private String arr[];
+    private String str;
 
     public RestAPI() {
     }
@@ -31,7 +34,6 @@ public class RestAPI {
         hospitalList = new ArrayList<Data>();
         salonList = new ArrayList<Data>();
         trailList = new ArrayList<Data>();
-        int num = 0;
         Log.d("RestAPI", "start" + type);
 
         try {
@@ -71,23 +73,30 @@ public class RestAPI {
                     br = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 } else {  // 에러 발생
                     br = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                    Log.d("err", br.readLine());
+                    Log.d(TAG, br.readLine());
                 }
 
                 // 원하는 정보를 모두 받아온다. 하지만 가장 최신의 하나것만 사용하기 때문에 break;를 사용
-
                 while ((inputLine = br.readLine()) != null) {
                     if (inputLine.contains("title")) {
                         data = new Data();
-
                         arr = inputLine.split("\"", 5);
-                        data.setTitle(arr[3]);
+                        str = arr[3].replace("<b>", "").replace("</b>", "").replace("&amp;", "&");
+                        data.setTitle(str);
+                    } else if (inputLine.contains("link")) {
+                        arr = inputLine.split("\"", 5);
+                        data.setLink(arr[3]);
+                    } else if (inputLine.contains("description")) {
+                        arr = inputLine.split("\"");
+                        str = arr[3].replace("<b>", "").replace("</b>", "");
+                        data.setDetail(str);
+                    } else if (inputLine.contains("telephone")) {
+                        arr = inputLine.split("\"");
+                        data.setTel(arr[3]);
                     } else if (inputLine.contains("mapx")) {
                         arr = inputLine.split("\"", 5);
-
                         String[] arr2 = br.readLine().split("\"", 5);
                         convertToLatlng(Double.parseDouble(arr[3]), Double.parseDouble(arr2[3]));
-
                     } else if (inputLine.contains("address")) {
                         arr = inputLine.split("\"", 5);
                         data.setAddress(arr[3]);
@@ -112,7 +121,7 @@ public class RestAPI {
                     }
                 }
                 br.close();
-                if(i==9)
+                if (i == 9)
                     saveDataSet(type);
             }
         } catch (Exception e) {
@@ -147,7 +156,7 @@ public class RestAPI {
                 DataSet.trailList = trailList;
                 break;
         }
-        Log.d("RestAPI", "fin"+type);
+        Log.d(TAG, "fin" + type);
     }
 
 }
