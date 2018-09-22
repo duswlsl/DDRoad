@@ -8,7 +8,7 @@ import android.os.Handler;
 import com.seoul.ddroad.MainActivity;
 import com.seoul.ddroad.R;
 
-import static com.seoul.ddroad.R.layout.activity_dust;
+import static com.seoul.ddroad.R.layout.activity_main;
 
 public class IntroActivity  extends Activity
 {

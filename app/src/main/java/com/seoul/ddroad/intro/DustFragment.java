@@ -64,23 +64,21 @@ public class DustFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = getLayoutInflater().inflate(R.layout.custom_simple_dropdown_item_1line,null);
+
     }
 
     //inflater 사용한다
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
 
-
+        View view = getLayoutInflater().inflate(R.layout.activity_dust_cool, null);
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-
 
 
         inputDate = "";
@@ -457,7 +455,7 @@ public class DustFragment extends Fragment {
                     temperature = tempJsonParser(result);
                     if (temperature != null) {
 
-                        runOnUiThread(new Runnable() {
+                        getActivity().runOnUiThread(new Runnable() {
 
                             public void run() {
 
@@ -482,7 +480,7 @@ public class DustFragment extends Fragment {
 
                     }
 
-                    runOnUiThread(new Runnable() {
+                    getActivity().runOnUiThread(new Runnable() {
 
                         public void run() {
 
@@ -587,24 +585,6 @@ public class DustFragment extends Fragment {
 
         }
         return result;
-    }
-    //ui 정보 바꿔줄 쓰레드
-    class ExecuteTask extends AsyncTask<String, String, String>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
     }
 
 }
