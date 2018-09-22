@@ -6,9 +6,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.text.Layout;
 import android.view.View;
 import android.widget.Button;
@@ -34,8 +38,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView diaryDetailContent;
     private Button diaryDetailEdit;
     private Button diaryDetailDelete;
-    int diaryId;
-    private TableLayout diaryDetailImg;
+    private int diaryId;
     private  String diaryDetailImgDir;
 
     HashMap<String,Object> diaryMap = new HashMap<String,Object>();
@@ -64,7 +67,7 @@ public class DetailActivity extends AppCompatActivity {
 
         diaryDetailEdit = (Button) findViewById(R.id.diaryDetailEdit);
         diaryDetailDelete = (Button) findViewById(R.id.diaryDetailDelete);
-        diaryDetailImg = (TableLayout) findViewById(R.id.diaryDetailImg);
+
 
         diaryDetailEdit.setOnClickListener(
                 new Button.OnClickListener(){
@@ -111,31 +114,61 @@ public class DetailActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), diaryDetailImgDir, Toast.LENGTH_LONG).show();
         }
         //이미지뷰뿌리기
-        if(diaryDetailImgDir != "") {
+        if(diaryDetailImgDir != null && diaryDetailImgDir != "") {
             ImageView iv = new ImageView(this);
             iv.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
             //  iv.setBackgroundResource(R.drawable.bichon1);
             File f = new File(diaryDetailImgDir);
-            Bitmap d = new BitmapDrawable(getApplicationContext().getResources(), f.getAbsolutePath()).getBitmap();
+            Bitmap d = new BitmapDrawable(getResources(), f.getAbsolutePath()).getBitmap();
+
+            d = resizeBitmapImage(d,1024);
+            Drawable drawable = new BitmapDrawable(getResources(), d);
+
+            GravityCompoundDrawable gravityDrawable = new GravityCompoundDrawable(drawable);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            gravityDrawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+            //diaryDetailContent.setCompoundDrawablePadding(10);
+            diaryDetailContent.setCompoundDrawablesWithIntrinsicBounds(null,drawable,null,null);
             //Bitmap scaled = com.fxn.utility.Utility.getScaledBitmap(512, com.fxn.utility.Utility.getExifCorrectedBitmap(f));
-            Bitmap scaled = com.fxn.utility.Utility.getScaledBitmap(512, d);
-            iv.setImageBitmap(scaled);
-            diaryDetailImg.addView(iv);
+            //Bitmap scaled = com.fxn.utility.Utility.getScaledBitmap(512, d);
+            //iv.setImageBitmap(d);
+            //diaryDetailImg.addView(iv);
         }
-
-
-
-
-
-
-        //데이터 확인이되면 화면을 만들고 각각 view 레이아웃에 뿌려줍니다.
-        //diaryId, title, content, imgstr, regdt 의 데이터를 뿌려야겠죠?????????????
 
 
         }
 
+        //비트맵 이미지 리사이즈
+    public Bitmap resizeBitmapImage(Bitmap source, int maxResolution)
+    {
+        int width = source.getWidth();
+        int height = source.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate = 0.0f;
 
+        if(width > height)
+        {
+            if(maxResolution < width)
+            {
+                rate = maxResolution / (float) width;
+                newHeight = (int) (height * rate);
+                newWidth = maxResolution;
+            }
+        }
+        else
+        {
+            if(maxResolution < height)
+            {
+                rate = maxResolution / (float) height;
+                newWidth = (int) (width * rate);
+                newHeight = maxResolution;
+            }
+        }
 
+        return Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
+    }
 
 }
 

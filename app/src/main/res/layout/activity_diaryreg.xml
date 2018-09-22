@@ -112,7 +112,7 @@
                     android:background="#00000000"
                     android:gravity="top"
                     android:hint="내용을 입력하세요."
-                    android:inputType="text|textCapSentences|textAutoCorrect|textAutoComplete"
+                    android:inputType="text|textCapSentences|textAutoCorrect|textAutoComplete|textMultiLine|textLongMessage"
                     android:padding="2dp" />
 
 
