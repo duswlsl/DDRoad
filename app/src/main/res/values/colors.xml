@@ -30,4 +30,8 @@
 
     <color name="diaryCountText">#FF33B5E5</color>
     <color name="calendarBackground">@android:color/white</color>
+
+    <!-- 카메라 스타일 -->
+    <color name="colorPrimaryPix">#9e6244</color>
+    <color name="colorPrimaryLightPix">#cc8a70</color>
 </resources>
