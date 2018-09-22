@@ -2,10 +2,12 @@ package com.seoul.ddroad.map;
 
 import java.io.Serializable;
 
-public class Data implements Serializable{
+public class Data implements Serializable {
     public String title;
     public String address;
-    public String roadAddress;
+    public String link;
+    public String tel;
+    public String detail;
     public double latitude;
     public double longitude;
 
@@ -29,14 +31,6 @@ public class Data implements Serializable{
         this.address = address;
     }
 
-    public String getRoadAddress() {
-        return roadAddress;
-    }
-
-    public void setRoadAddress(String roadAddress) {
-        this.roadAddress = roadAddress;
-    }
-
     public double getLatitude() {
         return latitude;
     }
@@ -51,5 +45,29 @@ public class Data implements Serializable{
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 }

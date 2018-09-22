@@ -7,6 +7,7 @@ import android.os.Handler;
 
 import com.seoul.ddroad.MainActivity;
 import com.seoul.ddroad.R;
+import com.seoul.ddroad.map.RestAPI;
 
 import static com.seoul.ddroad.R.layout.activity_dust;
 
@@ -25,6 +26,7 @@ public class IntroActivity  extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
+        runThread();
     }
 
     @Override
@@ -37,6 +39,20 @@ public class IntroActivity  extends Activity
     protected void onPause() {
         super.onPause();
         handler.removeCallbacks(runnable);
+    }
+
+    private void runThread() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RestAPI restAPI = new RestAPI();
+                restAPI.getinfo("trail");
+                restAPI.getinfo("hospital");
+                restAPI.getinfo("hotel");
+                restAPI.getinfo("cafe");
+                restAPI.getinfo("salon");
+            }
+        }).start();
     }
 }
 
