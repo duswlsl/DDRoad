@@ -54,6 +54,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MapFragment extends Fragment implements LocationListener, OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+    private static String TAG = MapFragment.class.getSimpleName();
     private GoogleMap googleMap;
     private LatLng SEOUL = new LatLng(37.56, 126.97);
     private MapView mapView;
@@ -311,7 +312,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     public void screenshot(Bitmap captureBitmap) {
         FileOutputStream fos;
         File file = new File(this.getContext().getFilesDir(), "CaptureDir"); // 폴더 경로
-        Log.d("file", this.getContext().getFilesDir().toString());
+        Log.d(TAG, this.getContext().getFilesDir().toString());
         if (!file.exists()) {  // 해당 폴더 없으면 만들어라
             file.mkdirs();
         }
@@ -356,6 +357,70 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         }
     }
 
+//    private void showMarker(String cafe, String hotel, String hospital, String salon, String trail) { //버튼 클릭했을 때
+//        googleMap.clear();
+//        marker = null;
+//        setCurMarker();
+//        if (latLngList != null)
+//            drawPolyline(latLngList);
+//
+//        if (cafe.equals("O")) {
+//            if (DataSet.cafeList == null) {
+//                RestAPI restAPI = new RestAPI();
+//                restAPI.getinfo("cafe");
+//            } else {
+//                Log.d("RestAPI", "cafe" + String.valueOf(DataSet.cafeList.size()));
+//                for (Data data : DataSet.cafeList)
+//                    addMarker(data, "marker_cafe");
+//            }
+//        }
+//        if (hotel.equals("O")) {
+//            if (DataSet.hotelList == null) {
+//                RestAPI restAPI = new RestAPI();
+//                restAPI.getinfo("hotel");
+//            }
+//            while (DataSet.hotelList == null)
+//                ;
+//            Log.d("RestAPI", "hotel" + String.valueOf(DataSet.hotelList.size()));
+//            for (Data data : DataSet.hotelList)
+//
+//                addMarker(data, "marker_hotel");
+//        }
+//        if (hospital.equals("O")) {
+//            if (DataSet.hospitalList == null) {
+//                RestAPI restAPI = new RestAPI();
+//                restAPI.getinfo("hospital");
+//            }
+//            while (DataSet.hospitalList == null)
+//                ;
+//            Log.d("RestAPI", "hospital" + String.valueOf(DataSet.hospitalList.size()));
+//            for (Data data : DataSet.hospitalList)
+//                addMarker(data, "marker_hospital");
+//        }
+//        if (salon.equals("O")) {
+//            if (DataSet.salonList == null) {
+//                RestAPI restAPI = new RestAPI();
+//                restAPI.getinfo("salon");
+//            }
+//            while (DataSet.salonList == null)
+//                ;
+//            Log.d("RestAPI", "salon" + String.valueOf(DataSet.salonList.size()));
+//            for (Data data : DataSet.salonList)
+//                addMarker(data, "marker_salon");
+//        }
+//        if (trail.equals("O")) {
+//            if (DataSet.trailList == null) {
+//                RestAPI restAPI = new RestAPI();
+//                restAPI.getinfo("trail");
+//            }
+//            while (DataSet.trailList == null)
+//                ;
+//            Log.d("RestAPI", "trail" + String.valueOf(DataSet.trailList.size()));
+//            for (Data data : DataSet.trailList)
+//                addMarker(data, "marker_tree");
+//        }
+//    }
+
     private void showMarker(String cafe, String hotel, String hospital, String salon, String trail) { //버튼 클릭했을 때
         googleMap.clear();
         marker = null;
@@ -380,7 +445,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 addMarker(data, "marker_tree");
     }
 
-
     private void addMarker(Data data, String imgname) { //마커 추가
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(imgname, "drawable", getContext().getPackageName()));
         Bitmap bitmap_resize = Bitmap.createScaledBitmap(bitmap, 120, 120, false);
@@ -392,16 +456,14 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 .icon(BitmapDescriptorFactory.fromBitmap(bitmap_resize));
         Marker marker = googleMap.addMarker(markerOptions);
         marker.setTag(data);
-
-
-        // markerMap.put(marker, data);
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         DataDialog dialog = new DataDialog();
         Bundle args = new Bundle();
-        args.putSerializable("data", (Data)(marker.getTag()));
+        args.putSerializable("data", (Data) (marker.getTag()));
+        args.putParcelable("curLatlng", curLatlng);
         dialog.setArguments(args);
         dialog.show(getActivity().getFragmentManager(), "tag");
     }

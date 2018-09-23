@@ -10,20 +10,20 @@ import com.seoul.ddroad.board.BoardFragment;
 import com.seoul.ddroad.diary.DiaryFragment;
 import com.seoul.ddroad.intro.DustFragment;
 import com.seoul.ddroad.map.MapFragment;
-import com.seoul.ddroad.map.RestAPI;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
+    private static String TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         callFragment(1);
         ButterKnife.bind(this);
-        runThread();
     }
+
 
     @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board})
     void tabClick(View v) {
@@ -54,48 +54,4 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-
-    private void runThread() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RestAPI restAPI = new RestAPI();
-                restAPI.getinfo("trail");
-                restAPI.getinfo("hospital");
-//                restAPI.getinfo("hotel");
-//                restAPI.getinfo("cafe");
-//                restAPI.getinfo("salon");
-            }
-        }).start();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                RestAPI restAPI = new RestAPI();
-//                restAPI.getinfo("hospital");
-//            }
-//        }).start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RestAPI restAPI = new RestAPI();
-                restAPI.getinfo("hotel");
-                restAPI.getinfo("cafe");
-                restAPI.getinfo("salon");
-            }
-        }).start();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                RestAPI restAPI = new RestAPI();
-//                restAPI.getinfo("cafe");
-//            }
-//        }).start();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                RestAPI restAPI = new RestAPI();
-//                restAPI.getinfo("salon");
-//            }
-//        }).start();
-    }
 }
