@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         runThread();
     }
 
-    @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board})
+    @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board, R.id.btn_setting})
     void tabClick(View v) {
         int fragment_no = Integer.parseInt(v.getTag().toString());
         callFragment(fragment_no);
