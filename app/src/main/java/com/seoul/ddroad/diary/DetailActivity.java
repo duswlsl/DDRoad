@@ -1,20 +1,32 @@
 package com.seoul.ddroad.diary;
 
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.text.Layout;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seoul.ddroad.R;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class DetailActivity extends AppCompatActivity {
@@ -24,30 +36,27 @@ public class DetailActivity extends AppCompatActivity {
     private TextView diaryDetailTitle; //title
     private ImageView diaryDetailImage;
     private TextView diaryDetailContent;
+    private Button diaryDetailEdit;
+    private Button diaryDetailDelete;
+    private int diaryId;
+    private  String diaryDetailImgDir;
 
-    private String diaryTableName = "diary"; //테이블 이름
-    private String diaryDatabaseName = "ddroad.db"; //데이터베이스 이름
-    SqlLiteOpenHelper helper;
-    SQLiteDatabase database;  // database를 다루기 위한 SQLiteDatabase 객체 생성
     HashMap<String,Object> diaryMap = new HashMap<String,Object>();
+
+    private SqlLiteDao sqlLiteDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        //DB 선언
-        helper = new SqlLiteOpenHelper(this, // 현재 화면의 context
-                diaryDatabaseName, // 파일명
-                null, // 커서 팩토리
-                1); // 버전 번호
-        database = helper.getWritableDatabase();
-
+        sqlLiteDao = new SqlLiteDao(DetailActivity.this);
 
         Intent intent = getIntent();
-        int diaryId = intent.getExtras().getInt("diaryId");
+        diaryId = intent.getExtras().getInt("diaryId");
 
-        diaryMap = selectDiary(diaryId); //메서드에서 데이터를 가져옵니다.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!원래 이거 만들었어야함
+
+        diaryMap = sqlLiteDao.selectDiary(diaryId); //메서드에서 데이터를 가져옵니다.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!원래 이거 만들었어야함
 
 
        // comeOn = (TextView) findViewById(R.id.comeOn); //상세화면 텍스트 뷰 선언
@@ -55,6 +64,31 @@ public class DetailActivity extends AppCompatActivity {
         diaryDetailTitle = (TextView) findViewById(R.id.diaryDetailTitle);
         diaryDetailImage = (ImageView) findViewById(R.id.diaryDetailImage);
         diaryDetailContent = (TextView) findViewById(R.id.diaryDetailContent);
+
+        diaryDetailEdit = (Button) findViewById(R.id.diaryDetailEdit);
+        diaryDetailDelete = (Button) findViewById(R.id.diaryDetailDelete);
+
+
+        diaryDetailEdit.setOnClickListener(
+                new Button.OnClickListener(){
+                    @Override
+                    public  void  onClick(View view){
+                        Toast.makeText(getApplicationContext(),"수정.",Toast.LENGTH_LONG).show();
+                    }
+                }
+        );
+
+        diaryDetailDelete.setOnClickListener(
+                new Button.OnClickListener(){
+                    @Override
+                    public  void  onClick(View view){
+                        sqlLiteDao.deleteDiary(diaryId);
+                        Toast.makeText(getApplicationContext(),"삭제 되었습니다.",Toast.LENGTH_LONG).show();
+                        onBackPressed();
+                        finish();
+                    }
+                }
+        );
 
 
         //comeOn.setText("권바보야 MAP이 뭐냐~~!!" + diaryMap.toString()); //데이터 확인합니다.
@@ -69,42 +103,73 @@ public class DetailActivity extends AppCompatActivity {
         int resID = getResources().getIdentifier(resName, "drawable", packName);
         diaryDetailImage.setImageResource(resID);
 
-        //데이터 확인이되면 화면을 만들고 각각 view 레이아웃에 뿌려줍니다.
-        //diaryId, title, content, imgstr, regdt 의 데이터를 뿌려야겠죠?????????????
+
+        //db에서 이미지 경로 가져오기
+        HashMap<String,Object> diaryImgMap = new HashMap<String,Object>(); //hashmap 선언
+        diaryImgMap = sqlLiteDao.selectDiaryImg(diaryId); //diaryImg db에서 가져옴
+        if(diaryImgMap != null) {
+
+            diaryDetailImgDir= (String)diaryImgMap.get("imgDir");
+
+            Toast.makeText(getApplicationContext(), diaryDetailImgDir, Toast.LENGTH_LONG).show();
+        }
+        //이미지뷰뿌리기
+        if(diaryDetailImgDir != null && diaryDetailImgDir != "") {
+            ImageView iv = new ImageView(this);
+            iv.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
+            //  iv.setBackgroundResource(R.drawable.bichon1);
+            File f = new File(diaryDetailImgDir);
+            Bitmap d = new BitmapDrawable(getResources(), f.getAbsolutePath()).getBitmap();
+
+            d = resizeBitmapImage(d,1024);
+            Drawable drawable = new BitmapDrawable(getResources(), d);
+
+            GravityCompoundDrawable gravityDrawable = new GravityCompoundDrawable(drawable);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            gravityDrawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+
+            //diaryDetailContent.setCompoundDrawablePadding(10);
+            diaryDetailContent.setCompoundDrawablesWithIntrinsicBounds(null,drawable,null,null);
+            //Bitmap scaled = com.fxn.utility.Utility.getScaledBitmap(512, com.fxn.utility.Utility.getExifCorrectedBitmap(f));
+            //Bitmap scaled = com.fxn.utility.Utility.getScaledBitmap(512, d);
+            //iv.setImageBitmap(d);
+            //diaryDetailImg.addView(iv);
+        }
 
 
         }
 
+        //비트맵 이미지 리사이즈
+    public Bitmap resizeBitmapImage(Bitmap source, int maxResolution)
+    {
+        int width = source.getWidth();
+        int height = source.getHeight();
+        int newWidth = width;
+        int newHeight = height;
+        float rate = 0.0f;
 
-    public HashMap<String,Object> selectDiary(int diaryId){
-        HashMap<String,Object> map = new HashMap<String,Object>();
-
-        if(database != null){
-            //sqlite에서 값을 가져와서  map 에 담아야합니다~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!꼭 해야봐야함~~~~~~~!!!!!!!!!
-            //http://here4you.tistory.com/49 참고 해보세요~ 정말 쉽죠~~
-            String sql = "select diaryId, title, content, imgstr, regdt from " +diaryTableName+ " where diaryId = "+diaryId+";";
-            Cursor result = database.rawQuery(sql, null);
-
-            if(result.moveToFirst()){ //커서가 처음지점이 값이있으면,
-                int id = result.getInt(0);
-                String title = result.getString(1); // 두번째 속성
-                String content = result.getString(2);    // 세번째 속성
-                String imgstr = result.getString(3);    // 세번째 속성
-                String regdt = result.getString(4);    // 세번째 속성
-
-                map.put("diaryId",diaryId);
-                map.put("title",title);
-                map.put("content",content);
-                map.put("imgstr",imgstr);
-                map.put("regdt",regdt);
-
-                Toast.makeText(this, "diaryId= "+diaryId, Toast.LENGTH_LONG).show();
+        if(width > height)
+        {
+            if(maxResolution < width)
+            {
+                rate = maxResolution / (float) width;
+                newHeight = (int) (height * rate);
+                newWidth = maxResolution;
             }
-            result.close();
-
         }
-        return map;
+        else
+        {
+            if(maxResolution < height)
+            {
+                rate = maxResolution / (float) height;
+                newWidth = (int) (width * rate);
+                newHeight = maxResolution;
+            }
+        }
+
+        return Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
     }
+
 }
 
 
