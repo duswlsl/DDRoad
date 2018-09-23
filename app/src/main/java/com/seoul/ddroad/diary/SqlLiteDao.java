@@ -25,12 +25,35 @@ public class SqlLiteDao {
                 DATABASE_VERSION); // 버전 번호
     }
 
+    public void insertScreenShot(String imgDir) {
+        database = helper.getWritableDatabase();
+        int diaryId = 0;
+        if (database != null) {
+
+            String sql = "insert into diary(title, content,imgstr ,regdt) values('길찾기', '',null,datetime('now','localtime'))";
+            database.execSQL(sql);
+
+            Cursor cur = database.rawQuery("SELECT MAX(diaryId) FROM diary", null);
+            cur.moveToFirst();
+            diaryId = cur.getInt(0);
+            cur.close();
+
+            if (diaryId > 0) {
+                String sqlimg = "insert into diaryimg(diaryId, imgDir) values(?, ?)";
+                Object[] params = {diaryId, imgDir};
+                database.execSQL(sqlimg, params);
+            }
+        }
+    }
+
+
     public void insertDiary(Object[] params){
         database = helper.getWritableDatabase();
         if(database != null){
             String sql = "insert into diary(title, content,imgstr ,regdt) values(?, ?,?,?)";
 
             database.execSQL(sql, params);
+
 
         }
     }
