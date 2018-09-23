@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorAccent">#FF9800</color>
-    <color name="colorPrimary">#cc8a70</color>
-    <color name="colorPrimaryDark">#9e6244</color>
+    <color name="colorAccent">#0c163b</color>
+    <color name="colorPrimary">#bcdde6</color>
+    <color name="colorPrimaryDark">#235478</color>
 
     <color name="caldroid_white">#FFFFFF</color>
     <color name="caldroid_black">#000000</color>
