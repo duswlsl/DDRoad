@@ -23,6 +23,7 @@ public class RestAPI {
     private Data data;
     private String arr[];
     private String str;
+    private int cnt;
 
     public RestAPI() {
     }
@@ -41,16 +42,21 @@ public class RestAPI {
             String text = "";
             if (type.equals("cafe")) {
                 text = URLEncoder.encode("애견카페", "UTF-8");
+                cnt = 2;
             } else if (type.equals("hospital")) {
                 text = URLEncoder.encode("서울동물병원", "UTF-8");
+                cnt = 9;
             } else if (type.equals("salon")) {
                 text = URLEncoder.encode("서울애견미용실", "UTF-8");
+                cnt = 1;
             } else if (type.equals("trail")) {
                 text = URLEncoder.encode("서울공원", "UTF-8");
+                cnt = 10;
             } else if (type.equals("hotel")) {
                 text = URLEncoder.encode("서울애견호텔", "UTF-8");
+                cnt = 4;
             }
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < cnt; i++) {
                 int start = (100 * i) + 1;
                 // 오픈API를 이용하기 위한 URL
                 apiURL = "https://openapi.naver.com/v1/search/local?query=" + text + "&display=100&start=" + start + "&";
@@ -121,7 +127,7 @@ public class RestAPI {
                     }
                 }
                 br.close();
-                if (i == 9)
+                if (i == cnt-1)
                     saveDataSet(type);
             }
         } catch (Exception e) {
