@@ -42,8 +42,8 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         File f = new File(list.get(position));
         Bitmap d = new BitmapDrawable(context.getResources(), f.getAbsolutePath()).getBitmap();
         //Bitmap scaled = com.fxn.utility.Utility.getScaledBitmap(512, com.fxn.utility.Utility.getExifCorrectedBitmap(f));
-        Bitmap scaled = com.fxn.utility.Utility.getScaledBitmap(512, d);
-        ((Holder) holder).iv.setImageBitmap(scaled);
+        //Bitmap scaled = com.fxn.utility.Utility.getScaledBitmap(512, d);
+        ((Holder) holder).iv.setImageBitmap(d);
         // ((Holder) holder).iv.setImageURI(imageUri);
         }
 

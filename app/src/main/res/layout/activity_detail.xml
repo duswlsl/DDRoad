@@ -15,6 +15,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            card_view:cardCornerRadius="3dp"
+            card_view:cardElevation="0dp"
+            card_view:contentPadding="15dp"
+            card_view:contentPaddingBottom="5dp"
+            card_view:contentPaddingTop="5dp">
+
+            <LinearLayout style="@style/LinearLayoutHorizontal">
+
+                <TextView
+                    android:id="@+id/diaryDetailDate"
+                    android:layout_width="219dp"
+                    android:layout_height="39dp"
+                    android:layout_weight="1"
+                    android:text=""
+                    android:gravity="center_vertical"/>
+
+                <Button
+                    android:id="@+id/diaryDetailEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/calendar_w"
+                    android:text="" />
+
+                <Button
+                    android:id="@+id/diaryDetailDelete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/time_w"
+                    android:text="" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -60,28 +98,20 @@
             android:layout_marginTop="@dimen/card_layout_margin"
             android:layout_marginBottom="@dimen/card_layout_margin"
             style="@style/AppCard">
+
+
+
             <ScrollView
-                android:fillViewport="true"
+                android:id="@+id/diaryDetailScroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/diaryDetailContent"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="#00000000"
-                    android:gravity="top"
-                    android:padding="2dp" />
+                    android:layout_height="wrap_content" />
             </ScrollView>
 
-            <TextView
-                android:id="@+id/diaryDetailDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:gravity="right"
-                android:text="TextView" />
 
         </android.support.v7.widget.CardView>
     </LinearLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +35,16 @@ public class SqlLiteDao {
         }
     }
 
+    public void deleteDiary(int diaryId){
+        database = helper.getWritableDatabase();
+        if(database != null){
+            String sql = "delete from diary where diaryId = ?";
+            Object[] params = { diaryId};
+            database.execSQL(sql, params);
+
+        }
+    }
+
     public int getLastDiaryId() {
         int ID = 0;
         database = helper.getWritableDatabase();
@@ -44,6 +55,35 @@ public class SqlLiteDao {
             ID = cur.getInt(0);
             cur.close();}
         return ID;
+    }
+
+    public HashMap<String,Object> selectDiary(int diaryId){
+        HashMap<String,Object> map = new HashMap<String,Object>();
+        database = helper.getWritableDatabase();
+        if(database != null){
+            //sqlite에서 값을 가져와서  map 에 담아야합니다~~~~~~!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!꼭 해야봐야함~~~~~~~!!!!!!!!!
+            //http://here4you.tistory.com/49 참고 해보세요~ 정말 쉽죠~~
+            String sql = "select diaryId, title, content, imgstr, regdt from diary where diaryId = "+diaryId+";";
+            Cursor result = database.rawQuery(sql, null);
+
+            if(result.moveToFirst()){ //커서가 처음지점이 값이있으면,
+                int id = result.getInt(0);
+                String title = result.getString(1); // 두번째 속성
+                String content = result.getString(2);    // 세번째 속성
+                String imgstr = result.getString(3);    // 세번째 속성
+                String regdt = result.getString(4);    // 세번째 속성
+
+                map.put("diaryId",diaryId);
+                map.put("title",title);
+                map.put("content",content);
+                map.put("imgstr",imgstr);
+                map.put("regdt",regdt);
+
+            }
+            result.close();
+
+        }
+        return map;
     }
 
     public List<HashMap<String,Object>> selectDiaryList(Date date){   // 항상 DB문을 쓸때는 예외처리(try-catch)를 해야한다. 이름으로 값을 찾는것
@@ -103,7 +143,7 @@ public class SqlLiteDao {
     }
 
     public HashMap<String,Object> selectDiaryImg(int diaryId){
-        HashMap<String,Object> map = null;
+        HashMap<String,Object> map = new HashMap<String,Object>();
         database = helper.getWritableDatabase();
         if(database != null){
             String sql = "select diaryId, imgDir from diaryimg where diaryId = "+diaryId+";";
@@ -111,10 +151,10 @@ public class SqlLiteDao {
 
             if(result.moveToFirst()){ //커서가 처음지점이 값이있으면,
                 int id = result.getInt(0);
-                String title = result.getString(1); // 두번째 속성
+                String imgDir = result.getString(1); // 두번째 속성
 
-                map.put("diaryId",diaryId);
-                map.put("imgDir",title);
+                map.put("diaryId",id);
+                map.put("imgDir",imgDir);
             }
             result.close();
         }
