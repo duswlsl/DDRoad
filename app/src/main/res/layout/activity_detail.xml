@@ -35,21 +35,32 @@
                     android:text=""
                     android:gravity="center_vertical"/>
 
-                <Button
-                    android:id="@+id/diaryDetailEdit"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@drawable/calendar_w"
-                    android:text="" />
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/diaryDetailDelete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/time_w"
-                    android:text="" />
+                    <Button
+                        android:id="@+id/diaryDetailEdit"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/detail_edit"
+                        android:text="" />
+
+                    <Button
+                        android:id="@+id/diaryDetailDelete"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/detail_delete"
+                        android:text="" />
+                </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
