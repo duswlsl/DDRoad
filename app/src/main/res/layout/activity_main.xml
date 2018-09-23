@@ -60,6 +60,7 @@
             android:tag="3"
             android:text="다이어리" />
 
+
         <ImageButton
             android:id="@+id/btn_board"
             android:layout_width="0dp"
@@ -72,6 +73,7 @@
             android:scaleType="centerInside"
             android:tag="4"
             android:text="게시판" />
+
     </LinearLayout>
 
 </LinearLayout>
