@@ -3,11 +3,16 @@ package com.seoul.ddroad.board;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Message;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +22,7 @@ import android.webkit.CookieManager;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -25,11 +31,17 @@ import android.widget.Toast;
 
 import com.seoul.ddroad.R;
 
+import java.io.File;
+
 /**
  * Created by guitarhyo on 2018-08-15.
  */
 public class BoardActivity extends AppCompatActivity {
     private WebView mWebView;
+    private ValueCallback<Uri> filePathCallbackNormal;
+    private ValueCallback<Uri[]> filePathCallbackLollipop;
+    private Uri mCapturedImageURI;
+
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
@@ -171,6 +183,65 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     class MyWebChrome extends WebChromeClient{
+        // For Android < 3.0
+        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+            openFileChooser(uploadMsg, "");
+        }
+
+        // For Android 3.0+
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType) {
+            filePathCallbackNormal = uploadMsg;
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType("image/*");
+            startActivityForResult(Intent.createChooser(i, "File Chooser"), 1);
+        }
+
+        // For Android 4.1+
+        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
+            openFileChooser(uploadMsg, acceptType);
+        }
+
+
+        // For Android 5.0+
+        public boolean onShowFileChooser(
+                WebView webView, ValueCallback<Uri[]> filePathCallback,
+                WebChromeClient.FileChooserParams fileChooserParams) {
+            if (filePathCallbackLollipop != null) {
+//                    filePathCallbackLollipop.onReceiveValue(null);
+                filePathCallbackLollipop = null;
+            }
+            filePathCallbackLollipop = filePathCallback;
+
+
+            // Create AndroidExampleFolder at sdcard
+            File imageStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "AndroidExampleFolder");
+            if (!imageStorageDir.exists()) {
+                // Create AndroidExampleFolder at sdcard
+                imageStorageDir.mkdirs();
+            }
+
+            // Create camera captured image file path and name
+            File file = new File(imageStorageDir + File.separator + "IMG_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
+            mCapturedImageURI = Uri.fromFile(file);
+
+            Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
+
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType("image/*");
+
+            // Create file chooser intent
+            Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
+            // Set camera intent to file chooser
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Parcelable[]{captureIntent});
+
+            // On select image call onActivityResult method of activity
+            startActivityForResult(chooserIntent, 2);
+            return true;
+
+        }
 
 
         public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
@@ -197,20 +268,23 @@ public class BoardActivity extends AppCompatActivity {
             return true;
         }
 
-      /*  public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
-            WebView newWebView = new WebView(BoardActivity.this);
-            WebSettings webSettings = newWebView.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            final Dialog dialog = new Dialog(BoardActivity.this);
-            dialog.setContentView(newWebView); dialog.show();
-
-            newWebView.setWebChromeClient(new WebChromeClient() {
-
-                @Override public void onCloseWindow(WebView window) { dialog.dismiss(); } });
-            ((WebView.WebViewTransport)resultMsg.obj).setWebView(newWebView); resultMsg.sendToTarget();
-            return true; }*/
     }
 
-
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (filePathCallbackNormal == null) return;
+            Uri result = (data == null || resultCode != RESULT_OK) ? null : data.getData();
+            filePathCallbackNormal.onReceiveValue(result);
+            filePathCallbackNormal = null;
+        } else if (requestCode == 2) {
+            Uri[] result = new Uri[0];
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                if(resultCode == RESULT_OK){
+                    result = (data == null) ? new Uri[]{mCapturedImageURI} : WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+                }
+                filePathCallbackLollipop.onReceiveValue(result);
+            }
+        }
+    }
 
 }
