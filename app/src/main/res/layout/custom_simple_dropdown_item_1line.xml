@@ -7,6 +7,10 @@
     android:singleLine="true"
     android:layout_width="match_parent"
     android:layout_height="52dp"
-    android:textSize="15dp"
+    android:textSize="30dp"
+    android:textStyle="bold"
+    android:text="아아아"
+    android:textColor="#000"
+    android:gravity="center_horizontal"
     android:ellipsize="marquee">
 </TextView>

@@ -72,8 +72,8 @@ public class dustActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dust_cool);
 
-        text_location = (TextView) findViewById(R.id.text_location);
-        text_location.setText(location);
+        //text_location = (TextView) findViewById(R.id.text_location);
+        //text_location.setText(location);
 
         text_temperature = (TextView) findViewById(R.id.text_temperature);
 
@@ -100,14 +100,12 @@ public class dustActivity extends AppCompatActivity {
         text_dog_date.setText(myDog + "♡ " + nDogDate + " D-Days");
 
 
-
         setSpinner();
 
 
     }
 
-    public void setSpinner()
-    {
+    public void setSpinner() {
         //input array data
         final ArrayList<String> list = new ArrayList<>();
         list.add("서울시");
@@ -136,7 +134,6 @@ public class dustActivity extends AppCompatActivity {
         list.add("강남구");
 
 
-
         //배열 어답터 사용
         ArrayAdapter spinnerAdater;
         spinnerAdater = new ArrayAdapter(this, R.layout.custom_simple_dropdown_item_1line, list);
@@ -145,7 +142,7 @@ public class dustActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(dustActivity.this,"선택된 아이템 :" +spinner.getItemAtPosition(position), Toast.LENGTH_LONG).show();
+                Toast.makeText(dustActivity.this, "선택된 아이템 :" + spinner.getItemAtPosition(position), Toast.LENGTH_LONG).show();
                 location = spinner.getItemAtPosition(position).toString();
                 text_location.setText(location);
 
@@ -169,15 +166,15 @@ public class dustActivity extends AppCompatActivity {
 
         });
     }
+
     public void fontChange() {
         Typeface typeface = Typeface.createFromAsset(getAssets(), "BMJUA_ttf.ttf");
 
         text_temperature.setTypeface(typeface);
         text_finddust.setTypeface(typeface);
         text_dog_date.setTypeface(typeface);
-        text_location.setTypeface(typeface);
+        //text_location.setTypeface(typeface);
     }
-
 
 
     public void setDateTime() {
@@ -453,32 +450,29 @@ public class dustActivity extends AppCompatActivity {
                     if (fineDust != 0) {
                         findDustResult = setFineDustResult(fineDust);
 
-                    }
 
-                    runOnUiThread(new Runnable() {
+                        runOnUiThread(new Runnable() {
 
-                        public void run() {
+                            public void run() {
 
-                            if (temperature == 100.0) {
-                                text_finddust.setText("재설정해주세요");
-                                text_finddust.setTextColor(Color.parseColor("#FF0000"));
-                                mainDogImg.setImageResource(R.drawable.dogface2);
-                            } else {
-                                text_finddust.setText("미세먼지 " + findDustResult);
-                                text_finddust.setTextColor(Color.parseColor(findDustColor));
-                                if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
+                                if (temperature == 100.0) {
+                                    text_finddust.setText("재설정해주세요");
+                                    text_finddust.setTextColor(Color.parseColor("#FF0000"));
                                     mainDogImg.setImageResource(R.drawable.dogface2);
-                                } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
-                                    mainDogImg.setImageResource(R.drawable.dogface1);
+                                } else {
+                                    text_finddust.setText("미세먼지 " + findDustResult);
+                                    //text_finddust.setTextColor(Color.parseColor(findDustColor));
+                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
+                                        mainDogImg.setImageResource(R.drawable.dogface2);
+                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
+                                        mainDogImg.setImageResource(R.drawable.dogface1);
+                                    }
                                 }
-
-
                             }
-                        }
 
-                    });
+                        });
+                    }
                 }
-
             }
 
         });
@@ -561,6 +555,4 @@ public class dustActivity extends AppCompatActivity {
         }
         return result;
     }
-
-
 }

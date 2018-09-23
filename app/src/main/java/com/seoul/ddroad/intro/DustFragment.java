@@ -94,7 +94,7 @@ public class DustFragment extends Fragment {
         findDustColor = "";
         nYear = 2018;
         nMonth = 9;
-        nDay = 30;
+        nDay = 1;
 
 
         super.onCreate(savedInstanceState);
@@ -102,8 +102,8 @@ public class DustFragment extends Fragment {
 
         //setContentView(R.layout.activity_dust_cool);
 
-        text_location = (TextView) getView().findViewById(R.id.text_location);
-        text_location.setText(location);
+        //text_location = (TextView) getView().findViewById(R.id.text1);
+        //text_location.setText(location);
 
         text_temperature = (TextView) getView().findViewById(R.id.text_temperature);
 
@@ -127,7 +127,7 @@ public class DustFragment extends Fragment {
         setDustApi();
 
         nDogDate = countDday(nYear, nMonth, nDay);
-        text_dog_date.setText(myDog + "♡ " + nDogDate + " D-Days");
+        text_dog_date.setText(myDog + " ♡ " + nDogDate);
 
 
         setSpinner();
@@ -136,30 +136,29 @@ public class DustFragment extends Fragment {
     public void setSpinner() {
         //input array data
         final ArrayList<String> list = new ArrayList<>();
-        list.add("서울시");
-        list.add("종로구");
-        list.add("중구");
-        list.add("용산구");
-        list.add("성동구");
-        list.add("광진구");
-        list.add("동대문구");
-        list.add("성북구");
-        list.add("강북구");
-        list.add("도봉구");
-        list.add("노원구");
-        list.add("서대문구");
-        list.add("마포구");
-        list.add("양천구");
-        list.add("강서구");
-        list.add("구로구");
-        list.add("금천구");
-        list.add("영등포구");
-        list.add("동작구");
-        list.add("관악구");
-        list.add("서초구");
-        list.add("강남구");
-        list.add("송파구");
-        list.add("강남구");
+        list.add("서울시 종로구");
+        list.add("서울시 중구");
+        list.add("서울시 용산구");
+        list.add("서울시 성동구");
+        list.add("서울시 광진구");
+        list.add("서울시 동대문구");
+        list.add("서울시 성북구");
+        list.add("서울시 강북구");
+        list.add("서울시 도봉구");
+        list.add("서울시 노원구");
+        list.add("서울시 서대문구");
+        list.add("서울시 마포구");
+        list.add("서울시 양천구");
+        list.add("서울시 강서구");
+        list.add("서울시 구로구");
+        list.add("서울시 금천구");
+        list.add("서울시 영등포구");
+        list.add("서울시 동작구");
+        list.add("서울시 관악구");
+        list.add("서울시 서초구");
+        list.add("서울시 강남구");
+        list.add("서울시 송파구");
+        list.add("서울시 강남구");
 
 
         //배열 어답터 사용
@@ -172,7 +171,6 @@ public class DustFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getActivity().getApplicationContext(), "선택된 아이템 :" + spinner.getItemAtPosition(position), Toast.LENGTH_LONG).show();
                 location = spinner.getItemAtPosition(position).toString();
-                text_location.setText(location);
 
                 //날짜시간설정
                 setDateTime();
@@ -183,6 +181,7 @@ public class DustFragment extends Fragment {
                 //온도API
                 setTempApi(inputDate, inputTime, inputNx, inputNy);
 
+                //미세먼지
                 setDustApi();
             }
 
@@ -201,7 +200,7 @@ public class DustFragment extends Fragment {
         text_temperature.setTypeface(typeface);
         text_finddust.setTypeface(typeface);
         text_dog_date.setTypeface(typeface);
-        text_location.setTypeface(typeface);
+//        text_location.setTypeface(typeface);
     }
 
 
@@ -358,7 +357,7 @@ public class DustFragment extends Fragment {
 
             long today = todaCal.getTimeInMillis() / 86400000; //(24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
             long dday = ddayCal.getTimeInMillis() / 86400000;
-            long count = dday - today; // 오늘 날짜에서 dday 빼준다
+            long count = (dday - today) * -1; // 오늘 날짜에서 dday 빼준다
             return (int) count; // 결과값 반환해준다
 
 
@@ -472,38 +471,37 @@ public class DustFragment extends Fragment {
                     }
 
 
-                } else {
+                } else if (funcFlag == 2) {
 
                     fineDust = dustJsonParser(result);
+
                     if (fineDust != 0) {
                         findDustResult = setFineDustResult(fineDust);
 
-                    }
+                        getActivity().runOnUiThread(new Runnable() {
 
-                    getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
 
-                        public void run() {
+                                if (temperature == 100.0) {
+                                    text_finddust.setText("재설정해주세요");
 
-                            if (temperature == 100.0) {
-                                text_finddust.setText("재설정해주세요");
-                                text_finddust.setTextColor(Color.parseColor("#FF0000"));
-                                mainDogImg.setImageResource(R.drawable.dogface2);
-                            } else {
-                                text_finddust.setText("미세먼지 " + findDustResult);
-                                text_finddust.setTextColor(Color.parseColor(findDustColor));
-                                if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
-                                    mainDogImg.setImageResource(R.drawable.dogface2);
-                                } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
+                                    text_finddust.setTextColor(Color.parseColor("#FF0000"));
                                     mainDogImg.setImageResource(R.drawable.dogface1);
+                                } else {
+                                    text_finddust.setTextColor(Color.parseColor(findDustColor));
+                                    text_finddust.setText("미세먼지 " + findDustResult);
+                                    Log.d("sss", findDustColor);
+
+                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
+                                        mainDogImg.setImageResource(R.drawable.dogface_1);
+                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
+                                        mainDogImg.setImageResource(R.drawable.dogface1);
+                                    }
                                 }
-
-
                             }
-                        }
-
-                    });
+                        });
+                    }
                 }
-
             }
 
         });
