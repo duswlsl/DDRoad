@@ -41,6 +41,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.seoul.ddroad.diary.SqlLiteDao;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -153,10 +154,14 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         if (resultCode == Activity.RESULT_OK) { // 경로 저장
             latLngList = data.getExtras().getParcelableArrayList("pointList");
             drawPolyline(latLngList);
+
+            // 스크린샷 저장
             GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
                 @Override
                 public void onSnapshotReady(Bitmap bitmap) {
-                    screenshot(bitmap);
+                    String imgPath = screenshot(bitmap);
+                    SqlLiteDao sqlDao = new SqlLiteDao(getContext());
+                    sqlDao.insertScreenShot(imgPath);
                 }
             };
             googleMap.snapshot(callback);
@@ -309,7 +314,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
 
-    public void screenshot(Bitmap captureBitmap) {
+    public String screenshot(Bitmap captureBitmap) {
         FileOutputStream fos;
         File file = new File(this.getContext().getFilesDir(), "CaptureDir"); // 폴더 경로
         Log.d(TAG, this.getContext().getFilesDir().toString());
@@ -326,6 +331,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        return strFilePath;
     }
 
 
