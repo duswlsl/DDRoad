@@ -128,7 +128,7 @@ public class RestAPI {
                     }
                 }
                 br.close();
-                if (i == cnt)
+                if (i == cnt-1)
                     saveDataSet(type);
             }
         } catch (Exception e) {
