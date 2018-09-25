@@ -23,7 +23,7 @@ public class RestAPI {
     private Data data;
     private String arr[];
     private String str;
-    private int cnt;
+    int cnt;
 
     public RestAPI() {
     }
@@ -41,7 +41,7 @@ public class RestAPI {
 
             String text = "";
             if (type.equals("cafe")) {
-                text = URLEncoder.encode("애견카페", "UTF-8");
+                text = URLEncoder.encode("서울애견카페", "UTF-8");
                 cnt = 2;
             } else if (type.equals("hospital")) {
                 text = URLEncoder.encode("서울동물병원", "UTF-8");
@@ -59,7 +59,7 @@ public class RestAPI {
             for (int i = 0; i < cnt; i++) {
                 int start = (100 * i) + 1;
                 // 오픈API를 이용하기 위한 URL
-                apiURL = "https://openapi.naver.com/v1/search/local?query=" + text + "&display=100&start=" + start + "&";
+                apiURL = "https://openapi.naver.com/v1/search/local?query=" + text + "&display=100&start=" + start;
                 url = new URL(apiURL);
 
                 // URL연결
@@ -105,6 +105,7 @@ public class RestAPI {
                         convertToLatlng(Double.parseDouble(arr[3]), Double.parseDouble(arr2[3]));
                     } else if (inputLine.contains("address")) {
                         arr = inputLine.split("\"", 5);
+
                         data.setAddress(arr[3]);
 
                         switch (type) {
@@ -127,7 +128,7 @@ public class RestAPI {
                     }
                 }
                 br.close();
-                if (i == cnt-1)
+                if (i == cnt)
                     saveDataSet(type);
             }
         } catch (Exception e) {
