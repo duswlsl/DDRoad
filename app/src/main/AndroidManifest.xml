@@ -27,7 +27,7 @@
         </activity>
         <activity android:name=".intro.PermissionActivity" />
         <activity android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+            android:theme="@style/NoTile01"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA4oG50dxooInZ2ueURq-7XvPNOrLvgqf4" />

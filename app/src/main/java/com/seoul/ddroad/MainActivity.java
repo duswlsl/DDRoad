@@ -11,6 +11,7 @@ import com.seoul.ddroad.diary.DiaryFragment;
 import com.seoul.ddroad.intro.DustFragment;
 import com.seoul.ddroad.map.MapFragment;
 import com.seoul.ddroad.map.RestAPI;
+import com.seoul.ddroad.setting.SettingFragment;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         runThread();
     }
 
-    @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board})
+    @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board, R.id.btn_setting})
     void tabClick(View v) {
         int fragment_no = Integer.parseInt(v.getTag().toString());
         callFragment(fragment_no);
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
             case 4:
                 Fragment fragment4 = new BoardFragment();
                 transaction.replace(R.id.fragment_container, fragment4);
+                break;
+            case 5:
+                Fragment fragment5 = new SettingFragment();
+                transaction.replace(R.id.fragment_container, fragment5);
                 break;
         }
         transaction.commit();

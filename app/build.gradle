@@ -45,7 +45,10 @@ dependencies {
     implementation group: 'com.roomorama', name: 'caldroid', version: '3.0.1'
     implementation 'com.android.support:cardview-v7:26.1.0'
 
+    //데이트 피커
     implementation 'com.wdullaer:materialdatetimepicker:3.6.3'
 
+    //카메라
     implementation  'com.fxn769:pix:1.2.5'
+
 }

@@ -9,6 +9,15 @@
         <item name="android:typeface">monospace</item>
     </style>
 
+    <style name="NoTile01" parent="Theme.AppCompat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <!--Caldroid theme-->
     <style name="CaldroidDefaultGridView">
         <item name="android:adjustViewBounds">true</item>
@@ -50,5 +59,5 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
-
+    <item name="item_click_support" type="id" />
 </resources>

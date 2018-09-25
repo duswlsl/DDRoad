@@ -74,6 +74,19 @@
             android:tag="4"
             android:text="게시판" />
 
+        <ImageButton
+            android:id="@+id/btn_setting"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:src="@drawable/fragment_usershape"
+            android:backgroundTint="@color/btnbg_color"
+            android:scaleType="centerInside"
+            android:tag="5"
+            android:text="설정" />
+
     </LinearLayout>
 
 </LinearLayout>
