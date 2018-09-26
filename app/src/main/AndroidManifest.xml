@@ -20,7 +20,8 @@
         android:theme="@style/AppTheme"
         android:largeHeap="true">
 
-        <activity android:name=".intro.IntroActivity">
+        <activity android:name=".intro.IntroActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

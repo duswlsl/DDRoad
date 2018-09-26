@@ -65,7 +65,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="34도"
-            android:textColor="#AB4A12"
+            android:textColor="#3d536a"
             android:textSize="80px" />
 
 
@@ -89,16 +89,18 @@
         <ImageButton
             android:id="@+id/mainDogImg"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="260dp"
             android:background="#00000000"
-            android:src="@drawable/dogface1" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/dogface_2" />
 
         <TextView
             android:id="@+id/text_dog_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="콩이♡ 456days"
-            android:textColor="#AB4A12"
+            android:textColor="#3d536a"
             android:textSize="80px" />
     </LinearLayout>
 </LinearLayout>

@@ -486,7 +486,7 @@ public class DustFragment extends Fragment {
                                     text_finddust.setText("재설정해주세요");
 
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
-                                    mainDogImg.setImageResource(R.drawable.dogface1);
+                                    mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
                                     text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     text_finddust.setText("미세먼지 " + findDustResult);
@@ -495,7 +495,7 @@ public class DustFragment extends Fragment {
                                     if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
                                         mainDogImg.setImageResource(R.drawable.dogface_1);
                                     } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
-                                        mainDogImg.setImageResource(R.drawable.dogface1);
+                                        mainDogImg.setImageResource(R.drawable.dogface_2);
                                     }
                                 }
                             }
