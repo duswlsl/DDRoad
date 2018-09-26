@@ -81,8 +81,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     Button btn_salon;
     @BindView(R.id.btn_trail)
     Button btn_trail;
-    @BindView(R.id.btn_all)
-    Button btn_all;
 
     public MapFragment() {
 
@@ -340,29 +338,29 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     void clickSearch(View view) {
         String state = view.getTag().toString();
         if (state.equals("X")) { // 버튼 off -> on
-            btn_all.setTag("X");
+            //btn_all.setTag("X");
             view.setTag("O");
         } else // 버튼 on -> off
             view.setTag("X");
         showMarker(btn_cafe.getTag().toString(), btn_hotel.getTag().toString(), btn_hospital.getTag().toString(), btn_salon.getTag().toString(), btn_trail.getTag().toString());
     }
 
-    @OnClick(R.id.btn_all)
-    void clickSearchAll(View view) {
-        String state = view.getTag().toString();
-        if (state.equals("X")) { // 버튼 off -> on
-            btn_all.setTag("O");
-            btn_cafe.setTag("X");
-            btn_hotel.setTag("X");
-            btn_hospital.setTag("X");
-            btn_salon.setTag("X");
-            btn_trail.setTag("X");
-            showMarker("O", "O", "O", "O", "O");
-        } else { // 버튼 on -> of
-            btn_all.setTag("X");
-            showMarker("X", "X", "X", "X", "X");
-        }
-    }
+//    @OnClick(R.id.btn_all)
+//    void clickSearchAll(View view) {
+//        String state = view.getTag().toString();
+//        if (state.equals("X")) { // 버튼 off -> on
+//            //btn_all.setTag("O");
+//            btn_cafe.setTag("X");
+//            btn_hotel.setTag("X");
+//            btn_hospital.setTag("X");
+//            btn_salon.setTag("X");
+//            btn_trail.setTag("X");
+//            showMarker("O", "O", "O", "O", "O");
+//        } else { // 버튼 on -> of
+//            btn_all.setTag("X");
+//            showMarker("X", "X", "X", "X", "X");
+//        }
+//    }
 
 
     private void showMarker(String cafe, String hotel, String hospital, String salon, String trail) { //버튼 클릭했을 때
@@ -404,7 +402,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         if (trail.equals("O")) {
             long _start = System.currentTimeMillis();
             for (Data data : DataSet.trailList)
-                addMarker(data, "marker_tree");
+                addMarker(data, "marker_trail");
             long _end = System.currentTimeMillis();
             Log.d(TAG, "salon"+(_end-_start)/1000);
         }

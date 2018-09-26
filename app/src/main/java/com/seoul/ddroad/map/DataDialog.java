@@ -136,7 +136,7 @@ public class DataDialog extends DialogFragment {
     public void clickCall() {
         String tel = "tel:" + data.getTel();
         try {
-            startActivity(new Intent("android.intent.action.CALL", Uri.parse(tel)));
+            startActivity(new Intent("android.intent.action.DIAL", Uri.parse(tel)));
         } catch (Exception e) {
             e.printStackTrace();
         }
