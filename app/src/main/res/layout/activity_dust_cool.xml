@@ -27,26 +27,24 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:layout_width="80dp"
+            android:layout_width="60dp"
             android:layout_height="100dp"
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
-            android:layout_gravity="right"
             android:src="@drawable/weather_drop" />
 
         <ImageView
-            android:layout_width="80dp"
+            android:layout_width="60dp"
             android:layout_height="100dp"
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
             android:src="@drawable/weather_sun" />
 
         <ImageView
-            android:layout_width="80dp"
+            android:layout_width="60dp"
             android:layout_height="100dp"
             android:paddingBottom="20dp"
             android:paddingTop="20dp"
-            android:layout_gravity="left"
             android:src="@drawable/weather_snowflake" />
     </LinearLayout>
 
