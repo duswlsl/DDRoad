@@ -618,4 +618,23 @@ public class DustFragment extends Fragment {
         }
         return result;
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //날짜시간설정
+        setDateTime();
+
+        //임의로 주소입력
+        setNxNy(location);
+
+        //온도API
+        setTempApi(inputDate, inputTime, inputNx, inputNy);
+
+        //미세먼지
+        setDustApi();
+
+        Log.d("리즘", "리즘");
+    }
 }
