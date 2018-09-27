@@ -59,4 +59,9 @@
         <item name="android:foreground">?attr/selectableItemBackground</item>
     </style>
     <item name="item_click_support" type="id" />
+
+    <style name="SpinnerTextViewItem" parent="@android:style/Widget.TextView" >
+        <item name="android:textSize" >8dp</item>
+        <item name="android:textStyle" >bold</item>
+    </style>
 </resources>
