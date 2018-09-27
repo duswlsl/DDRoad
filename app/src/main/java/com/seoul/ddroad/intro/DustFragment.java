@@ -535,11 +535,12 @@ public class DustFragment extends Fragment {
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
-                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")||weatherFlag==2) {
+                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")||weatherFlag==2||temperature>25.0) {
                                         mainDogImg.setImageResource(R.drawable.dogface_1);
-                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")||weatherFlag==1) {
+                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")||weatherFlag==1||temperature<=25.0) {
                                         mainDogImg.setImageResource(R.drawable.dogface_2);
                                     }
+                                    
                                 }
                             }
                         });
