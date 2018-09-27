@@ -67,7 +67,7 @@ public class DiaryRegActivity extends AppCompatActivity{
     private String content = "";
     private String title = "";
     private String imgstr = "";
-    private String imgDir = "";
+
     private int diaryId;
 
     private String regModCheck = "";
@@ -95,7 +95,7 @@ public class DiaryRegActivity extends AppCompatActivity{
             redgt = intent.getExtras().getString("redgt");
             imgstr = intent.getExtras().getString("imgstr");
 
-            imgDir = intent.getExtras().getString("imgDir");
+            imgDirStr = intent.getExtras().getString("imgDir");
         }
 
 
@@ -160,9 +160,9 @@ public class DiaryRegActivity extends AppCompatActivity{
                 spinner.setSelection(5);
             }
 
-            if(imgDir != null && !"".equals(imgDir)){
+            if(imgDirStr != null && !"".equals(imgDirStr)){
                 ArrayList<String> returnValue = new ArrayList<>();
-                returnValue.add(imgDir);
+                returnValue.add(imgDirStr);
                 myAdapter.addImage(returnValue);
             }
 
@@ -326,14 +326,14 @@ public class DiaryRegActivity extends AppCompatActivity{
                 new AlertDialog.Builder(this)
                         .setTitle("다이어리>수정하기")
                         .setMessage("수정하시겠습니까?")
-                        .setIcon(R.drawable.diary_save)
+                        .setIcon(R.drawable.info_dots)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 // 확인시 처리 로직
                                 Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr,weatherDateStr,diaryId};
                                 sqlLiteImgDao.updatDiary(params);
-
-                                if(!"".equals(imgDir)){
+                                String imgDir = imgFIleWrite();
+                                if(imgDir != null && !"".equals(imgDir)){
                                     sqlLiteImgDao.updateDiaryImg(diaryId,imgDir);
                                 }
 
@@ -439,6 +439,8 @@ public class DiaryRegActivity extends AppCompatActivity{
             case (100): {
                 if (resultCode == Activity.RESULT_OK) {
                     ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+
+
                     myAdapter.addImage(returnValue);
 
                     for (String s : returnValue) {
