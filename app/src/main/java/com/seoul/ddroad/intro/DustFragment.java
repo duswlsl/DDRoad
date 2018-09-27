@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.seoul.ddroad.R.layout.custom_simple_dropdown_item_1line;
+import static com.seoul.ddroad.R.layout.support_simple_spinner_dropdown_item;
 
 public class DustFragment extends Fragment {
 
@@ -47,7 +48,7 @@ public class DustFragment extends Fragment {
     private Double temperature;
     private int fineDust;
     private TextView text_temperature;
-    private TextView text_location;
+    private TextView text_dropdown;
     private TextView text_finddust;
     private TextView text_dog_date;
     private String findDustResult;
@@ -105,7 +106,7 @@ public class DustFragment extends Fragment {
 
         //text_location = (TextView) getView().findViewById(R.id.text1);
         //text_location.setText(location);
-
+        text_dropdown = (TextView) getView().findViewById(R.id.dropdown_item);
         text_temperature = (TextView) getView().findViewById(R.id.text_temperature);
 
         text_finddust = (TextView) getView().findViewById(R.id.text_finedust);
@@ -135,6 +136,8 @@ public class DustFragment extends Fragment {
     }
 
     public void setSpinner() {
+
+
         //input array data
         final ArrayList<String> list = new ArrayList<>();
         list.add("서울시 종로구");
@@ -161,12 +164,13 @@ public class DustFragment extends Fragment {
         list.add("서울시 송파구");
         list.add("서울시 강남구");
 
-
         //배열 어답터 사용
         ArrayAdapter spinnerAdater;
         spinnerAdater = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.custom_simple_dropdown_item_1line, list);
+        spinnerAdater.setDropDownViewResource(R.layout.custom_simple_dropdown_item_1line);
         spinner.setAdapter(spinnerAdater);
-
+//        getView(spinnerAdater.getCount(), text_dropdown, spinner);
+//        getDropDownView(spinnerAdater.getCount(), text_dropdown, spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -184,15 +188,43 @@ public class DustFragment extends Fragment {
 
                 //미세먼지
                 setDustApi();
+
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-
-
         });
+    }
+
+    public TextView getView(int position, View convertView, ViewGroup parent) {
+        int mPosition;
+        View mView;
+        ViewGroup mParent;
+
+        mPosition = position;
+        mView = convertView;
+        mParent = parent;
+        TextView v = (TextView) this.getView(mPosition, mView, mParent);
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
+        v.setTypeface(typeface);
+        return v;
+    }
+
+    public TextView getDropDownView(int position, View convertView, ViewGroup parent) {
+        int mPosition;
+        View mView;
+        ViewGroup mParent;
+
+        mPosition = position;
+        mView = convertView;
+        mParent = parent;
+        TextView v = (TextView) this.getView(mPosition, mView, mParent);
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
+        v.setTypeface(typeface);
+        return v;
     }
 
     public void fontChange() {
@@ -201,7 +233,7 @@ public class DustFragment extends Fragment {
         text_temperature.setTypeface(typeface);
         text_finddust.setTypeface(typeface);
         text_dog_date.setTypeface(typeface);
-//        text_location.setTypeface(typeface);
+
     }
 
 
@@ -586,5 +618,4 @@ public class DustFragment extends Fragment {
         }
         return result;
     }
-
 }

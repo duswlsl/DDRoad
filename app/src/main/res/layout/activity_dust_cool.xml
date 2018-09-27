@@ -38,10 +38,6 @@
             android:layout_height="100dp"
             android:src="@drawable/weather_sun" />
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="100dp"
-            android:src="@drawable/weather_snowflake" />
     </LinearLayout>
 
 
