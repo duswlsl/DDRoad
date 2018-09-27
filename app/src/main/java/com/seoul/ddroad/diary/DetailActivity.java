@@ -42,6 +42,7 @@ public class DetailActivity extends AppCompatActivity {
     private  String diaryDetailImgDir;
 
     HashMap<String,Object> diaryMap = new HashMap<String,Object>();
+    HashMap<String,Object> diaryImgMap = new HashMap<String,Object>(); //hashmap 선언;
 
     private SqlLiteDao sqlLiteDao;
 
@@ -58,6 +59,8 @@ public class DetailActivity extends AppCompatActivity {
 
         diaryMap = sqlLiteDao.selectDiary(diaryId); //메서드에서 데이터를 가져옵니다.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!원래 이거 만들었어야함
 
+        //db에서 이미지 경로 가져오기
+        diaryImgMap = sqlLiteDao.selectDiaryImg(diaryId);
 
        // comeOn = (TextView) findViewById(R.id.comeOn); //상세화면 텍스트 뷰 선언
         diaryDetailDate = (TextView) findViewById(R.id.diaryDetailDate);
@@ -73,7 +76,26 @@ public class DetailActivity extends AppCompatActivity {
                 new Button.OnClickListener(){
                     @Override
                     public  void  onClick(View view){
-                        Toast.makeText(getApplicationContext(),"수정.",Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), DiaryRegActivity.class);
+                        String redgt = (String)diaryMap.get("regdt");
+                        String content = (String)diaryMap.get("content");
+                        String title = (String)diaryMap.get("title");
+                        String imgstr = (String)diaryMap.get("imgstr");
+
+                        intent.putExtra("diaryId", diaryId);
+                        intent.putExtra("imgstr", imgstr);
+                        intent.putExtra("redgt", redgt);
+                        intent.putExtra("content", content);
+                        intent.putExtra("title", title);
+                        intent.putExtra("regModCheck", "M");
+                        if(diaryImgMap != null) {
+                            String imgDir = (String) diaryImgMap.get("imgDir");
+                            intent.putExtra("imgDir", imgDir);
+                        }else{
+                            intent.putExtra("imgDir", "");
+                        }
+                        startActivity(intent);
+                        finish();
                     }
                 }
         );
@@ -98,15 +120,12 @@ public class DetailActivity extends AppCompatActivity {
         diaryDetailDate.setText(redgt);
         diaryDetailContent.setText(content);
         diaryDetailTitle.setText(title);
-        String resName = (String)diaryMap.get("imgstr");;
+        String resName = (String)diaryMap.get("imgstr");
         String packName = this.getPackageName(); // 패키지명
         int resID = getResources().getIdentifier(resName, "drawable", packName);
         diaryDetailImage.setImageResource(resID);
 
 
-        //db에서 이미지 경로 가져오기
-        HashMap<String,Object> diaryImgMap = new HashMap<String,Object>(); //hashmap 선언
-        diaryImgMap = sqlLiteDao.selectDiaryImg(diaryId); //diaryImg db에서 가져옴
         if(diaryImgMap != null) {
 
             diaryDetailImgDir= (String)diaryImgMap.get("imgDir");
