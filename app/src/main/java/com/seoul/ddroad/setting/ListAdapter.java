@@ -12,6 +12,8 @@ import com.seoul.ddroad.R;
 
 import java.util.ArrayList;
 
+import butterknife.OnClick;
+
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     Context context;
     ArrayList<ListItem> singModels = new ArrayList<>();
@@ -35,8 +37,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         holder.title.setText(singModel.getTitle());
         holder.imageview.setImageResource(singModel.getResId());
+
     }
 
+
+    //리스리 내용 개수
     @Override
     public int getItemCount() {
         return singModels.size();
@@ -45,11 +50,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView title;
         ImageView imageview;
+        //뷰들을 홀더에 꼽아높듯이 보관하는 객체
         public ViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.settingTextView);
             imageview = itemView.findViewById(R.id.settingImageView);
         }
     }
+
+
 }
 

@@ -64,13 +64,14 @@ public class SettingFragment extends Fragment {
 
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+
+
+
                 Toast.makeText(getActivity().getApplicationContext(), "클릭한 아이템의 이름은 " + list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
+
+
             }
         });
-
-
-
-
         }
 
 
