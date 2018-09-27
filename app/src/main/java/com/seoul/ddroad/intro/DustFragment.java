@@ -1,5 +1,6 @@
 package com.seoul.ddroad.intro;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -13,12 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seoul.ddroad.R;
+import com.seoul.ddroad.map.PolylineDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +36,9 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.seoul.ddroad.R.layout.custom_simple_dropdown_item_1line;
 import static com.seoul.ddroad.R.layout.support_simple_spinner_dropdown_item;
@@ -50,6 +56,7 @@ public class DustFragment extends Fragment {
     private TextView text_temperature;
     private TextView text_dropdown;
     private TextView text_finddust;
+    private Button  btn_petday;
     private TextView text_dog_date;
     private String findDustResult;
     private String findDustColor;
@@ -75,6 +82,7 @@ public class DustFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = getLayoutInflater().inflate(R.layout.activity_dust_cool, null);
+
         return view;
     }
 
@@ -113,7 +121,7 @@ public class DustFragment extends Fragment {
         text_dog_date = (TextView) getView().findViewById(R.id.text_dog_date);
         mainDogImg = (ImageButton) getView().findViewById(R.id.mainDogImg);
         spinner = getView().findViewById(R.id.spinner);
-
+        btn_petday = (Button) getView().findViewById(R.id.btn_petday);
         //폰트설정
         fontChange();
 
@@ -618,7 +626,6 @@ public class DustFragment extends Fragment {
         }
         return result;
     }
-
 
     @Override
     public void onResume() {

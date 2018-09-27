@@ -98,9 +98,9 @@
             android:id="@+id/text_dog_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="20dp"
             android:text="콩이♡ 456d"
-            android:textColor="#3d536a"
+            android:textColor="#274668"
             android:textSize="80px" />
     </LinearLayout>
 </LinearLayout>
