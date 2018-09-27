@@ -58,6 +58,14 @@ public class SqlLiteDao {
         }
     }
 
+    public void updatDiary(Object[] params){
+        database = helper.getWritableDatabase();
+        if (database != null) {
+            String sql = "update diary set title=?, content=?,imgstr=? ,regdt=? where diaryId=?";
+            database.execSQL(sql, params);
+        }
+    }
+
     public void deleteDiary(int diaryId) {
         database = helper.getWritableDatabase();
         if (database != null) {
@@ -153,6 +161,15 @@ public class SqlLiteDao {
         if (database != null) {
             String sql = "insert into diaryimg(diaryId, imgDir) values(?, ?)";
             Object[] params = {diaryId, imgDir};
+            database.execSQL(sql, params);
+        }
+    }
+
+    public void updateDiaryImg(int diaryId, String imgDir) {
+        database = helper.getWritableDatabase();
+        if (database != null) {
+            String sql = "update diaryimg set imgDir=? where diaryId = ?";
+            Object[] params = {imgDir,diaryId };
             database.execSQL(sql, params);
         }
     }
