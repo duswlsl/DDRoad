@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -394,6 +395,7 @@ public class DustFragment extends Fragment {
 
     public void getJSON(final String requestUrl, final int funcFlag) {
 
+
         if (requestUrl == null) return;
 
         Thread thread = new Thread(new Runnable() {
@@ -459,7 +461,7 @@ public class DustFragment extends Fragment {
                             public void run() {
 
                                 if (temperature != 100.0) {
-                                    text_temperature.setText("온도 " +String.valueOf(temperature) + "º");
+                                    text_temperature.setText("온도 " +String.valueOf(temperature));
                                 } else {
                                     text_temperature.setText("시간을 대한민국 기준으로");
                                     text_temperature.setTextColor(Color.parseColor("#FF0000"));
