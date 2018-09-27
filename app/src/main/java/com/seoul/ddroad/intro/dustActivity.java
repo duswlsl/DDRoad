@@ -472,14 +472,14 @@ public class dustActivity extends AppCompatActivity {
                                 if (temperature == 100.0) {
                                     text_finddust.setText("재설정해주세요");
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
-                                    mainDogImg.setImageResource(R.drawable.dogface2);
+                                    mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     //text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
-                                        mainDogImg.setImageResource(R.drawable.dogface2);
+                                        mainDogImg.setImageResource(R.drawable.dogface_2);
                                     } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
-                                        mainDogImg.setImageResource(R.drawable.dogface1);
+                                        mainDogImg.setImageResource(R.drawable.dogface_1);
                                     }
                                 }
                             }

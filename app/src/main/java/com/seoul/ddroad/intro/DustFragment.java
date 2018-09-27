@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,11 @@ public class DustFragment extends Fragment {
     private ImageButton mainDogImg;
 
     private Spinner spinner;
+
+    private int rainResult;
+    private ImageView rain;
+    private ImageView sun;
+    private int weatherFlag;
 
 
     @Override
@@ -113,6 +119,8 @@ public class DustFragment extends Fragment {
         text_dog_date = (TextView) getView().findViewById(R.id.text_dog_date);
         mainDogImg = (ImageButton) getView().findViewById(R.id.mainDogImg);
         spinner = getView().findViewById(R.id.spinner);
+        rain = getView().findViewById(R.id.rain);
+        sun = getView().findViewById(R.id.sun);
 
         //폰트설정
         fontChange();
@@ -516,6 +524,7 @@ public class DustFragment extends Fragment {
 
                             public void run() {
 
+
                                 if (temperature == 100.0) {
                                     text_finddust.setText("재설정해주세요");
 
@@ -526,9 +535,9 @@ public class DustFragment extends Fragment {
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
-                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
+                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")||weatherFlag==2) {
                                         mainDogImg.setImageResource(R.drawable.dogface_1);
-                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
+                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")||weatherFlag==1) {
                                         mainDogImg.setImageResource(R.drawable.dogface_2);
                                     }
                                 }
@@ -545,6 +554,7 @@ public class DustFragment extends Fragment {
 
     public Double tempJsonParser(String jsonString) {
         double tempResult = 0.0;
+        rainResult = 0;
 
         if (jsonString == null) return 0.0;
 
@@ -556,6 +566,11 @@ public class DustFragment extends Fragment {
             JSONArray item = items.getJSONArray("item");
             JSONObject jsonObject2 = new JSONObject(item.get(5).toString());
             tempResult = BigDecimal.valueOf(jsonObject2.getDouble("obsrValue")).doubleValue();
+
+            JSONObject rainObject = new JSONObject(item.get(3).toString());
+            rainResult = BigDecimal.valueOf(rainObject.getInt("obsrValue")).intValue();
+
+            rainChange();
 
             return tempResult;
         } catch (JSONException e) {
@@ -636,5 +651,27 @@ public class DustFragment extends Fragment {
         setDustApi();
 
         Log.d("리즘", "리즘");
+    }
+
+    public void rainChange(){
+        weatherFlag=0;
+        //SUNNY 1, RAIN2
+        getActivity().runOnUiThread(new Runnable() {
+
+            public void run() {
+                if(rainResult>0){
+                    //rain
+                    weatherFlag = 2;
+                    rain.setImageResource(R.drawable.weather_drop);
+                    sun.setImageResource(R.drawable.weather_sun2);
+                }else{
+                    //sunny
+                    weatherFlag = 1;
+                    rain.setImageResource(R.drawable.weather_drop2);
+                    sun.setImageResource(R.drawable.weather_sun);
+                }
+            }
+
+        });
     }
 }

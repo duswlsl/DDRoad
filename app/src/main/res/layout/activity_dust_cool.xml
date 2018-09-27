@@ -29,14 +29,16 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/rain"
             android:layout_width="60dp"
             android:layout_height="100dp"
-            android:src="@drawable/weather_drop" />
+            android:src="@drawable/weather_drop2" />
 
         <ImageView
+            android:id="@+id/sun"
             android:layout_width="60dp"
             android:layout_height="100dp"
-            android:src="@drawable/weather_sun" />
+            android:src="@drawable/weather_sun2" />
 
     </LinearLayout>
 
