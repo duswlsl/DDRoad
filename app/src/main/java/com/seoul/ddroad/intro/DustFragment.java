@@ -53,7 +53,7 @@ public class DustFragment extends Fragment {
     private TextView text_dropdown;
     private TextView text_finddust;
     private TextView text_dog_date;
-    private TextView text_dog_name;
+    //private TextView text_dog_name;
     private String findDustResult;
     private String findDustColor;
     private String myDog;
@@ -116,7 +116,7 @@ public class DustFragment extends Fragment {
         //text_location.setText(location);
         text_dropdown = (TextView) getView().findViewById(R.id.dropdown_item);
         text_temperature = (TextView) getView().findViewById(R.id.text_temperature);
-        text_dog_name = (TextView) getView().findViewById(R.id.text_dog_name);
+        //text_dog_name = (TextView) getView().findViewById(R.id.text_dog_name);
         text_finddust = (TextView) getView().findViewById(R.id.text_finedust);
         text_dog_date = (TextView) getView().findViewById(R.id.text_dog_date);
         mainDogImg = (ImageButton) getView().findViewById(R.id.mainDogImg);
@@ -244,8 +244,7 @@ public class DustFragment extends Fragment {
         text_temperature.setTypeface(typeface);
         text_finddust.setTypeface(typeface);
         text_dog_date.setTypeface(typeface);
-        text_dog_name.setTypeface(typeface);
-
+        //text_dog_name.setTypeface(typeface);
     }
 
 
