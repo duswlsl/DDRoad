@@ -28,12 +28,6 @@
             android:text=""
             android:textColor="@android:color/holo_orange_dark"
             android:textSize="20dp" />
-        <Button
-            android:id="@+id/btn_petday"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="날짜 설정"
-            android:textSize="10dp"/>
     </LinearLayout>
 
 </LinearLayout>
