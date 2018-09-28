@@ -182,6 +182,8 @@ public class DiaryRegActivity extends AppCompatActivity{
                 spinner.setSelection(12);
             }else if("@drawable/pills".equals(imgstr)){
                 spinner.setSelection(13);
+            }else if("@drawable/diary_walk".equals(imgstr)){
+                spinner.setSelection(14);
             }
 
             if(imgDirStr != null && !"".equals(imgDirStr)){
@@ -318,6 +320,8 @@ public class DiaryRegActivity extends AppCompatActivity{
                     mImgStr = "@drawable/hospital";
                 }else if(position == 13){
                     mImgStr = "@drawable/pills";
+                }else if(position == 1){
+                    mImgStr = "@drawable/diary_walk";
                 }else{
                     mImgStr = "";
                 }

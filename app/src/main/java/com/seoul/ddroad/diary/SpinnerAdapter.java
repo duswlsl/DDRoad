@@ -83,6 +83,8 @@ public class SpinnerAdapter  extends ArrayAdapter<String> {
                 holder.imageView1.setImageResource(R.drawable.hospital);
             }else if(position == 13){
                 holder.imageView1.setImageResource(R.drawable.pills);
+            }else if(position == 14){
+                holder.imageView1.setImageResource(R.drawable.diary_walk);
             }else{
                 holder.imageView1.setImageResource(0);
             }
