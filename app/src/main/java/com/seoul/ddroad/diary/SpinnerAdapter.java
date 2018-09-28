@@ -67,6 +67,22 @@ public class SpinnerAdapter  extends ArrayAdapter<String> {
                 holder.imageView1.setImageResource(R.drawable.bichon4);
             }else if(position == 5){
                 holder.imageView1.setImageResource(R.drawable.bichon5);
+            }else if(position == 6){
+                holder.imageView1.setImageResource(R.drawable.sun);
+            }else if(position == 7){
+                holder.imageView1.setImageResource(R.drawable.clouds);
+            }else if(position == 8){
+                holder.imageView1.setImageResource(R.drawable.cludysun);
+            }else if(position == 9){
+                holder.imageView1.setImageResource(R.drawable.drop);
+            }else if(position == 10){
+                holder.imageView1.setImageResource(R.drawable.flash);
+            }else if(position == 11){
+                holder.imageView1.setImageResource(R.drawable.snowflake);
+            }else if(position == 12){
+                holder.imageView1.setImageResource(R.drawable.hospital);
+            }else if(position == 13){
+                holder.imageView1.setImageResource(R.drawable.pills);
             }else{
                 holder.imageView1.setImageResource(0);
             }
