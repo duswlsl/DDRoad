@@ -2,6 +2,7 @@ package com.seoul.ddroad.diary;
 
 
 import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,7 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.Layout;
@@ -104,10 +106,30 @@ public class DetailActivity extends AppCompatActivity {
                 new Button.OnClickListener(){
                     @Override
                     public  void  onClick(View view){
-                        sqlLiteDao.deleteDiary(diaryId);
-                        Toast.makeText(getApplicationContext(),"삭제 되었습니다.",Toast.LENGTH_LONG).show();
-                        onBackPressed();
-                        finish();
+
+                        new AlertDialog.Builder(getApplicationContext())
+                                .setTitle("다이어리>삭제하기")
+                                .setMessage("삭제하시겠습니까?")
+                                .setIcon(R.drawable.info_dots)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        // 확인시 처리 로직
+
+                                        sqlLiteDao.deleteDiary(diaryId);
+                                        Toast.makeText(getApplicationContext(),"삭제 되었습니다.",Toast.LENGTH_LONG).show();
+                                        onBackPressed();
+                                        finish();
+
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        // 취소시 처리 로직
+                                        Toast.makeText(getApplicationContext(), "취소하였습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .show();
+
                     }
                 }
         );
