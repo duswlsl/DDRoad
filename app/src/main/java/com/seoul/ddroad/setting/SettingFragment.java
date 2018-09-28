@@ -94,6 +94,11 @@ public class SettingFragment extends Fragment {
                     case 0:
                         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
                         View mView = getLayoutInflater().inflate(R.layout.dialog_mydog, null);
+
+
+                        mBuilder.setView(mView);
+                        AlertDialog dialog = mBuilder.create();
+                        dialog.show();
                         break;
                     case 1:
 
@@ -103,14 +108,14 @@ public class SettingFragment extends Fragment {
                         int day = cal.get(Calendar.DAY_OF_MONTH);
 
                         //Toast.makeText(getActivity().getApplicationContext(), list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-                        DatePickerDialog dialog = new DatePickerDialog(getContext(),
+                        DatePickerDialog dialogPicker = new DatePickerDialog(getContext(),
                                 android.R.style.Theme_Holo_Light_Dialog_MinWidth, mDateSetListener,
                                 year,
                                 month,
                                 day);
 
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialog.show();
+                        dialogPicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialogPicker.show();
                         break;
                     case 2:
                         break;
