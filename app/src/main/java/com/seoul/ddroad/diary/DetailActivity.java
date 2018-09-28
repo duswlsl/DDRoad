@@ -1,28 +1,21 @@
 package com.seoul.ddroad.diary;
 
 
-import android.app.ActionBar;
+
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
+
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.text.Layout;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +45,13 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        //액션바 사용
+        ActionBar ab = getSupportActionBar() ;
+        ab.setTitle("상세내용");
+        //메뉴바에 '<' 버튼이 생긴다.(두개는 항상 같이다닌다)
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeButtonEnabled(true);
 
         sqlLiteDao = new SqlLiteDao(DetailActivity.this);
 
@@ -152,7 +152,7 @@ public class DetailActivity extends AppCompatActivity {
 
             diaryDetailImgDir= (String)diaryImgMap.get("imgDir");
 
-            Toast.makeText(getApplicationContext(), diaryDetailImgDir, Toast.LENGTH_LONG).show();
+          //  Toast.makeText(getApplicationContext(), diaryDetailImgDir, Toast.LENGTH_LONG).show();
         }
         //이미지뷰뿌리기
         if(diaryDetailImgDir != null && diaryDetailImgDir != "") {

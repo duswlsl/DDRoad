@@ -203,6 +203,21 @@ public class SqlLiteDao {
         return map;
     }
 
+    public int getCountDiaryImg(int diaryId) {
+        int cnt = 0;
+        database = helper.getWritableDatabase();
+        if (database != null) {
+
+            Cursor cur = database.rawQuery("SELECT COUNT(*) FROM diaryimg where diaryId = " + diaryId , null);
+            if(cur != null && cur.moveToFirst()){
+                cnt = cur.getInt(0);
+            };
+
+            cur.close();
+        }
+        return cnt;
+    }
+
     private String getDateFormat(String format, Date date) {//입력 Date를 날짜를  포팻 형태로 String 출력
 
         if (format == null || format == "") {

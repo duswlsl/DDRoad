@@ -132,7 +132,15 @@ public class DiaryRegActivity extends AppCompatActivity{
             }
         });
 
+        //날씨 이미지 스피너
+        String[] arr = getResources().getStringArray(R.array.weather_item_array);
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i=0; i < arr.length ; i++){
+            list.add(arr[i]);
+        }
 
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, R.layout.weather_spinner_item,list);
+        spinner.setAdapter(spinnerAdapter);
 
         //M은 수정하기 할때
         if("M".equals(regModCheck)){
@@ -259,15 +267,7 @@ public class DiaryRegActivity extends AppCompatActivity{
         });
 
 
-        //날씨 이미지 스피너
-        String[] arr = getResources().getStringArray(R.array.weather_item_array);
-        ArrayList<String> list = new ArrayList<String>();
-        for (int i=0; i < arr.length ; i++){
-            list.add(arr[i]);
-        }
 
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, R.layout.weather_spinner_item,list);
-        spinner.setAdapter(spinnerAdapter);
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -334,7 +334,14 @@ public class DiaryRegActivity extends AppCompatActivity{
                                 sqlLiteImgDao.updatDiary(params);
                                 String imgDir = imgFIleWrite();
                                 if(imgDir != null && !"".equals(imgDir)){
-                                    sqlLiteImgDao.updateDiaryImg(diaryId,imgDir);
+
+                                    int cnt = sqlLiteImgDao.getCountDiaryImg(diaryId);
+                                    if(cnt > 0){
+                                        sqlLiteImgDao.updateDiaryImg(diaryId,imgDir);
+                                    }else{
+                                        sqlLiteImgDao.insertDiaryImg(diaryId,imgDir);
+                                    }
+
                                 }
 
                                 Toast.makeText(DiaryRegActivity.this, "수정을 완료했습니다.", Toast.LENGTH_SHORT).show();
@@ -359,9 +366,6 @@ public class DiaryRegActivity extends AppCompatActivity{
                 int diaryId  = sqlLiteImgDao.getLastDiaryId();
                 String imgDir = imgFIleWrite();
                 if(imgDir != null && imgDir != ""){
-                    Toast.makeText(getApplicationContext(),
-                            imgDir, Toast.LENGTH_SHORT)
-                            .show();
                     sqlLiteImgDao.insertDiaryImg(diaryId,imgDir);
                 }
 
@@ -398,8 +402,6 @@ public class DiaryRegActivity extends AppCompatActivity{
             try {
                 File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_PICTURES), "ddroad");
-                Toast.makeText(getApplicationContext(),
-                        mediaStorageDir.getPath(), Toast.LENGTH_LONG).show();
                 if (!mediaStorageDir.exists()) { //폴더 있는지 확인하고 없으면 만든다
                     if (!mediaStorageDir.mkdirs()) {
                         Log.d("ddroad", "failed to create directory");
