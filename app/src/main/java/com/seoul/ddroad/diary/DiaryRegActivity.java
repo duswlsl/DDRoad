@@ -86,13 +86,17 @@ public class DiaryRegActivity extends AppCompatActivity{
 
         //데이터 가져와서 등록 수정 판별
         Intent intent = getIntent();
-        diaryId = intent.getExtras().getInt("diaryId");
-        title = intent.getExtras().getString("title");
-        content = intent.getExtras().getString("content");
-        redgt = intent.getExtras().getString("redgt");
-        imgstr = intent.getExtras().getString("imgstr");
-        imgDir = intent.getExtras().getString("imgDir");
+
         regModCheck= intent.getExtras().getString("regModCheck");
+        if("M".equals(regModCheck)){
+            diaryId = intent.getExtras().getInt("diaryId");
+            title = intent.getExtras().getString("title");
+            content = intent.getExtras().getString("content");
+            redgt = intent.getExtras().getString("redgt");
+            imgstr = intent.getExtras().getString("imgstr");
+
+            imgDir = intent.getExtras().getString("imgDir");
+        }
 
 
         //액션바 사용
@@ -156,7 +160,7 @@ public class DiaryRegActivity extends AppCompatActivity{
                 spinner.setSelection(5);
             }
 
-            if(!"".equals(imgDir)){
+            if(imgDir != null && !"".equals(imgDir)){
                 ArrayList<String> returnValue = new ArrayList<>();
                 returnValue.add(imgDir);
                 myAdapter.addImage(returnValue);
