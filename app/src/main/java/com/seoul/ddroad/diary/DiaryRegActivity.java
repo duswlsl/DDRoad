@@ -159,21 +159,21 @@ public class DiaryRegActivity extends AppCompatActivity{
             }else if("@drawable/bichon5".equals(imgstr)){
                 spinner.setSelection(5);
             }else if("@drawable/sun".equals(imgstr)){
-                spinner.setSelection(5);
+                spinner.setSelection(6);
             }else if("@drawable/cloudy".equals(imgstr)){
-                spinner.setSelection(5);
+                spinner.setSelection(7);
             }else if("@drawable/cludysun".equals(imgstr)){
-                spinner.setSelection(5);
+                spinner.setSelection(8);
             }else if("@drawable/drop".equals(imgstr)){
-                spinner.setSelection(5);
+                spinner.setSelection(9);
             }else if("@drawable/flash".equals(imgstr)){
-                spinner.setSelection(5);
+                spinner.setSelection(10);
             }else if("@drawable/snowflake".equals(imgstr)){
-                spinner.setSelection(5);
+                spinner.setSelection(11);
             }else if("@drawable/hospital".equals(imgstr)){
-                spinner.setSelection(5);
+                spinner.setSelection(12);
             }else if("@drawable/pills".equals(imgstr)){
-                spinner.setSelection(5);
+                spinner.setSelection(13);
             }
 
             if(imgDir != null && !"".equals(imgDir)){
