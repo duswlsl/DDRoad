@@ -24,6 +24,7 @@ import com.seoul.ddroad.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -52,6 +53,7 @@ public class DustFragment extends Fragment {
     private TextView text_dropdown;
     private TextView text_finddust;
     private TextView text_dog_date;
+    private TextView text_dog_name;
     private String findDustResult;
     private String findDustColor;
     private String myDog;
@@ -114,7 +116,7 @@ public class DustFragment extends Fragment {
         //text_location.setText(location);
         text_dropdown = (TextView) getView().findViewById(R.id.dropdown_item);
         text_temperature = (TextView) getView().findViewById(R.id.text_temperature);
-
+        text_dog_name = (TextView) getView().findViewById(R.id.text_dog_name);
         text_finddust = (TextView) getView().findViewById(R.id.text_finedust);
         text_dog_date = (TextView) getView().findViewById(R.id.text_dog_date);
         mainDogImg = (ImageButton) getView().findViewById(R.id.mainDogImg);
@@ -137,8 +139,8 @@ public class DustFragment extends Fragment {
 
         setDustApi();
 
-        //nDogDate = countDday(nYear, nMonth, nDay);
-        //text_dog_date.setText(myDog + " ♡ " + nDogDate);
+        nDogDate = countDday(nYear, nMonth, nDay);
+        text_dog_date.setText(myDog + " ♡ " + nDogDate);
 
 
         setSpinner();
@@ -242,6 +244,7 @@ public class DustFragment extends Fragment {
         text_temperature.setTypeface(typeface);
         text_finddust.setTypeface(typeface);
         text_dog_date.setTypeface(typeface);
+        text_dog_name.setTypeface(typeface);
 
     }
 
@@ -383,31 +386,31 @@ public class DustFragment extends Fragment {
         }
     }
 
-//    public int countDday(int myear, int mmonth, int mday) {
-//        try {
-//            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
-//            //캘린더
-//            Calendar todaCal = Calendar.getInstance(); //현재날짜
-//            Calendar ddayCal = Calendar.getInstance(); //설정날짜
-//
-//            mmonth -= 1;
-//
-//            ddayCal.set(myear, mmonth, mday);
-//            ddayCal.set(myear, mmonth, mday);// D-day의 날짜를 입력 셋팅해준다
-//            Log.e("테스트", simpleDateFormat.format(todaCal.getTime()) + "");
-//            Log.e("테스트", simpleDateFormat.format(ddayCal.getTime()) + "");
-//
-//            long today = todaCal.getTimeInMillis() / 86400000; //(24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
-//            long dday = ddayCal.getTimeInMillis() / 86400000;
-//            long count = (dday - today) * -1; // 오늘 날짜에서 dday 빼준다
-//            return (int) count; // 결과값 반환해준다
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return -1;
-//        }
-//    }
+    public int countDday(int myear, int mmonth, int mday) {
+        try {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            //캘린더
+            Calendar todaCal = Calendar.getInstance(); //현재날짜
+            Calendar ddayCal = Calendar.getInstance(); //설정날짜
+
+            mmonth -= 1;
+
+            ddayCal.set(myear, mmonth, mday);
+            ddayCal.set(myear, mmonth, mday);// D-day의 날짜를 입력 셋팅해준다
+            Log.e("테스트", simpleDateFormat.format(todaCal.getTime()) + "");
+            Log.e("테스트", simpleDateFormat.format(ddayCal.getTime()) + "");
+
+            long today = todaCal.getTimeInMillis() / 86400000; //(24 * 60 * 60 * 1000) 24시간 60분 60초 * (ms초->초 변환 1000)
+            long dday = ddayCal.getTimeInMillis() / 86400000;
+            long count = (dday - today) * -1; // 오늘 날짜에서 dday 빼준다
+            return (int) count; // 결과값 반환해준다
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
     public void setTempApi(String inputDate, String inputTime, String inputNx, String inputNy) {
 

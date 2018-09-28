@@ -2,6 +2,7 @@ package com.seoul.ddroad.setting;
 
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
@@ -91,6 +92,8 @@ public class SettingFragment extends Fragment {
                 switch (position)
                 {
                     case 0:
+                        AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
+                        View mView = getLayoutInflater().inflate(R.layout.dialog_mydog, null);
                         break;
                     case 1:
 
