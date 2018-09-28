@@ -53,7 +53,7 @@ public class DustFragment extends Fragment {
     private TextView text_dropdown;
     private TextView text_finddust;
     private TextView text_dog_date;
-    //private TextView text_dog_name;
+    private TextView text_dog_name;
     private String findDustResult;
     private String findDustColor;
     private String myDog;
@@ -109,14 +109,8 @@ public class DustFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
 
-
-        //setContentView(R.layout.activity_dust_cool);
-
-        //text_location = (TextView) getView().findViewById(R.id.text1);
-        //text_location.setText(location);
         text_dropdown = (TextView) getView().findViewById(R.id.dropdown_item);
         text_temperature = (TextView) getView().findViewById(R.id.text_temperature);
-        //text_dog_name = (TextView) getView().findViewById(R.id.text_dog_name);
         text_finddust = (TextView) getView().findViewById(R.id.text_finedust);
         text_dog_date = (TextView) getView().findViewById(R.id.text_dog_date);
         mainDogImg = (ImageButton) getView().findViewById(R.id.mainDogImg);
@@ -124,7 +118,6 @@ public class DustFragment extends Fragment {
         rain = getView().findViewById(R.id.rain);
         sun = getView().findViewById(R.id.sun);
 
-        //btn_petday = (Button) getView().findViewById(R.id.btn_petday);
         //폰트설정
         fontChange();
 
@@ -180,8 +173,6 @@ public class DustFragment extends Fragment {
         spinnerAdater = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.custom_simple_dropdown_item_1line, list);
         spinnerAdater.setDropDownViewResource(R.layout.custom_simple_dropdown_item_1line);
         spinner.setAdapter(spinnerAdater);
-//        getView(spinnerAdater.getCount(), text_dropdown, spinner);
-//        getDropDownView(spinnerAdater.getCount(), text_dropdown, spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -244,7 +235,6 @@ public class DustFragment extends Fragment {
         text_temperature.setTypeface(typeface);
         text_finddust.setTypeface(typeface);
         text_dog_date.setTypeface(typeface);
-        //text_dog_name.setTypeface(typeface);
     }
 
 
@@ -651,8 +641,6 @@ public class DustFragment extends Fragment {
 
         //미세먼지
         setDustApi();
-
-        Log.d("리즘", "리즘");
     }
 
     public void rainChange(){
