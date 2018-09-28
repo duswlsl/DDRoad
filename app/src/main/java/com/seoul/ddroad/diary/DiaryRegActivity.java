@@ -282,7 +282,24 @@ public class DiaryRegActivity extends AppCompatActivity{
                     mImgStr = "@drawable/bichon4";
                 }else if(position == 5){
                     mImgStr = "@drawable/bichon5";
-                }else{
+                }else if(position == 6){
+                    mImgStr = "@drawable/sun";
+                }else if(position == 7){
+                    mImgStr = "@drawable/clouds";
+                }else if(position == 8){
+                    mImgStr = "@drawable/cludysun";
+                }else if(position == 9){
+                    mImgStr = "@drawable/drop";
+                }else if(position == 10){
+                    mImgStr = "@drawable/flash";
+                }else if(position == 11){
+                    mImgStr = "@drawable/snowflake";
+                }else if(position == 12){
+                    mImgStr = "@drawable/hospital";
+                }else if(position == 13){
+                    mImgStr = "@drawable/pills";
+                }
+                else{
                     mImgStr = "";
                 }
             }
