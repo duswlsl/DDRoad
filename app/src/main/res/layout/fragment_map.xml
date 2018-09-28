@@ -18,19 +18,18 @@
         android:layout_margin="20dp"
         android:background="@drawable/btn_walk"
         android:tag="OFF"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_margin="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-
-        <Button
-            android:id="@+id/btn_all"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:tag="X"
-            android:text="all" />
+        android:layout_height="0dp"
+        android:padding="5dp"
+        android:layout_weight="1.6">
 
         <Button
             android:id="@+id/btn_cafe"
@@ -38,7 +37,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:tag="X"
-            android:text="cafe" />
+            android:background="@drawable/btn_cafe"
+            android:layout_marginRight="7dp"/>
 
         <Button
             android:id="@+id/btn_hotel"
@@ -46,7 +46,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:tag="X"
-            android:text="hot" />
+            android:background="@drawable/btn_hotel"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"/>
 
         <Button
             android:id="@+id/btn_hospital"
@@ -54,7 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:tag="X"
-            android:text="hos" />
+            android:background="@drawable/btn_hospital"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"/>
 
         <Button
             android:id="@+id/btn_salon"
@@ -62,7 +66,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:tag="X"
-            android:text="sal" />
+            android:background="@drawable/btn_salon"
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"/>
 
         <Button
             android:id="@+id/btn_trail"
@@ -70,7 +76,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:tag="X"
-            android:text="tra" />
+            android:background="@drawable/btn_trail"
+            android:layout_marginLeft="7dp" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8">
+
+    </LinearLayout>
+
+</LinearLayout>
+
 
 </RelativeLayout>

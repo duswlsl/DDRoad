@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -217,8 +218,28 @@ public class BoardFragment extends Fragment {
         });
         mWebView.setWebViewClient(new WebViewClient());
 
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                //This is the filter
+                if (event.getAction()!=KeyEvent.ACTION_DOWN)
+                    return true;
 
 
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (mWebView.canGoBack()) {
+                        mWebView.goBack();
+                    } else {
+                        (getActivity()).onBackPressed();
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
 
         mWebView.loadUrl("http://guitarhyo.freehongs.net"); // 접속 URL
 

@@ -1,26 +1,21 @@
 package com.seoul.ddroad.diary;
 
 
-import android.app.ActionBar;
+
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
+
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.text.Layout;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +37,7 @@ public class DetailActivity extends AppCompatActivity {
     private  String diaryDetailImgDir;
 
     HashMap<String,Object> diaryMap = new HashMap<String,Object>();
+    HashMap<String,Object> diaryImgMap = new HashMap<String,Object>(); //hashmap 선언;
 
     private SqlLiteDao sqlLiteDao;
 
@@ -49,6 +45,13 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        //액션바 사용
+        ActionBar ab = getSupportActionBar() ;
+        ab.setTitle("상세내용");
+        //메뉴바에 '<' 버튼이 생긴다.(두개는 항상 같이다닌다)
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeButtonEnabled(true);
 
         sqlLiteDao = new SqlLiteDao(DetailActivity.this);
 
@@ -58,6 +61,8 @@ public class DetailActivity extends AppCompatActivity {
 
         diaryMap = sqlLiteDao.selectDiary(diaryId); //메서드에서 데이터를 가져옵니다.!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!원래 이거 만들었어야함
 
+        //db에서 이미지 경로 가져오기
+        diaryImgMap = sqlLiteDao.selectDiaryImg(diaryId);
 
        // comeOn = (TextView) findViewById(R.id.comeOn); //상세화면 텍스트 뷰 선언
         diaryDetailDate = (TextView) findViewById(R.id.diaryDetailDate);
@@ -73,7 +78,26 @@ public class DetailActivity extends AppCompatActivity {
                 new Button.OnClickListener(){
                     @Override
                     public  void  onClick(View view){
-                        Toast.makeText(getApplicationContext(),"수정.",Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), DiaryRegActivity.class);
+                        String redgt = (String)diaryMap.get("regdt");
+                        String content = (String)diaryMap.get("content");
+                        String title = (String)diaryMap.get("title");
+                        String imgstr = (String)diaryMap.get("imgstr");
+
+                        intent.putExtra("diaryId", diaryId);
+                        intent.putExtra("imgstr", imgstr);
+                        intent.putExtra("redgt", redgt);
+                        intent.putExtra("content", content);
+                        intent.putExtra("title", title);
+                        intent.putExtra("regModCheck", "M");
+                        if(diaryImgMap != null) {
+                            String imgDir = (String) diaryImgMap.get("imgDir");
+                            intent.putExtra("imgDir", imgDir);
+                        }else{
+                            intent.putExtra("imgDir", "");
+                        }
+                        startActivity(intent);
+                        finish();
                     }
                 }
         );
@@ -82,10 +106,30 @@ public class DetailActivity extends AppCompatActivity {
                 new Button.OnClickListener(){
                     @Override
                     public  void  onClick(View view){
-                        sqlLiteDao.deleteDiary(diaryId);
-                        Toast.makeText(getApplicationContext(),"삭제 되었습니다.",Toast.LENGTH_LONG).show();
-                        onBackPressed();
-                        finish();
+
+                        new AlertDialog.Builder(getApplicationContext())
+                                .setTitle("다이어리>삭제하기")
+                                .setMessage("삭제하시겠습니까?")
+                                .setIcon(R.drawable.info_dots)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        // 확인시 처리 로직
+
+                                        sqlLiteDao.deleteDiary(diaryId);
+                                        Toast.makeText(getApplicationContext(),"삭제 되었습니다.",Toast.LENGTH_LONG).show();
+                                        onBackPressed();
+                                        finish();
+
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        // 취소시 처리 로직
+                                        Toast.makeText(getApplicationContext(), "취소하였습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .show();
+
                     }
                 }
         );
@@ -98,20 +142,17 @@ public class DetailActivity extends AppCompatActivity {
         diaryDetailDate.setText(redgt);
         diaryDetailContent.setText(content);
         diaryDetailTitle.setText(title);
-        String resName = (String)diaryMap.get("imgstr");;
+        String resName = (String)diaryMap.get("imgstr");
         String packName = this.getPackageName(); // 패키지명
         int resID = getResources().getIdentifier(resName, "drawable", packName);
         diaryDetailImage.setImageResource(resID);
 
 
-        //db에서 이미지 경로 가져오기
-        HashMap<String,Object> diaryImgMap = new HashMap<String,Object>(); //hashmap 선언
-        diaryImgMap = sqlLiteDao.selectDiaryImg(diaryId); //diaryImg db에서 가져옴
         if(diaryImgMap != null) {
 
             diaryDetailImgDir= (String)diaryImgMap.get("imgDir");
 
-            Toast.makeText(getApplicationContext(), diaryDetailImgDir, Toast.LENGTH_LONG).show();
+          //  Toast.makeText(getApplicationContext(), diaryDetailImgDir, Toast.LENGTH_LONG).show();
         }
         //이미지뷰뿌리기
         if(diaryDetailImgDir != null && diaryDetailImgDir != "") {

@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +24,7 @@ import com.seoul.ddroad.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -34,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static com.seoul.ddroad.R.layout.custom_simple_dropdown_item_1line;
+import static com.seoul.ddroad.R.layout.support_simple_spinner_dropdown_item;
 
 public class DustFragment extends Fragment {
 
@@ -46,9 +50,10 @@ public class DustFragment extends Fragment {
     private Double temperature;
     private int fineDust;
     private TextView text_temperature;
-    private TextView text_location;
+    private TextView text_dropdown;
     private TextView text_finddust;
     private TextView text_dog_date;
+    private TextView text_dog_name;
     private String findDustResult;
     private String findDustColor;
     private String myDog;
@@ -59,6 +64,11 @@ public class DustFragment extends Fragment {
     private ImageButton mainDogImg;
 
     private Spinner spinner;
+
+    private int rainResult;
+    private ImageView rain;
+    private ImageView sun;
+    private int weatherFlag;
 
 
     @Override
@@ -104,14 +114,17 @@ public class DustFragment extends Fragment {
 
         //text_location = (TextView) getView().findViewById(R.id.text1);
         //text_location.setText(location);
-
+        text_dropdown = (TextView) getView().findViewById(R.id.dropdown_item);
         text_temperature = (TextView) getView().findViewById(R.id.text_temperature);
-
+        text_dog_name = (TextView) getView().findViewById(R.id.text_dog_name);
         text_finddust = (TextView) getView().findViewById(R.id.text_finedust);
         text_dog_date = (TextView) getView().findViewById(R.id.text_dog_date);
         mainDogImg = (ImageButton) getView().findViewById(R.id.mainDogImg);
         spinner = getView().findViewById(R.id.spinner);
+        rain = getView().findViewById(R.id.rain);
+        sun = getView().findViewById(R.id.sun);
 
+        //btn_petday = (Button) getView().findViewById(R.id.btn_petday);
         //폰트설정
         fontChange();
 
@@ -134,6 +147,8 @@ public class DustFragment extends Fragment {
     }
 
     public void setSpinner() {
+
+
         //input array data
         final ArrayList<String> list = new ArrayList<>();
         list.add("서울시 종로구");
@@ -160,12 +175,13 @@ public class DustFragment extends Fragment {
         list.add("서울시 송파구");
         list.add("서울시 강남구");
 
-
         //배열 어답터 사용
         ArrayAdapter spinnerAdater;
         spinnerAdater = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.custom_simple_dropdown_item_1line, list);
+        spinnerAdater.setDropDownViewResource(R.layout.custom_simple_dropdown_item_1line);
         spinner.setAdapter(spinnerAdater);
-
+//        getView(spinnerAdater.getCount(), text_dropdown, spinner);
+//        getDropDownView(spinnerAdater.getCount(), text_dropdown, spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -183,15 +199,43 @@ public class DustFragment extends Fragment {
 
                 //미세먼지
                 setDustApi();
+
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-
-
         });
+    }
+
+    public TextView getView(int position, View convertView, ViewGroup parent) {
+        int mPosition;
+        View mView;
+        ViewGroup mParent;
+
+        mPosition = position;
+        mView = convertView;
+        mParent = parent;
+        TextView v = (TextView) this.getView(mPosition, mView, mParent);
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
+        v.setTypeface(typeface);
+        return v;
+    }
+
+    public TextView getDropDownView(int position, View convertView, ViewGroup parent) {
+        int mPosition;
+        View mView;
+        ViewGroup mParent;
+
+        mPosition = position;
+        mView = convertView;
+        mParent = parent;
+        TextView v = (TextView) this.getView(mPosition, mView, mParent);
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
+        v.setTypeface(typeface);
+        return v;
     }
 
     public void fontChange() {
@@ -200,7 +244,8 @@ public class DustFragment extends Fragment {
         text_temperature.setTypeface(typeface);
         text_finddust.setTypeface(typeface);
         text_dog_date.setTypeface(typeface);
-//        text_location.setTypeface(typeface);
+        text_dog_name.setTypeface(typeface);
+
     }
 
 
@@ -394,6 +439,7 @@ public class DustFragment extends Fragment {
 
     public void getJSON(final String requestUrl, final int funcFlag) {
 
+
         if (requestUrl == null) return;
 
         Thread thread = new Thread(new Runnable() {
@@ -459,7 +505,7 @@ public class DustFragment extends Fragment {
                             public void run() {
 
                                 if (temperature != 100.0) {
-                                    text_temperature.setText(String.valueOf(temperature) + "도");
+                                    text_temperature.setText("온도 " +String.valueOf(temperature));
                                 } else {
                                     text_temperature.setText("시간을 대한민국 기준으로");
                                     text_temperature.setTextColor(Color.parseColor("#FF0000"));
@@ -486,16 +532,16 @@ public class DustFragment extends Fragment {
                                     text_finddust.setText("재설정해주세요");
 
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
-                                    mainDogImg.setImageResource(R.drawable.dogface1);
+                                    mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
                                     text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
-                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
+                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")||weatherFlag==2||temperature>25.0) {
                                         mainDogImg.setImageResource(R.drawable.dogface_1);
-                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
-                                        mainDogImg.setImageResource(R.drawable.dogface1);
+                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")||weatherFlag==1||temperature<=25.0) {
+                                        mainDogImg.setImageResource(R.drawable.dogface_2);
                                     }
                                 }
                             }
@@ -511,6 +557,7 @@ public class DustFragment extends Fragment {
 
     public Double tempJsonParser(String jsonString) {
         double tempResult = 0.0;
+        rainResult = 0;
 
         if (jsonString == null) return 0.0;
 
@@ -522,6 +569,11 @@ public class DustFragment extends Fragment {
             JSONArray item = items.getJSONArray("item");
             JSONObject jsonObject2 = new JSONObject(item.get(5).toString());
             tempResult = BigDecimal.valueOf(jsonObject2.getDouble("obsrValue")).doubleValue();
+
+            JSONObject rainObject = new JSONObject(item.get(3).toString());
+            rainResult = BigDecimal.valueOf(rainObject.getInt("obsrValue")).intValue();
+
+            rainChange();
 
             return tempResult;
         } catch (JSONException e) {
@@ -585,4 +637,44 @@ public class DustFragment extends Fragment {
         return result;
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //날짜시간설정
+        setDateTime();
+
+        //임의로 주소입력
+        setNxNy(location);
+
+        //온도API
+        setTempApi(inputDate, inputTime, inputNx, inputNy);
+
+        //미세먼지
+        setDustApi();
+
+        Log.d("리즘", "리즘");
+    }
+
+    public void rainChange(){
+        weatherFlag=0;
+        //SUNNY 1, RAIN2
+        getActivity().runOnUiThread(new Runnable() {
+
+            public void run() {
+                if(rainResult>0){
+                    //rain
+                    weatherFlag = 2;
+                    rain.setImageResource(R.drawable.weather_drop);
+                    sun.setImageResource(R.drawable.weather_sun2);
+                }else{
+                    //sunny
+                    weatherFlag = 1;
+                    rain.setImageResource(R.drawable.weather_drop2);
+                    sun.setImageResource(R.drawable.weather_sun);
+                }
+            }
+
+        });
+    }
 }

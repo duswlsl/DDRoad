@@ -93,11 +93,25 @@ public class dustActivity extends AppCompatActivity {
 
         //온도API
         setTempApi(inputDate, inputTime, inputNx, inputNy);
-
+        //미세먼지 API
         setDustApi();
 
+        //견주 같이 지내온 날짜
         nDogDate = countDday(nYear, nMonth, nDay);
-        text_dog_date.setText(myDog + "♡ " + nDogDate + " D-Days");
+
+        //설정 셋팅 데이터 shared 써서 가져오기
+
+        //만약 shared 에서 가져온 정보가 널이 아닐경우 데이터 뿌리기
+        if(text_dog_date.toString() == null)
+        {
+            text_dog_date.setText("옵션 에서 설정 해주세요");
+            //옵션에 액티비티 창 뛰우기 설정이랑 이화면이랑 액티비티 정보 공유되어야함
+        }
+        else
+        {
+            text_dog_date.setText(myDog + "♡ " + nDogDate + " D-Days");
+
+        }
 
 
         setSpinner();
@@ -458,14 +472,14 @@ public class dustActivity extends AppCompatActivity {
                                 if (temperature == 100.0) {
                                     text_finddust.setText("재설정해주세요");
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
-                                    mainDogImg.setImageResource(R.drawable.dogface2);
+                                    mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     //text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")) {
-                                        mainDogImg.setImageResource(R.drawable.dogface2);
+                                        mainDogImg.setImageResource(R.drawable.dogface_2);
                                     } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")) {
-                                        mainDogImg.setImageResource(R.drawable.dogface1);
+                                        mainDogImg.setImageResource(R.drawable.dogface_1);
                                     }
                                 }
                             }

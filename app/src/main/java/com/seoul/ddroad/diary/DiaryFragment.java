@@ -70,6 +70,7 @@ public class DiaryFragment extends Fragment {
                 Intent intent = new Intent(
                         getActivity().getApplicationContext(), // 현재 화면의 제어권자
                         DiaryRegActivity.class); // 다음 넘어갈 클래스 지정
+                intent.putExtra("regModCheck", "R");
                 startActivity(intent); // 다음 화면으로 넘어간다
             }
         });
