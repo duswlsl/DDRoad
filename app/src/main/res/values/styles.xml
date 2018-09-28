@@ -21,7 +21,6 @@
     <style name="CaldroidDefaultGridView">
         <item name="android:adjustViewBounds">true</item>
         <item name="android:gravity">center_horizontal</item>
-        <!--<item name="android:listSelector">@null</item>-->
         <item name="android:background">@color/calendarBackground</item>
         <item name="android:horizontalSpacing">1dp</item>
         <item name="android:padding">1dp</item>
@@ -35,7 +34,7 @@
     </style>
 
     <style name="CaldroidDefaultMonthNameLand">
-        <item name="android:textColor">#FF9800</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>

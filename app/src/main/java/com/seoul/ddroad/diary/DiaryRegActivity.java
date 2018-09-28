@@ -1,6 +1,7 @@
 package com.seoul.ddroad.diary;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -60,26 +62,68 @@ public class DiaryRegActivity extends AppCompatActivity{
     private FloatingActionButton fab;
     private String imgDirStr = "";
     private SqlLiteDao sqlLiteImgDao;
+
+    private String redgt = "";
+    private String content = "";
+    private String title = "";
+    private String imgstr = "";
+
+    private int diaryId;
+
+    private String regModCheck = "";
+
+
+    private EditText diaryTitle;
+    private EditText diaryContent;
     @Override
     public void onCreate( Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diaryreg);
 
-        sqlLiteImgDao = new SqlLiteDao(DiaryRegActivity.this);
-        spinner =(Spinner)findViewById(R.id.weatherSpinner);
+        diaryTitle=(EditText)findViewById(R.id.diaryTitle);
+        diaryContent=(EditText)findViewById(R.id.diaryContent);
+
+        //데이터 가져와서 등록 수정 판별
+        Intent intent = getIntent();
+
+        regModCheck= intent.getExtras().getString("regModCheck");
+        if("M".equals(regModCheck)){
+            diaryId = intent.getExtras().getInt("diaryId");
+            title = intent.getExtras().getString("title");
+            content = intent.getExtras().getString("content");
+            redgt = intent.getExtras().getString("redgt");
+            imgstr = intent.getExtras().getString("imgstr");
+
+            imgDirStr = intent.getExtras().getString("imgDir");
+        }
+
+
+        //액션바 사용
+        ActionBar ab = getSupportActionBar() ;
+
+        //메뉴바에 '<' 버튼이 생긴다.(두개는 항상 같이다닌다)
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setHomeButtonEnabled(true);
+        // 출처: http://ande226.tistory.com/141 [안디스토리]
 
         now = Calendar.getInstance();
         mCurrentDate = now.getTime();  //현재 날짜를 가져온다
-        weatherDateStr = getDateFormat("yyyy-MM-dd HH:mm",mCurrentDate);
-        weatherDate = (TextView)findViewById(R.id.weatherDate);
-        weatherDate.setText(weatherDateStr);
 
+        //디비 초기화
+        sqlLiteImgDao = new SqlLiteDao(DiaryRegActivity.this);
+
+        //상태 이미지 초기화
+        spinner =(Spinner)findViewById(R.id.weatherSpinner);
+
+
+        //이미지 관련 뷰 초기화
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         myAdapter = new MyAdapter(this);
-        recyclerView.setAdapter(myAdapter);
 
+
+        //카메라 호출 버튼 초기화
         fab = findViewById(R.id.diaryImgFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +132,61 @@ public class DiaryRegActivity extends AppCompatActivity{
             }
         });
 
+        //날씨 이미지 스피너
+        String[] arr = getResources().getStringArray(R.array.weather_item_array);
+        ArrayList<String> list = new ArrayList<String>();
+        for (int i=0; i < arr.length ; i++){
+            list.add(arr[i]);
+        }
+
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, R.layout.weather_spinner_item,list);
+        spinner.setAdapter(spinnerAdapter);
+
+        //M은 수정하기 할때
+        if("M".equals(regModCheck)){
+            ab.setTitle("수정하기");
+            diaryTitle.setText(title);
+            diaryContent.setText(content);
+
+            if(redgt != null && redgt != "" && redgt.length() > 16){
+                SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                try {
+                    mCurrentDate = transFormat.parse(redgt);
+                }catch (Exception e){
+                    Log.e("ddroad",e.getMessage());
+                }
+            }
+            if("@drawable/bichon1".equals(imgstr) ){
+                spinner.setSelection(1);
+            }else if("@drawable/bichon2".equals(imgstr)){
+                spinner.setSelection(2);
+            }else if("@drawable/bichon3".equals(imgstr)){
+                spinner.setSelection(3);
+            }else if("@drawable/bichon4".equals(imgstr)){
+                spinner.setSelection(4);
+            }else if("@drawable/bichon5".equals(imgstr)){
+                spinner.setSelection(5);
+            }
+
+            if(imgDirStr != null && !"".equals(imgDirStr)){
+                ArrayList<String> returnValue = new ArrayList<>();
+                returnValue.add(imgDirStr);
+                myAdapter.addImage(returnValue);
+            }
+
+        }else{
+            ab.setTitle("등록하기");
+        }
+
+        //화면 표출할 날짜 포멧 String
+        weatherDateStr = getDateFormat("yyyy-MM-dd HH:mm",mCurrentDate);
+
+
+        //달력 텍스트뷰 초기화 및  날짜 셋팅
+        weatherDate = (TextView)findViewById(R.id.weatherDate);
+        weatherDate.setText(weatherDateStr);
+
+        recyclerView.setAdapter(myAdapter);
 
 
         Button btnDate  = (Button)findViewById(R.id.regBtnDate);
@@ -168,25 +267,9 @@ public class DiaryRegActivity extends AppCompatActivity{
         });
 
 
-        //액션바 사용
-        ActionBar ab = getSupportActionBar() ;
-        ab.setTitle("등록하기");
-
-        //메뉴바에 '<' 버튼이 생긴다.(두개는 항상 같이다닌다)
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setHomeButtonEnabled(true);
-        // 출처: http://ande226.tistory.com/141 [안디스토리]
 
 
-        //날씨 이미지 스피너
-        String[] arr = getResources().getStringArray(R.array.weather_item_array);
-        ArrayList<String> list = new ArrayList<String>();
-        for (int i=0; i < arr.length ; i++){
-            list.add(arr[i]);
-        }
 
-        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, R.layout.weather_spinner_item,list);
-        spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -237,37 +320,72 @@ public class DiaryRegActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if( id == R.id.regPost ){//글 등록 누르면?
+            if("M".equals(regModCheck)) {
 
+                //confirm 다이얼 로그 start
+                new AlertDialog.Builder(this)
+                        .setTitle("다이어리>수정하기")
+                        .setMessage("수정하시겠습니까?")
+                        .setIcon(R.drawable.info_dots)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // 확인시 처리 로직
+                                Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr,weatherDateStr,diaryId};
+                                sqlLiteImgDao.updatDiary(params);
+                                String imgDir = imgFIleWrite();
+                                if(imgDir != null && !"".equals(imgDir)){
 
-            final EditText diaryTitle=(EditText)findViewById(R.id.diaryTitle);
-            final EditText diaryContent=(EditText)findViewById(R.id.diaryContent);
+                                    int cnt = sqlLiteImgDao.getCountDiaryImg(diaryId);
+                                    if(cnt > 0){
+                                        sqlLiteImgDao.updateDiaryImg(diaryId,imgDir);
+                                    }else{
+                                        sqlLiteImgDao.insertDiaryImg(diaryId,imgDir);
+                                    }
 
+                                }
 
+                                Toast.makeText(DiaryRegActivity.this, "수정을 완료했습니다.", Toast.LENGTH_SHORT).show();
+                                onBackPressed();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // 취소시 처리 로직
+                                Toast.makeText(DiaryRegActivity.this, "취소하였습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
+                //confirm 다이얼 로그 end
+            }else{
                 Object[] params = { diaryTitle.getText(), diaryContent.getText(),mImgStr,weatherDateStr};
                 sqlLiteImgDao.insertDiary(params);
 
 
-            //이미지 들어갈 다이어리 번호 가져와서 파일 만들구 디비에 넣기
-            int diaryId  = sqlLiteImgDao.getLastDiaryId();
-            String imgDir = imgFIleWrite();
-            if(imgDir != null && imgDir != ""){
+                //이미지 들어갈 다이어리 번호 가져와서 파일 만들구 디비에 넣기
+                int diaryId  = sqlLiteImgDao.getLastDiaryId();
+                String imgDir = imgFIleWrite();
+                if(imgDir != null && imgDir != ""){
+                    sqlLiteImgDao.insertDiaryImg(diaryId,imgDir);
+                }
+
+
                 Toast.makeText(getApplicationContext(),
-                        imgDir, Toast.LENGTH_SHORT)
+                        "등록 되었습니다.", Toast.LENGTH_SHORT)
                         .show();
-                sqlLiteImgDao.insertDiaryImg(diaryId,imgDir);
-            }
-
-
-            Toast.makeText(getApplicationContext(),
-                    "등록 되었습니다.", Toast.LENGTH_SHORT)
-                    .show();
 
             /*Intent intent = new Intent(
                     getApplicationContext(), // 현재 화면의 제어권자
                     DiaryActivity.class); // 다음 넘어갈 클래스 지정
             startActivity(intent); // 다음 화면으로 넘어간다*/
-            onBackPressed();
-            finish();
+                onBackPressed();
+                finish();
+            }
+
+
+
+
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -284,8 +402,6 @@ public class DiaryRegActivity extends AppCompatActivity{
             try {
                 File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                         Environment.DIRECTORY_PICTURES), "ddroad");
-                Toast.makeText(getApplicationContext(),
-                        mediaStorageDir.getPath(), Toast.LENGTH_LONG).show();
                 if (!mediaStorageDir.exists()) { //폴더 있는지 확인하고 없으면 만든다
                     if (!mediaStorageDir.mkdirs()) {
                         Log.d("ddroad", "failed to create directory");
@@ -325,6 +441,8 @@ public class DiaryRegActivity extends AppCompatActivity{
             case (100): {
                 if (resultCode == Activity.RESULT_OK) {
                     ArrayList<String> returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+
+
                     myAdapter.addImage(returnValue);
 
                     for (String s : returnValue) {
