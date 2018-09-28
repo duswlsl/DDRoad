@@ -158,6 +158,22 @@ public class DiaryRegActivity extends AppCompatActivity{
                 spinner.setSelection(4);
             }else if("@drawable/bichon5".equals(imgstr)){
                 spinner.setSelection(5);
+            }else if("@drawable/sun".equals(imgstr)){
+                spinner.setSelection(5);
+            }else if("@drawable/cloudy".equals(imgstr)){
+                spinner.setSelection(5);
+            }else if("@drawable/cludysun".equals(imgstr)){
+                spinner.setSelection(5);
+            }else if("@drawable/drop".equals(imgstr)){
+                spinner.setSelection(5);
+            }else if("@drawable/flash".equals(imgstr)){
+                spinner.setSelection(5);
+            }else if("@drawable/snowflake".equals(imgstr)){
+                spinner.setSelection(5);
+            }else if("@drawable/hospital".equals(imgstr)){
+                spinner.setSelection(5);
+            }else if("@drawable/pills".equals(imgstr)){
+                spinner.setSelection(5);
             }
 
             if(imgDir != null && !"".equals(imgDir)){
@@ -302,8 +318,7 @@ public class DiaryRegActivity extends AppCompatActivity{
                     mImgStr = "@drawable/hospital";
                 }else if(position == 13){
                     mImgStr = "@drawable/pills";
-                }
-                else{
+                }else{
                     mImgStr = "";
                 }
             }
