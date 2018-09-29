@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -133,7 +134,8 @@ public class DustFragment extends Fragment {
         setDustApi();
 
 
-
+        myDog = getFileDate("dogname");
+        Log.d("TestDogname", ""+myDog);
         nDogDate = countDday(nYear, nMonth, nDay);
 
         text_dog_date.setText(myDog + " ♡ " + nDogDate);
@@ -513,9 +515,7 @@ public class DustFragment extends Fragment {
 
                     if (fineDust != 0) {
                         findDustResult = setFineDustResult(fineDust);
-                    }
-                    else
-                    {
+                    } else {
                         getActivity().runOnUiThread(new Runnable() {
 
                             public void run() {
@@ -526,7 +526,7 @@ public class DustFragment extends Fragment {
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
                                     mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
-                                //    text_finddust.setTextColor(Color.parseColor(findDustColor));
+                                    //    text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
@@ -670,4 +670,28 @@ public class DustFragment extends Fragment {
 
         });
     }
+
+    private String getFileDate(String textName) {
+        String retStr = "";
+        try {
+            // 파일에서 읽은 데이터를 저장하기 위해서 만든 변수
+            StringBuffer data = new StringBuffer();
+            FileInputStream fis = getActivity().openFileInput(textName + ".txt");//파일명
+            BufferedReader buffer = new BufferedReader
+                    (new InputStreamReader(fis));
+            String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
+            while (str != null) {
+                data.append(str + "");
+                str = buffer.readLine();
+            }
+            retStr = data.toString();
+            buffer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return retStr;
+
+    }
+
 }

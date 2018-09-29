@@ -53,7 +53,7 @@ public class IntroActivity extends Activity implements Animation.AnimationListen
     protected void onResume() {
         super.onResume();
 
-        handler.postDelayed(runnable, 10000);
+        handler.postDelayed(runnable, 4000);
     }
 
     @Override

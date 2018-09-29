@@ -149,19 +149,6 @@ public class SettingFragment extends Fragment {
                                 //파일에 쓰기
                                 setFileData(input,"dogname");
 
-                               /* SettingFragment fragment = new SettingFragment();
-
-                                if (!input.equals("")) {
-
-                                    bundle.putString("MYDOG", input);
-                                    mDisplayDogname.setText(input.toString());
-                                }
-
-
-                                //정보를 너머겨줘야한다 어디로 더스트 프라그먼트로
-                                fragment.setArguments(bundle);
-                                Log.d("bundle",bundle.toString());*/
-
                                 dialog.dismiss();
                             }
                         });
@@ -244,18 +231,7 @@ public class SettingFragment extends Fragment {
             }
         };
     }
-//
-//    void onPetState() {
-//        //다이얼로그
-//        PolylineDialog dialog = new PolylineDialog();
-//        Bundle args = new Bundle();
-//        dialog.setArguments(args);
-//        dialog.setTargetFragment(this, 2);
-//        dialog.show(getActivity().getSupportFragmentManager(), "tag");
-//    }
-
-
-    //
+    //파일 저장
     private void setFileData(String s,String textName){
         try {
 
@@ -272,6 +248,7 @@ public class SettingFragment extends Fragment {
         }// 출처: http://bitsoul.tistory.com/116 [Happy Programmer~]
 
     }
+    //파일 가져오기
     private String getFileDate(String textName){
         String retStr = "";
         try {
