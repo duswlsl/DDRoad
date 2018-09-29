@@ -1,21 +1,22 @@
 package com.seoul.ddroad.setting;
 
 
-import android.app.ActionBar;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.content.Intent;
-import android.content.res.TypedArray;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +40,13 @@ import com.seoul.ddroad.map.PolylineDialog;
 
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -58,6 +66,12 @@ public class SettingFragment extends Fragment {
     ArrayList<ListItem> list = new ArrayList<>();
 
 
+    // 출처: http://tlshenm.tistory.com/45 [No Job Of Star]
+    //public static final String CACHE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "ddroad" + File.separator + ".cache"; //캐시 기본폴더
+
+
+
+
     Bundle bundle = new Bundle(1);
     String input;
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +89,17 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        checkFunction();
+
+       /* FileCacheFactory.initialize(getActivity().getApplicationContext(), CACHE_PATH);
+        if (!FileCacheFactory.getInstance().has("ddroad"))          // 해당 키의 캐시 디렉토리가 있는지 확인
+        {
+            FileCacheFactory.getInstance().create("ddroad", 0);     // 캐시디렉토리가 없을경우 만든다.
+        }
+        mFileCache = FileCacheFactory.getInstance().get("ddroad");  // 해당 파일의 캐시 디렉토리를 가져온다.
+*/
+
         strDogName = "";
         input = "";
         recyclerView = getView().findViewById(R.id.settingRecycler);
@@ -115,12 +140,16 @@ public class SettingFragment extends Fragment {
                         edt_dogname = mView.findViewById(R.id.edit_dog_name);
                         mDisplayDogname = mView.findViewById(R.id.text_dog_name);
 
-
+                        edt_dogname.setText(getFileDate("dogname"));
                         btn_CertainDog.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 String input = edt_dogname.getText().toString();
-                                SettingFragment fragment = new SettingFragment();
+
+                                //파일에 쓰기
+                                setFileData(input,"dogname");
+
+                               /* SettingFragment fragment = new SettingFragment();
 
                                 if (!input.equals("")) {
 
@@ -131,7 +160,7 @@ public class SettingFragment extends Fragment {
 
                                 //정보를 너머겨줘야한다 어디로 더스트 프라그먼트로
                                 fragment.setArguments(bundle);
-                                Log.d("bundle",bundle.toString());
+                                Log.d("bundle",bundle.toString());*/
 
                                 dialog.dismiss();
                             }
@@ -224,4 +253,60 @@ public class SettingFragment extends Fragment {
 //        dialog.setTargetFragment(this, 2);
 //        dialog.show(getActivity().getSupportFragmentManager(), "tag");
 //    }
+
+
+    //
+    private void setFileData(String s,String textName){
+        try {
+
+            FileOutputStream fos = getActivity().openFileOutput
+                    (textName+".txt", // 파일명 지정
+                            Context.MODE_PRIVATE);// 저장모드
+            // Context.MODE_APPEND  //기존에 추가
+            PrintWriter out = new PrintWriter(fos,false);
+            out.write(s);
+            //out.println(s);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }// 출처: http://bitsoul.tistory.com/116 [Happy Programmer~]
+
+    }
+    private String getFileDate(String textName){
+        String retStr = "";
+        try {
+            // 파일에서 읽은 데이터를 저장하기 위해서 만든 변수
+            StringBuffer data = new StringBuffer();
+            FileInputStream fis = getActivity().openFileInput(textName+".txt");//파일명
+            BufferedReader buffer = new BufferedReader
+                    (new InputStreamReader(fis));
+            String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
+            while (str != null) {
+                data.append(str + "\n");
+                str = buffer.readLine();
+            }
+            retStr = data.toString();
+            buffer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return retStr;
+
+    }
+
+
+    public void checkFunction(){
+        int permissioninfo = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permissioninfo == PackageManager.PERMISSION_GRANTED){
+           // Toast.makeText(getActivity(),"SDCard 쓰기 권한 있음",Toast.LENGTH_SHORT).show();
+        }else{
+            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+
+            }else{
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},100);
+            }
+        }
+    }
 }

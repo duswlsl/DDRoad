@@ -356,9 +356,12 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         layout_result.setVisibility(View.GONE);
         btn_walk.setVisibility(View.VISIBLE);
         Toast.makeText(this.getContext(), "저장되었습니다", Toast.LENGTH_LONG).show();
-        latLngList.clear();
-        marker1.remove();
-        marker2.remove();
+        if (latLngList.size() > 0)
+            latLngList.clear();
+        if (marker1 != null) {
+            marker1.remove();
+            marker2.remove();
+        }
         if (polyline != null)
             polyline.remove();
     }
@@ -386,20 +389,21 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     private void setCaptureMarker() {
         if (totDistance >= 0.1) {
+            marker.remove();
             Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("marker_home", "drawable", getContext().getPackageName()));
             bitmap1 = bitmap1.createScaledBitmap(bitmap1, 120, 120, false);
             Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("marker_dog", "drawable", getContext().getPackageName()));
             bitmap2 = bitmap2.createScaledBitmap(bitmap2, 120, 120, false);
-           MarkerOptions markerOptions1 = new MarkerOptions()
+            MarkerOptions markerOptions1 = new MarkerOptions()
                     .position(latLngList.get(0))
                     .icon(BitmapDescriptorFactory.fromBitmap(bitmap1));
             MarkerOptions markerOptions2 = new MarkerOptions()
-                    .position(latLngList.get(latLngList.size()-1))
+                    .position(latLngList.get(latLngList.size() - 1))
                     .icon(BitmapDescriptorFactory.fromBitmap(bitmap2));
 
             marker1 = googleMap.addMarker(markerOptions1);
             marker2 = googleMap.addMarker(markerOptions2);
-            }
+        }
     }
 
 

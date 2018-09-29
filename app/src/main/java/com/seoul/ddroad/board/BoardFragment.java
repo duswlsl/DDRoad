@@ -1,7 +1,9 @@
 package com.seoul.ddroad.board;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,8 +11,10 @@ import android.os.Environment;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 //import android.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,8 +28,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
+import com.fxn.pix.Pix;
+import com.fxn.utility.PermUtil;
 import com.seoul.ddroad.R;
+import com.seoul.ddroad.diary.DiaryRegActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +66,25 @@ public class BoardFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mWebView = (WebView) getView().findViewById(R.id.webView);
+
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    10);
+        }
+
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    20);
+        }
 
         WebSettings settings=mWebView.getSettings();
         //웹뷰 셋팅
@@ -319,13 +346,32 @@ public class BoardFragment extends Fragment {
         return result;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 10: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                } else {
+                    Toast.makeText(getActivity(), "권한 설정을 해야 이미지 업로드를 사용할 수있습니다.", Toast.LENGTH_LONG).show();
+                }
+                return;
 
+            }
+            case 20: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                } else {
+                    Toast.makeText(getActivity(), "권한 설정을 해야 이미지 업로드를 사용할 수있습니다.", Toast.LENGTH_LONG).show();
+                }
+                return;
 
+            }
 
-
-
+        }
+    }
 
     /*
 

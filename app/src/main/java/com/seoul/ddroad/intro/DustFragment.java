@@ -526,7 +526,7 @@ public class DustFragment extends Fragment {
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
                                     mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
-                                    text_finddust.setTextColor(Color.parseColor(findDustColor));
+                                //    text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
