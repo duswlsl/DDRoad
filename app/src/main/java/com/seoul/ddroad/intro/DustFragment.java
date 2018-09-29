@@ -74,6 +74,7 @@ public class DustFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     //inflater 사용한다
@@ -82,14 +83,6 @@ public class DustFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = getLayoutInflater().inflate(R.layout.activity_dust_cool, null);
-
-
-//        Bundle bundle = getArguments();
-
-//        if(bundle != null)
-//        {
-//
-//        }
         return view;
     }
 
@@ -140,8 +133,9 @@ public class DustFragment extends Fragment {
         setDustApi();
 
 
+
         nDogDate = countDday(nYear, nMonth, nDay);
-        Log.d("mydog", myDog);
+
         text_dog_date.setText(myDog + " ♡ " + nDogDate);
 
 
@@ -208,6 +202,34 @@ public class DustFragment extends Fragment {
 
             }
         });
+    }
+
+    public TextView getView(int position, View convertView, ViewGroup parent) {
+        int mPosition;
+        View mView;
+        ViewGroup mParent;
+
+        mPosition = position;
+        mView = convertView;
+        mParent = parent;
+        TextView v = (TextView) this.getView(mPosition, mView, mParent);
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
+        v.setTypeface(typeface);
+        return v;
+    }
+
+    public TextView getDropDownView(int position, View convertView, ViewGroup parent) {
+        int mPosition;
+        View mView;
+        ViewGroup mParent;
+
+        mPosition = position;
+        mView = convertView;
+        mParent = parent;
+        TextView v = (TextView) this.getView(mPosition, mView, mParent);
+        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
+        v.setTypeface(typeface);
+        return v;
     }
 
     public void fontChange() {
@@ -650,4 +672,29 @@ public class DustFragment extends Fragment {
 
         });
     }
+
+
+    private String getFileDate(String textName) {
+        String retStr = "";
+        try {
+            // 파일에서 읽은 데이터를 저장하기 위해서 만든 변수
+            StringBuffer data = new StringBuffer();
+            FileInputStream fis = getActivity().openFileInput(textName + ".txt");//파일명
+            BufferedReader buffer = new BufferedReader
+                    (new InputStreamReader(fis));
+            String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
+            while (str != null) {
+                data.append(str + "");
+                str = buffer.readLine();
+            }
+            retStr = data.toString();
+            buffer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return retStr;
+
+    }
+
 }

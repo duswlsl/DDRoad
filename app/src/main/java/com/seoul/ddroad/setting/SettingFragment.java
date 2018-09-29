@@ -90,6 +90,7 @@ public class SettingFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //캐쉬 메모리 체크
         checkFunction();
 
        /* FileCacheFactory.initialize(getActivity().getApplicationContext(), CACHE_PATH);
@@ -135,11 +136,10 @@ public class SettingFragment extends Fragment {
                         final AlertDialog dialog = mBuilder.create();
                         dialog.show();
 
-
                         btn_CertainDog = mView.findViewById(R.id.btn_certaindog);
                         edt_dogname = mView.findViewById(R.id.edit_dog_name);
                         mDisplayDogname = mView.findViewById(R.id.text_dog_name);
-
+                        //메모장
                         edt_dogname.setText(getFileDate("dogname"));
                         btn_CertainDog.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -148,19 +148,6 @@ public class SettingFragment extends Fragment {
 
                                 //파일에 쓰기
                                 setFileData(input,"dogname");
-
-                               /* SettingFragment fragment = new SettingFragment();
-
-                                if (!input.equals("")) {
-
-                                    bundle.putString("MYDOG", input);
-                                    mDisplayDogname.setText(input.toString());
-                                }
-
-
-                                //정보를 너머겨줘야한다 어디로 더스트 프라그먼트로
-                                fragment.setArguments(bundle);
-                                Log.d("bundle",bundle.toString());*/
 
                                 dialog.dismiss();
                             }
@@ -206,13 +193,15 @@ public class SettingFragment extends Fragment {
                 int daysss;
                 String strDaysss;
                 //확인눌러 데이타  다일로그 받어서 넣어주기
-                month = month + 1;
-                Log.d("Setting", "onDateSet data: " + year + "/" + month + "/" + dayOfMonth);
+                nMonth = nMonth + 1;
+                //Log.d("Setting", "onDateSet data: " + year + "/" + month + "/" + dayOfMonth);
                 //값을 더스트 프라그먼트의 화면에 넣어줘야한다
 
                 daysss = countDday(nYear, nMonth, nDayofMonth);
 
-                strDaysss = "" + daysss;
+                strDaysss = String.valueOf(daysss);
+
+                setFileData(strDaysss,"dogdate");
                 Toast.makeText(getActivity().getApplicationContext(), strDaysss.toString(), Toast.LENGTH_SHORT).show();
                 //mDisplayDate.setText(strDaysss.toString());
             }
@@ -244,18 +233,7 @@ public class SettingFragment extends Fragment {
             }
         };
     }
-//
-//    void onPetState() {
-//        //다이얼로그
-//        PolylineDialog dialog = new PolylineDialog();
-//        Bundle args = new Bundle();
-//        dialog.setArguments(args);
-//        dialog.setTargetFragment(this, 2);
-//        dialog.show(getActivity().getSupportFragmentManager(), "tag");
-//    }
-
-
-    //
+    //파일 저장
     private void setFileData(String s,String textName){
         try {
 
@@ -272,6 +250,7 @@ public class SettingFragment extends Fragment {
         }// 출처: http://bitsoul.tistory.com/116 [Happy Programmer~]
 
     }
+    //파일 가져오기
     private String getFileDate(String textName){
         String retStr = "";
         try {
