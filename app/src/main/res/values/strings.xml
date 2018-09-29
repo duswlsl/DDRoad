@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DDRoad</string>
+    <string name="app_name">댕댕로</string>
     <string name="activiy_name">액티비티 이동</string>
 
     <!-- 권한 화면 -->
