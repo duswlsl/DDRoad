@@ -84,19 +84,19 @@ public class DataDialog extends DialogFragment {
 
     private void setInfo() {
         tv_title.setText(data.getTitle());
-        if (!data.getAddress().equals("")) {
+        if (!data.getAddress().equals("null")) {
             tv_addr.setText(data.getAddress());
             bool_addr = true;
         }
-        if (!data.getTel().equals("")) {
+        if (!data.getTel().equals("null")) {
             tv_tel.setText(data.getTel());
             bool_tel = true;
         }
-        if (!data.getLink().equals("")) {
+        if (!data.getLink().equals("null")) {
             tv_link.setText(data.getLink());
             bool_link = true;
         }
-        if (!data.getDetail().equals("")) {
+        if (!data.getDetail().equals("null")) {
             tv_detail.setText(data.getDetail());
             bool_detail = true;
         }
