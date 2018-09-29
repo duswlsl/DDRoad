@@ -25,12 +25,12 @@ public class SqlLiteDao {
                 DATABASE_VERSION); // 버전 번호
     }
 
-    public void insertScreenShot(String imgDir) {
+    public void insertScreenShot(String imgDir, String content) {
         database = helper.getWritableDatabase();
         int diaryId = 0;
         if (database != null) {
 
-            String sql = "insert into diary(title, content, imgstr, regdt) values('산책 경로', '', '@drawable/btn_walk', datetime('now','localtime'))";
+            String sql = "insert into diary(title, content, imgstr, regdt) values('오늘의 산책','\n" + content + "', '@drawable/diary_walk', datetime('now','localtime'))";
             database.execSQL(sql);
 
             Cursor cur = database.rawQuery("SELECT MAX(diaryId) FROM diary", null);
@@ -58,7 +58,7 @@ public class SqlLiteDao {
         }
     }
 
-    public void updatDiary(Object[] params){
+    public void updatDiary(Object[] params) {
         database = helper.getWritableDatabase();
         if (database != null) {
             String sql = "update diary set title=?, content=?,imgstr=? ,regdt=? where diaryId=?";
@@ -169,7 +169,7 @@ public class SqlLiteDao {
         database = helper.getWritableDatabase();
         if (database != null) {
             String sql = "update diaryimg set imgDir=? where diaryId = ?";
-            Object[] params = {imgDir,diaryId };
+            Object[] params = {imgDir, diaryId};
             database.execSQL(sql, params);
         }
     }
@@ -208,10 +208,11 @@ public class SqlLiteDao {
         database = helper.getWritableDatabase();
         if (database != null) {
 
-            Cursor cur = database.rawQuery("SELECT COUNT(*) FROM diaryimg where diaryId = " + diaryId , null);
-            if(cur != null && cur.moveToFirst()){
+            Cursor cur = database.rawQuery("SELECT COUNT(*) FROM diaryimg where diaryId = " + diaryId, null);
+            if (cur != null && cur.moveToFirst()) {
                 cnt = cur.getInt(0);
-            };
+            }
+            ;
 
             cur.close();
         }

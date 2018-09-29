@@ -8,8 +8,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.SphericalUtil;
 import com.seoul.ddroad.R;
 
 import android.Manifest;
@@ -32,7 +34,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -67,6 +73,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private Marker marker;
     private String state = "";
     private Button btnPrevious;
+    private long start, end;
+    private int hour, min;
+    private float km;
 
 
     @BindView(R.id.btn_walk)
@@ -81,6 +90,14 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     Button btn_salon;
     @BindView(R.id.btn_trail)
     Button btn_trail;
+    @BindView(R.id.layout_result)
+    RelativeLayout layout_result;
+    @BindView(R.id.tv_hour)
+    TextView tv_hour;
+    @BindView(R.id.tv_minute)
+    TextView tv_minute;
+    @BindView(R.id.tv_km)
+    TextView tv_km;
 
     public MapFragment() {
 
@@ -109,29 +126,56 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     }
 
     @OnClick(R.id.btn_walk)
-    void startWalk() {
-        String state = btn_walk.getTag().toString();
-        if (state.equals("OFF")) { //산책 시작
+    void startWalk(View view) {
+        view.setSelected(!view.isSelected());
+        if (view.isSelected()) { //산책 시작
+            start = System.currentTimeMillis();
             latLngList = new ArrayList<>();
-            btn_walk.setTag("ON");
-            btn_walk.setBackgroundResource(R.drawable.btn_end);
             changeCallback(locCallback, locCallback_walk, true);
         } else { //산책 끝
-            btn_walk.setTag("OFF");
-            btn_walk.setBackgroundResource(R.drawable.btn_walk);
+            end = System.currentTimeMillis();
             changeCallback(locCallback_walk, locCallback, false);
+            calcResult(latLngList);
 
-            //다이얼로그
-            PolylineDialog dialog = new PolylineDialog();
-            Bundle args = new Bundle();
-            args.putParcelableArrayList("pointList", latLngList);
-            dialog.setArguments(args);
-            dialog.setTargetFragment(this, 2);
-            dialog.show(getActivity().getSupportFragmentManager(), "tag");
-            if (polyline != null)
-                polyline.remove();
-
+            Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.translate);
+            btn_walk.setVisibility(View.GONE);
+            layout_result.setVisibility(View.VISIBLE);
+            layout_result.startAnimation(anim);
+//
+//            //다이얼로그
+//            PolylineDialog dialog = new PolylineDialog();
+//            Bundle args = new Bundle();
+//            args.putParcelableArrayList("pointList", latLngList);
+//            dialog.setArguments(args);
+//            dialog.setTargetFragment(this, 2);
+//            dialog.show(getActivity().getSupportFragmentManager(), "tag");
+//            if (polyline != null)
+//                polyline.remove();
         }
+    }
+
+
+    private void calcResult(ArrayList<LatLng> latLngList) {
+        double totDistance = 0;
+
+        LatLng prev = latLngList.get(0);
+        for (LatLng latLng : latLngList) {
+            totDistance += SphericalUtil.computeDistanceBetween(prev, latLng);
+            prev = latLng;
+        }
+        km = Float.parseFloat(String.format("%.1f", totDistance));
+        tv_km.setText(String.valueOf(km));
+
+        long time = (end - start) / 1000 / 60;//분
+        if (time > 60) {
+            hour = (int) (time / 60);
+            min = (int) (time % 60);
+        } else {
+            hour = 0;
+            min = (int) time;
+        }
+        tv_hour.setText(String.valueOf(hour));
+        tv_minute.setText(String.valueOf(min));
     }
 
 
@@ -147,7 +191,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) { // 경로 저장
+        /* if (resultCode == Activity.RESULT_OK) { // 경로 저장
             latLngList = data.getExtras().getParcelableArrayList("pointList");
             drawPolyline(latLngList);
 
@@ -157,21 +201,25 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 public void onSnapshotReady(Bitmap bitmap) {
                     String imgPath = screenshot(bitmap);
                     SqlLiteDao sqlDao = new SqlLiteDao(getContext());
-                    sqlDao.insertScreenShot(imgPath);
+                    //sqlDao.insertScreenShot(imgPath);
                 }
             };
             googleMap.snapshot(callback);
+            btn_walk.setVisibility(View.VISIBLE);
             Toast.makeText(this.getContext(), "저장되었습니다", Toast.LENGTH_LONG).show();
+            latLngList = null;
         }
+        */
     }
 
     public void drawPolyline(List<LatLng> pointList) {
         if (polyline != null)
             polyline.remove();
-        PolylineOptions polylineOptions = new PolylineOptions();
-        polylineOptions.color(Color.RED);
-        polylineOptions.width(15);
-        polylineOptions.addAll(pointList);
+        PolylineOptions polylineOptions = new PolylineOptions()
+                .color(Color.RED)
+                .width(15)
+                .addAll(pointList)
+                .geodesic(true);
         polyline = googleMap.addPolyline(polylineOptions);
     }
 
@@ -309,6 +357,39 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     }
 
+    @OnClick(R.id.btn_ok)
+    public void clickOk() {
+        layout_result.setVisibility(View.GONE);
+        btn_walk.setVisibility(View.VISIBLE);
+        latLngList = null;
+        if (polyline != null)
+            polyline.remove();
+    }
+
+    @OnClick(R.id.btn_capture)
+    public void clickCapture() {
+        GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
+            @Override
+            public void onSnapshotReady(Bitmap bitmap) {
+                String imgPath = screenshot(bitmap);
+                String content = "";
+                if (hour > 0)
+                    content += String.valueOf(hour) + "시간 ";
+                content = content + String.valueOf(min) + "분 동안 " + String.valueOf(km) + "km 걸었어요";
+                SqlLiteDao sqlDao = new SqlLiteDao(getContext());
+                sqlDao.insertScreenShot(imgPath, content);
+            }
+        };
+        googleMap.snapshot(callback);
+        latLngList = null;
+        if (polyline != null)
+            polyline.remove();
+
+        layout_result.setVisibility(View.GONE);
+        btn_walk.setVisibility(View.VISIBLE);
+        Toast.makeText(this.getContext(), "저장되었습니다", Toast.LENGTH_LONG).show();
+    }
+
 
     public String screenshot(Bitmap captureBitmap) {
         FileOutputStream fos;
@@ -347,7 +428,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 btnPrevious.setSelected(false);
             showMarker(view.getTag().toString());
             btnPrevious = (Button) view;
-        }
+        } else
+            btnPrevious = null;
     }
 
 
