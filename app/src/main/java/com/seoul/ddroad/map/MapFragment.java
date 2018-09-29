@@ -163,6 +163,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             totDistance += SphericalUtil.computeDistanceBetween(prev, latLng);
             prev = latLng;
         }
+        totDistance /= 1000;
         km = Float.parseFloat(String.format("%.1f", totDistance));
         tv_km.setText(String.valueOf(km));
 
@@ -381,13 +382,13 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             }
         };
         googleMap.snapshot(callback);
-        latLngList = null;
-        if (polyline != null)
-            polyline.remove();
 
         layout_result.setVisibility(View.GONE);
         btn_walk.setVisibility(View.VISIBLE);
         Toast.makeText(this.getContext(), "저장되었습니다", Toast.LENGTH_LONG).show();
+        latLngList = null;
+        if (polyline != null)
+            polyline.remove();
     }
 
 
@@ -404,7 +405,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         try {
             fos = new FileOutputStream(fileCacheItem);
             captureBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            polyline.remove();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
