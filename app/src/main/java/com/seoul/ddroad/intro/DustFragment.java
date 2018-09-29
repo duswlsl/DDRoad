@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.seoul.ddroad.R;
+import com.seoul.ddroad.setting.SettingFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,11 +71,14 @@ public class DustFragment extends Fragment {
     private ImageView sun;
     private int weatherFlag;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if(getArguments() != null)
+        {
+            getArguments().getString("MYDOG");
+            Log.d("dustbundle",getArguments().getString("MYDOG"));
+        }
     }
 
     //inflater 사용한다
@@ -99,7 +103,7 @@ public class DustFragment extends Fragment {
         dustLocation = 0;
         temperature = 0.0;
         fineDust = 0;
-        myDog = "콩이";
+        myDog = "";
         findDustResult = "";
         findDustColor = "";
         nYear = 2018;
@@ -132,7 +136,10 @@ public class DustFragment extends Fragment {
 
         setDustApi();
 
+
+
         nDogDate = countDday(nYear, nMonth, nDay);
+
         text_dog_date.setText(myDog + " ♡ " + nDogDate);
 
 
@@ -494,7 +501,7 @@ public class DustFragment extends Fragment {
                             public void run() {
 
                                 if (temperature != 100.0) {
-                                    text_temperature.setText("온도 " +String.valueOf(temperature));
+                                    text_temperature.setText("온도 " + String.valueOf(temperature));
                                 } else {
                                     text_temperature.setText("시간을 대한민국 기준으로");
                                     text_temperature.setTextColor(Color.parseColor("#FF0000"));
@@ -527,9 +534,9 @@ public class DustFragment extends Fragment {
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
-                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨")||weatherFlag==2||temperature>25.0) {
+                                    if (findDustResult.equals("나쁨") || findDustResult.equals("매우나쁨") || weatherFlag == 2 || temperature > 25.0) {
                                         mainDogImg.setImageResource(R.drawable.dogface_1);
-                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통")||weatherFlag==1||temperature<=25.0) {
+                                    } else if (findDustResult.equals("좋음") || findDustResult.equals("보통") || weatherFlag == 1 || temperature <= 25.0) {
                                         mainDogImg.setImageResource(R.drawable.dogface_2);
                                     }
                                 }
@@ -641,20 +648,21 @@ public class DustFragment extends Fragment {
 
         //미세먼지
         setDustApi();
+
     }
 
-    public void rainChange(){
-        weatherFlag=0;
+    public void rainChange() {
+        weatherFlag = 0;
         //SUNNY 1, RAIN2
         getActivity().runOnUiThread(new Runnable() {
 
             public void run() {
-                if(rainResult>0){
+                if (rainResult > 0) {
                     //rain
                     weatherFlag = 2;
                     rain.setImageResource(R.drawable.weather_drop);
                     sun.setImageResource(R.drawable.weather_sun2);
-                }else{
+                } else {
                     //sunny
                     weatherFlag = 1;
                     rain.setImageResource(R.drawable.weather_drop2);
