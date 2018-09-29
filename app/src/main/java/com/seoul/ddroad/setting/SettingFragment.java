@@ -58,7 +58,7 @@ public class SettingFragment extends Fragment {
     ArrayList<ListItem> list = new ArrayList<>();
 
 
-    Bundle bundle = new Bundle(1);
+    Bundle args = new Bundle(1);
     String input;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +110,7 @@ public class SettingFragment extends Fragment {
                         final AlertDialog dialog = mBuilder.create();
                         dialog.show();
 
-
+                        final String STRTAG_1 ="SETTING";
                         btn_CertainDog = mView.findViewById(R.id.btn_certaindog);
                         edt_dogname = mView.findViewById(R.id.edit_dog_name);
                         mDisplayDogname = mView.findViewById(R.id.text_dog_name);
@@ -119,21 +119,21 @@ public class SettingFragment extends Fragment {
                         btn_CertainDog.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                String input = edt_dogname.getText().toString();
-                                SettingFragment fragment = new SettingFragment();
+                                input = edt_dogname.getText().toString();
 
-                                if (!input.equals("")) {
+//                                if(getFragmentManager().findFragmentByTag(STRTAG_1) == null)
+//                                {
+//                                    SettingFragment fragment = new SettingFragment();
+//                                    args.putString("MYDOG", input);
+//                                    fragment.setArguments(args);
+//                                }
+//
+//                                mDisplayDogname.setText(input.toString());
+//
+//                                //정보를 너머겨줘야한다 어디로 더스트 프라그먼트로
+//                                Log.d("bundle", args.toString());
 
-                                    bundle.putString("MYDOG", input);
-                                    mDisplayDogname.setText(input.toString());
-                                }
-
-
-                                //정보를 너머겨줘야한다 어디로 더스트 프라그먼트로
-                                fragment.setArguments(bundle);
-                                Log.d("bundle",bundle.toString());
-
-                                dialog.dismiss();
+                                //dialog.dismiss();
                             }
                         });
                         break;

@@ -74,7 +74,6 @@ public class DustFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     //inflater 사용한다
@@ -83,6 +82,14 @@ public class DustFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = getLayoutInflater().inflate(R.layout.activity_dust_cool, null);
+
+
+//        Bundle bundle = getArguments();
+
+//        if(bundle != null)
+//        {
+//
+//        }
         return view;
     }
 
@@ -133,9 +140,8 @@ public class DustFragment extends Fragment {
         setDustApi();
 
 
-
         nDogDate = countDday(nYear, nMonth, nDay);
-
+        Log.d("mydog", myDog);
         text_dog_date.setText(myDog + " ♡ " + nDogDate);
 
 
@@ -202,34 +208,6 @@ public class DustFragment extends Fragment {
 
             }
         });
-    }
-
-    public TextView getView(int position, View convertView, ViewGroup parent) {
-        int mPosition;
-        View mView;
-        ViewGroup mParent;
-
-        mPosition = position;
-        mView = convertView;
-        mParent = parent;
-        TextView v = (TextView) this.getView(mPosition, mView, mParent);
-        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
-        v.setTypeface(typeface);
-        return v;
-    }
-
-    public TextView getDropDownView(int position, View convertView, ViewGroup parent) {
-        int mPosition;
-        View mView;
-        ViewGroup mParent;
-
-        mPosition = position;
-        mView = convertView;
-        mParent = parent;
-        TextView v = (TextView) this.getView(mPosition, mView, mParent);
-        Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
-        v.setTypeface(typeface);
-        return v;
     }
 
     public void fontChange() {
