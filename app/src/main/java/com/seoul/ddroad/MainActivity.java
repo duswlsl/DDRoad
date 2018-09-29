@@ -1,6 +1,5 @@
 package com.seoul.ddroad;
 
-import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -11,10 +10,8 @@ import com.seoul.ddroad.board.BoardFragment;
 import com.seoul.ddroad.diary.DiaryFragment;
 import com.seoul.ddroad.intro.DustFragment;
 import com.seoul.ddroad.map.MapFragment;
-import com.seoul.ddroad.map.RestAPI;
 import com.seoul.ddroad.setting.SettingFragment;
 
-import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;

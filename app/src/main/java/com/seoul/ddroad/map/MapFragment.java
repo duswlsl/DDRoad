@@ -47,7 +47,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -66,7 +65,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private FusedLocationProviderClient fusedLocClient;
     private LocationCallback locCallback, locCallback_walk;
     private Marker marker;
-    private HashMap<Marker, Data> markerMap = new HashMap<>();
+    private String state = "";
+    private Button btnPrevious;
 
 
     @BindView(R.id.btn_walk)
@@ -114,12 +114,10 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         if (state.equals("OFF")) { //산책 시작
             latLngList = new ArrayList<>();
             btn_walk.setTag("ON");
-            //btn_walk.setText("끝");
             btn_walk.setBackgroundResource(R.drawable.btn_end);
             changeCallback(locCallback, locCallback_walk, true);
         } else { //산책 끝
             btn_walk.setTag("OFF");
-            //btn_walk.setText("시작");
             btn_walk.setBackgroundResource(R.drawable.btn_walk);
             changeCallback(locCallback_walk, locCallback, false);
 
@@ -336,34 +334,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
 
     @OnClick({R.id.btn_cafe, R.id.btn_hotel, R.id.btn_hospital, R.id.btn_salon, R.id.btn_trail})
     void clickSearch(View view) {
-        String state = view.getTag().toString();
-        if (state.equals("X")) { // 버튼 off -> on
-            //btn_all.setTag("X");
-            view.setTag("O");
-        } else // 버튼 on -> off
-            view.setTag("X");
-        showMarker(btn_cafe.getTag().toString(), btn_hotel.getTag().toString(), btn_hospital.getTag().toString(), btn_salon.getTag().toString(), btn_trail.getTag().toString());
-    }
-
-//    @OnClick(R.id.btn_all)
-//    void clickSearchAll(View view) {
-//        String state = view.getTag().toString();
-//        if (state.equals("X")) { // 버튼 off -> on
-//            //btn_all.setTag("O");
-//            btn_cafe.setTag("X");
-//            btn_hotel.setTag("X");
-//            btn_hospital.setTag("X");
-//            btn_salon.setTag("X");
-//            btn_trail.setTag("X");
-//            showMarker("O", "O", "O", "O", "O");
-//        } else { // 버튼 on -> of
-//            btn_all.setTag("X");
-//            showMarker("X", "X", "X", "X", "X");
-//        }
-//    }
-
-
-    private void showMarker(String cafe, String hotel, String hospital, String salon, String trail) { //버튼 클릭했을 때
+        view.setSelected(!view.isSelected());
 
         googleMap.clear();
         marker = null;
@@ -371,53 +342,48 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         if (latLngList != null)
             drawPolyline(latLngList);
 
-        if (cafe.equals("O")) {
-            long _start = System.currentTimeMillis();
-            for (Data data : DataSet.cafeList)
-                addMarker(data, "marker_cafe");
-            long _end = System.currentTimeMillis();
-            Log.d(TAG, "cafe"+(_end-_start)/1000);
-        }
-        if (hotel.equals("O")) {
-            long _start = System.currentTimeMillis();
-            for (Data data : DataSet.hotelList)
-                addMarker(data, "marker_hotel");
-            long _end = System.currentTimeMillis();
-            Log.d(TAG, "hotel"+(_end-_start)/1000);
-        }
-        if (hospital.equals("O")) {
-            long _start = System.currentTimeMillis();
-            for (Data data : DataSet.hospitalList)
-                addMarker(data, "marker_hospital");
-            long _end = System.currentTimeMillis();
-            Log.d(TAG, "hospital"+(_end-_start)/1000);
-        }
-        if (salon.equals("O")) {
-            long _start = System.currentTimeMillis();
-            for (Data data : DataSet.salonList)
-                addMarker(data, "marker_salon");
-            long _end = System.currentTimeMillis();
-            Log.d(TAG, "salon"+(_end-_start)/1000);
-        }
-        if (trail.equals("O")) {
-            long _start = System.currentTimeMillis();
-            for (Data data : DataSet.trailList)
-                addMarker(data, "marker_trail");
-            long _end = System.currentTimeMillis();
-            Log.d(TAG, "salon"+(_end-_start)/1000);
+        if (view.isSelected()) {
+            if (btnPrevious != null)
+                btnPrevious.setSelected(false);
+            showMarker(view.getTag().toString());
+            btnPrevious = (Button) view;
         }
     }
 
-    private void addMarker(Data data, String imgname) { //마커 추가
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(imgname, "drawable", getContext().getPackageName()));
+    private void showMarker(String category) { //버튼 클릭했을 때
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(category, "drawable", getContext().getPackageName()));
         Bitmap bitmap_resize = Bitmap.createScaledBitmap(bitmap, 120, 120, false);
+        switch (category) {
+            case "marker_cafe":
+                for (Data data : DataSet.cafeList)
+                    addMarker(data, bitmap_resize);
+                break;
+            case "marker_hotel":
+                for (Data data : DataSet.hotelList)
+                    addMarker(data, bitmap_resize);
+                break;
+            case "marker_hospital":
+                for (Data data : DataSet.hospitalList)
+                    addMarker(data, bitmap_resize);
+                break;
+            case "marker_salon":
+                for (Data data : DataSet.salonList)
+                    addMarker(data, bitmap_resize);
+                break;
+            case "marker_trail":
+                for (Data data : DataSet.trailList)
+                    addMarker(data, bitmap_resize);
+                break;
+        }
+    }
 
+    private void addMarker(Data data, Bitmap bitmap) { //마커 추가
         LatLng position = new LatLng(data.getLatitude(), data.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions()
                 .title(data.getTitle())
                 .position(position)
-                .icon(BitmapDescriptorFactory.fromBitmap(bitmap_resize));
+                .icon(BitmapDescriptorFactory.fromBitmap(bitmap));
         Marker marker = googleMap.addMarker(markerOptions);
         marker.setTag(data);
     }
@@ -438,5 +404,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         googleMap.animateCamera(center);
         return false;
     }
+
 
 }

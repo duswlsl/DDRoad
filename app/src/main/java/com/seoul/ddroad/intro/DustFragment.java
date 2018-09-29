@@ -241,10 +241,10 @@ public class DustFragment extends Fragment {
     public void fontChange() {
         Typeface typeface = Typeface.createFromAsset(getActivity().getAssets(), "BMJUA_ttf.ttf");
 
-        text_temperature.setTypeface(typeface);
-        text_finddust.setTypeface(typeface);
-        text_dog_date.setTypeface(typeface);
-        text_dog_name.setTypeface(typeface);
+//        text_temperature.setTypeface(typeface);
+//        text_finddust.setTypeface(typeface);
+//        text_dog_date.setTypeface(typeface);
+//        text_dog_name.setTypeface(typeface);
 
     }
 
@@ -273,7 +273,6 @@ public class DustFragment extends Fragment {
         } else {
             inputTime = formattedHour + formattedMinute;
         }
-
     }
 
 
