@@ -57,6 +57,9 @@ public class SettingFragment extends Fragment {
     private String strDogName;
     ArrayList<ListItem> list = new ArrayList<>();
 
+
+    Bundle bundle = new Bundle(1);
+    String input;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -73,6 +76,7 @@ public class SettingFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         strDogName = "";
+        input = "";
         recyclerView = getView().findViewById(R.id.settingRecycler);
         mDisplayDate = getView().findViewById(R.id.text_dog_date);
         //줄 구분선 만들기
@@ -116,9 +120,8 @@ public class SettingFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
                                 String input = edt_dogname.getText().toString();
-
                                 SettingFragment fragment = new SettingFragment();
-                                Bundle bundle = new Bundle(1);
+
                                 if (!input.equals("")) {
 
                                     bundle.putString("MYDOG", input);
@@ -127,7 +130,7 @@ public class SettingFragment extends Fragment {
 
 
                                 //정보를 너머겨줘야한다 어디로 더스트 프라그먼트로
-                                setArguments(bundle);
+                                fragment.setArguments(bundle);
                                 Log.d("bundle",bundle.toString());
 
                                 dialog.dismiss();

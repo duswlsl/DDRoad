@@ -74,11 +74,7 @@ public class DustFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null)
-        {
-            getArguments().getString("MYDOG");
-            Log.d("dustbundle",getArguments().getString("MYDOG"));
-        }
+
     }
 
     //inflater 사용한다
@@ -519,7 +515,9 @@ public class DustFragment extends Fragment {
 
                     if (fineDust != 0) {
                         findDustResult = setFineDustResult(fineDust);
-
+                    }
+                    else
+                    {
                         getActivity().runOnUiThread(new Runnable() {
 
                             public void run() {
@@ -543,6 +541,8 @@ public class DustFragment extends Fragment {
                             }
                         });
                     }
+
+
                 }
             }
 
