@@ -8,26 +8,28 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.seoul.ddroad.MainActivity;
 import com.seoul.ddroad.R;
-import com.seoul.ddroad.map.RestAPI;
+import com.seoul.ddroad.map.FillData;
 
-import static com.seoul.ddroad.R.layout.activity_main;
+import java.io.InputStream;
 
-public class IntroActivity  extends Activity implements Animation.AnimationListener {
+public class IntroActivity extends Activity implements Animation.AnimationListener {
 
     ImageView introView;
+    FillData fillData;
     Handler handler = new Handler();
+
+
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            Intent intent = new Intent(getApplicationContext(),PermissionActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PermissionActivity.class);
             startActivity(intent);
             finish();
         }
     };
-    public void onCreate(Bundle savedInstanceState)
-    {
+
+    public void onCreate(Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
@@ -37,7 +39,14 @@ public class IntroActivity  extends Activity implements Animation.AnimationListe
         cBounceInterpolar interpolar = new cBounceInterpolar(0.4, 10);
         introView.setAnimation(anim);
         anim.setInterpolator(interpolar);
-        runThread();
+
+        fillData = new FillData();
+        readFile("cafe");
+        readFile("salon");
+        readFile("trail");
+        readFile("hotel");
+        readFile("hospital");
+
     }
 
     @Override
@@ -59,19 +68,7 @@ public class IntroActivity  extends Activity implements Animation.AnimationListe
         introView.setAnimation(null);
     }
 
-    private void runThread() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                RestAPI restAPI = new RestAPI();
-                restAPI.getinfo("trail");
-                restAPI.getinfo("hospital");
-                restAPI.getinfo("hotel");
-                restAPI.getinfo("cafe");
-                restAPI.getinfo("salon");
-            }
-        }).start();
-    }
+
 
     @Override
     public void onAnimationStart(Animation animation) {
@@ -87,5 +84,39 @@ public class IntroActivity  extends Activity implements Animation.AnimationListe
     public void onAnimationRepeat(Animation animation) {
 
     }
+
+    public void readFile(String type) {
+        try {
+            int raw = 0;
+
+            switch (type) {
+                case "cafe":
+                    raw = R.raw.cafe;
+                    break;
+                case "hospital":
+                    raw = R.raw.hospital;
+                    break;
+                case "salon":
+                    raw = R.raw.salon;
+                    break;
+                case "trail":
+                    raw = R.raw.trail;
+                    break;
+                case "hotel":
+                    raw = R.raw.hotel;
+                    break;
+            }
+
+            InputStream is = getResources().openRawResource(raw);
+            byte[] readStr = new byte[is.available()];
+            is.read(readStr);
+            is.close();
+            String str[] = (new String(readStr)).split("\n");
+            fillData.setData(type, str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
