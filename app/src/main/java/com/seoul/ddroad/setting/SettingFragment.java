@@ -90,6 +90,7 @@ public class SettingFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //캐쉬 메모리 체크
         checkFunction();
 
        /* FileCacheFactory.initialize(getActivity().getApplicationContext(), CACHE_PATH);
@@ -135,11 +136,10 @@ public class SettingFragment extends Fragment {
                         final AlertDialog dialog = mBuilder.create();
                         dialog.show();
 
-
                         btn_CertainDog = mView.findViewById(R.id.btn_certaindog);
                         edt_dogname = mView.findViewById(R.id.edit_dog_name);
                         mDisplayDogname = mView.findViewById(R.id.text_dog_name);
-
+                        //메모장
                         edt_dogname.setText(getFileDate("dogname"));
                         btn_CertainDog.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -193,13 +193,15 @@ public class SettingFragment extends Fragment {
                 int daysss;
                 String strDaysss;
                 //확인눌러 데이타  다일로그 받어서 넣어주기
-                month = month + 1;
-                Log.d("Setting", "onDateSet data: " + year + "/" + month + "/" + dayOfMonth);
+                nMonth = nMonth + 1;
+                //Log.d("Setting", "onDateSet data: " + year + "/" + month + "/" + dayOfMonth);
                 //값을 더스트 프라그먼트의 화면에 넣어줘야한다
 
                 daysss = countDday(nYear, nMonth, nDayofMonth);
 
-                strDaysss = "" + daysss;
+                strDaysss = String.valueOf(daysss);
+
+                setFileData(strDaysss,"dogdate");
                 Toast.makeText(getActivity().getApplicationContext(), strDaysss.toString(), Toast.LENGTH_SHORT).show();
                 //mDisplayDate.setText(strDaysss.toString());
             }

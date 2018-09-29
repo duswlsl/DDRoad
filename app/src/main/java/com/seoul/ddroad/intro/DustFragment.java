@@ -37,7 +37,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import static com.seoul.ddroad.R.layout.custom_simple_dropdown_item_1line;
 import static com.seoul.ddroad.R.layout.support_simple_spinner_dropdown_item;
 
@@ -55,14 +54,13 @@ public class DustFragment extends Fragment {
     private TextView text_dropdown;
     private TextView text_finddust;
     private TextView text_dog_date;
-    private TextView text_dog_name;
     private String findDustResult;
     private String findDustColor;
     private String myDog;
     private int nYear;
     private int nMonth;
     private int nDay;
-    private int nDogDate;
+    private int DogDate;
     private ImageButton mainDogImg;
 
     private Spinner spinner;
@@ -71,7 +69,6 @@ public class DustFragment extends Fragment {
     private ImageView rain;
     private ImageView sun;
     private int weatherFlag;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,9 +133,8 @@ public class DustFragment extends Fragment {
 
         myDog = getFileDate("dogname");
         Log.d("TestDogname", ""+myDog);
-        nDogDate = countDday(nYear, nMonth, nDay);
-
-        text_dog_date.setText(myDog + " ♡ " + nDogDate);
+        DogDate = Integer.valueOf(getFileDate("dogdate"));
+        text_dog_date.setText(myDog + " ♡ " + DogDate);
 
 
         setSpinner();
@@ -670,6 +666,7 @@ public class DustFragment extends Fragment {
 
         });
     }
+
 
     private String getFileDate(String textName) {
         String retStr = "";
