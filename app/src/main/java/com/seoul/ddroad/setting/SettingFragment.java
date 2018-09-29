@@ -23,7 +23,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +49,10 @@ import butterknife.OnClick;
 public class SettingFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView mDisplayDate;
+    private Button btn_CertainDog;
+    private EditText edt_dogname;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-
+    private String strDogName;
     ArrayList<ListItem> list = new ArrayList<>();
 
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,7 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        strDogName = "";
 
         recyclerView = getView().findViewById(R.id.settingRecycler);
         mDisplayDate = getView().findViewById(R.id.text_dog_date);
@@ -87,13 +92,27 @@ public class SettingFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                //Toast.makeText(getActivity().getApplicationContext(), "클릭한 아이템의 이름은 " + list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
+                //0.강아지 이름, 1.강아지 데려온 날짜, 3.출처보기
                 switch (position)
                 {
                     case 0:
                         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
                         View mView = getLayoutInflater().inflate(R.layout.dialog_mydog, null);
+
+
+                        mBuilder.setView(mView);
+                        AlertDialog dialog = mBuilder.create();
+                        dialog.show();
+                        btn_CertainDog = mView.findViewById(R.id.btn_certaindog);
+                        edt_dogname = mView.findViewById(R.id.edit_dog_name);
+                        btn_CertainDog.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //strDogName = edt_dogname.setText();
+                                //edt_dogname.setText(strDogName);
+                            }
+                        });
                         break;
                     case 1:
 
@@ -103,16 +122,23 @@ public class SettingFragment extends Fragment {
                         int day = cal.get(Calendar.DAY_OF_MONTH);
 
                         //Toast.makeText(getActivity().getApplicationContext(), list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-                        DatePickerDialog dialog = new DatePickerDialog(getContext(),
+                        DatePickerDialog dialogPicker = new DatePickerDialog(getContext(),
                                 android.R.style.Theme_Holo_Light_Dialog_MinWidth, mDateSetListener,
                                 year,
                                 month,
                                 day);
 
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        dialog.show();
+                        dialogPicker.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        dialogPicker.show();
                         break;
                     case 2:
+                        //AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
+                        //View mView = getLayoutInflater().inflate(R.layout.dialog_mydog, null);
+
+
+                        //mBuilder.setView(mView);
+                        //AlertDialog dialog = mBuilder.create();
+                        //dialog.show();
                         break;
                 }
             }
@@ -166,13 +192,4 @@ public class SettingFragment extends Fragment {
             }
         };
     }
-//
-//    void onPetState() {
-//        //다이얼로그
-//        PolylineDialog dialog = new PolylineDialog();
-//        Bundle args = new Bundle();
-//        dialog.setArguments(args);
-//        dialog.setTargetFragment(this, 2);
-//        dialog.show(getActivity().getSupportFragmentManager(), "tag");
-//    }
 }

@@ -107,7 +107,7 @@ public class DetailActivity extends AppCompatActivity {
                     @Override
                     public  void  onClick(View view){
 
-                        new AlertDialog.Builder(getApplicationContext())
+                        new AlertDialog.Builder(DetailActivity.this)
                                 .setTitle("다이어리>삭제하기")
                                 .setMessage("삭제하시겠습니까?")
                                 .setIcon(R.drawable.info_dots)

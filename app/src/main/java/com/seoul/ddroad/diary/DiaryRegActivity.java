@@ -166,6 +166,24 @@ public class DiaryRegActivity extends AppCompatActivity{
                 spinner.setSelection(4);
             }else if("@drawable/bichon5".equals(imgstr)){
                 spinner.setSelection(5);
+            }else if("@drawable/sun".equals(imgstr)){
+                spinner.setSelection(6);
+            }else if("@drawable/cloudy".equals(imgstr)){
+                spinner.setSelection(7);
+            }else if("@drawable/cludysun".equals(imgstr)){
+                spinner.setSelection(8);
+            }else if("@drawable/drop".equals(imgstr)){
+                spinner.setSelection(9);
+            }else if("@drawable/flash".equals(imgstr)){
+                spinner.setSelection(10);
+            }else if("@drawable/snowflake".equals(imgstr)){
+                spinner.setSelection(11);
+            }else if("@drawable/hospital".equals(imgstr)){
+                spinner.setSelection(12);
+            }else if("@drawable/pills".equals(imgstr)){
+                spinner.setSelection(13);
+            }else if("@drawable/diary_walk".equals(imgstr)){
+                spinner.setSelection(14);
             }
 
             if(imgDirStr != null && !"".equals(imgDirStr)){
@@ -286,6 +304,24 @@ public class DiaryRegActivity extends AppCompatActivity{
                     mImgStr = "@drawable/bichon4";
                 }else if(position == 5){
                     mImgStr = "@drawable/bichon5";
+                }else if(position == 6){
+                    mImgStr = "@drawable/sun";
+                }else if(position == 7){
+                    mImgStr = "@drawable/clouds";
+                }else if(position == 8){
+                    mImgStr = "@drawable/cludysun";
+                }else if(position == 9){
+                    mImgStr = "@drawable/drop";
+                }else if(position == 10){
+                    mImgStr = "@drawable/flash";
+                }else if(position == 11){
+                    mImgStr = "@drawable/snowflake";
+                }else if(position == 12){
+                    mImgStr = "@drawable/hospital";
+                }else if(position == 13){
+                    mImgStr = "@drawable/pills";
+                }else if(position == 1){
+                    mImgStr = "@drawable/diary_walk";
                 }else{
                     mImgStr = "";
                 }
