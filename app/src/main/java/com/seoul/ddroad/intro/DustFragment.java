@@ -99,7 +99,7 @@ public class DustFragment extends Fragment {
         dustLocation = 0;
         temperature = 0.0;
         fineDust = 0;
-        myDog = "";
+        myDog = "콩이";
         findDustResult = "";
         findDustColor = "";
         nYear = 2018;
@@ -169,7 +169,7 @@ public class DustFragment extends Fragment {
         list.add("서울시 서초구");
         list.add("서울시 강남구");
         list.add("서울시 송파구");
-        list.add("서울시 강남구");
+        list.add("서울시 강동구");
 
         //배열 어답터 사용
         ArrayAdapter spinnerAdater;
@@ -193,8 +193,6 @@ public class DustFragment extends Fragment {
 
                 //미세먼지
                 setDustApi();
-
-
             }
 
             @Override
