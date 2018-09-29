@@ -17,12 +17,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
-    boolean bButton1, bButton2, bButton3, bButton4, bButton5;
+    int tabNo = 0;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        bButton1 = false;
-        bButton2 = false;
-        bButton3 = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         callFragment(1);
@@ -32,7 +30,11 @@ public class MainActivity extends AppCompatActivity {
     @OnClick({R.id.btn_dust, R.id.btn_map, R.id.btn_diary, R.id.btn_board, R.id.btn_setting})
     void tabClick(View v) {
         int fragment_no = Integer.parseInt(v.getTag().toString());
-        callFragment(fragment_no);
+        if (tabNo != fragment_no)
+        {
+            callFragment(fragment_no);
+            tabNo = fragment_no;
+        }
     }
 
     private void callFragment(int fragment_no) {
@@ -40,12 +42,8 @@ public class MainActivity extends AppCompatActivity {
         switch (fragment_no) {
             case 1:
                 Fragment fragment1 = new DustFragment();
+                transaction.replace(R.id.fragment_container, fragment1);
 
-                if(transaction.equals(1))
-                {
-                    transaction.replace(R.id.fragment_container, fragment1);
-                    bButton1 = true;
-                }
                 break;
             case 2:
                 Fragment fragment2 = new MapFragment();
@@ -65,5 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         transaction.commit();
+
     }
 }

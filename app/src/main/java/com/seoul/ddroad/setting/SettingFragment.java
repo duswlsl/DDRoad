@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
@@ -49,12 +50,16 @@ import butterknife.OnClick;
 public class SettingFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView mDisplayDate;
+    private TextView mDisplayDogname;
     private Button btn_CertainDog;
     private EditText edt_dogname;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private String strDogName;
     ArrayList<ListItem> list = new ArrayList<>();
 
+
+    Bundle bundle = new Bundle(1);
+    String input;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -71,7 +76,7 @@ public class SettingFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         strDogName = "";
-
+        input = "";
         recyclerView = getView().findViewById(R.id.settingRecycler);
         mDisplayDate = getView().findViewById(R.id.text_dog_date);
         //줄 구분선 만들기
@@ -92,25 +97,43 @@ public class SettingFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                //Toast.makeText(getActivity().getApplicationContext(), "클릭한 아이템의 이름은 " + list.get(position).getTitle(), Toast.LENGTH_SHORT).show();
 
                 //0.강아지 이름, 1.강아지 데려온 날짜, 3.출처보기
-                switch (position)
-                {
+                switch (position) {
                     case 0:
                         AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
                         View mView = getLayoutInflater().inflate(R.layout.dialog_mydog, null);
 
 
                         mBuilder.setView(mView);
-                        AlertDialog dialog = mBuilder.create();
+                        final AlertDialog dialog = mBuilder.create();
                         dialog.show();
+
+
                         btn_CertainDog = mView.findViewById(R.id.btn_certaindog);
                         edt_dogname = mView.findViewById(R.id.edit_dog_name);
+                        mDisplayDogname = mView.findViewById(R.id.text_dog_name);
+
+
                         btn_CertainDog.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                //strDogName = edt_dogname.setText();
-                                //edt_dogname.setText(strDogName);
+                                String input = edt_dogname.getText().toString();
+                                SettingFragment fragment = new SettingFragment();
+
+                                if (!input.equals("")) {
+
+                                    bundle.putString("MYDOG", input);
+                                    mDisplayDogname.setText(input.toString());
+                                }
+
+
+                                //정보를 너머겨줘야한다 어디로 더스트 프라그먼트로
+                                fragment.setArguments(bundle);
+                                Log.d("bundle",bundle.toString());
+
+                                dialog.dismiss();
                             }
                         });
                         break;
@@ -154,13 +177,13 @@ public class SettingFragment extends Fragment {
                 int daysss;
                 String strDaysss;
                 //확인눌러 데이타  다일로그 받어서 넣어주기
-                month = month +1;
+                month = month + 1;
                 Log.d("Setting", "onDateSet data: " + year + "/" + month + "/" + dayOfMonth);
                 //값을 더스트 프라그먼트의 화면에 넣어줘야한다
 
                 daysss = countDday(nYear, nMonth, nDayofMonth);
 
-                strDaysss = ""+daysss;
+                strDaysss = "" + daysss;
                 Toast.makeText(getActivity().getApplicationContext(), strDaysss.toString(), Toast.LENGTH_SHORT).show();
                 //mDisplayDate.setText(strDaysss.toString());
             }
@@ -192,4 +215,13 @@ public class SettingFragment extends Fragment {
             }
         };
     }
+//
+//    void onPetState() {
+//        //다이얼로그
+//        PolylineDialog dialog = new PolylineDialog();
+//        Bundle args = new Bundle();
+//        dialog.setArguments(args);
+//        dialog.setTargetFragment(this, 2);
+//        dialog.show(getActivity().getSupportFragmentManager(), "tag");
+//    }
 }
