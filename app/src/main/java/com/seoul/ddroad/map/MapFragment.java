@@ -8,16 +8,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 import com.seoul.ddroad.R;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -70,12 +67,12 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private LocationRequest locRequest;
     private FusedLocationProviderClient fusedLocClient;
     private LocationCallback locCallback, locCallback_walk;
-    private Marker marker;
-    private String state = "";
+    private Marker marker, marker1, marker2;
     private Button btnPrevious;
     private long start, end;
     private int hour, min;
     private float km;
+    private double totDistance = 0;
 
 
     @BindView(R.id.btn_walk)
@@ -135,29 +132,22 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         } else { //산책 끝
             end = System.currentTimeMillis();
             changeCallback(locCallback_walk, locCallback, false);
-            calcResult(latLngList);
 
-            Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.translate);
-            btn_walk.setVisibility(View.GONE);
-            layout_result.setVisibility(View.VISIBLE);
-            layout_result.startAnimation(anim);
-//
-//            //다이얼로그
-//            PolylineDialog dialog = new PolylineDialog();
-//            Bundle args = new Bundle();
-//            args.putParcelableArrayList("pointList", latLngList);
-//            dialog.setArguments(args);
-//            dialog.setTargetFragment(this, 2);
-//            dialog.show(getActivity().getSupportFragmentManager(), "tag");
-//            if (polyline != null)
-//                polyline.remove();
+            if (latLngList.size() != 0 && end != start) {
+                calcResult(latLngList);
+
+                Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.translate);
+                btn_walk.setVisibility(View.GONE);
+                layout_result.setVisibility(View.VISIBLE);
+                layout_result.startAnimation(anim);
+            }
         }
     }
 
 
     private void calcResult(ArrayList<LatLng> latLngList) {
-        double totDistance = 0;
-
+        totDistance = 0;
+        Log.d(TAG, String.valueOf(latLngList.size()));
         LatLng prev = latLngList.get(0);
         for (LatLng latLng : latLngList) {
             totDistance += SphericalUtil.computeDistanceBetween(prev, latLng);
@@ -168,7 +158,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         tv_km.setText(String.valueOf(km));
 
         long time = (end - start) / 1000 / 60;//분
-        if (time > 60) {
+        if (time >= 60) {
             hour = (int) (time / 60);
             min = (int) (time % 60);
         } else {
@@ -190,34 +180,12 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         fusedLocClient.requestLocationUpdates(locRequest, callback2, null);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /* if (resultCode == Activity.RESULT_OK) { // 경로 저장
-            latLngList = data.getExtras().getParcelableArrayList("pointList");
-            drawPolyline(latLngList);
-
-            // 스크린샷 저장
-            GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
-                @Override
-                public void onSnapshotReady(Bitmap bitmap) {
-                    String imgPath = screenshot(bitmap);
-                    SqlLiteDao sqlDao = new SqlLiteDao(getContext());
-                    //sqlDao.insertScreenShot(imgPath);
-                }
-            };
-            googleMap.snapshot(callback);
-            btn_walk.setVisibility(View.VISIBLE);
-            Toast.makeText(this.getContext(), "저장되었습니다", Toast.LENGTH_LONG).show();
-            latLngList = null;
-        }
-        */
-    }
 
     public void drawPolyline(List<LatLng> pointList) {
         if (polyline != null)
             polyline.remove();
         PolylineOptions polylineOptions = new PolylineOptions()
-                .color(Color.RED)
+                .color(Color.argb(255, 64, 129, 145))
                 .width(15)
                 .addAll(pointList)
                 .geodesic(true);
@@ -362,13 +330,15 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     public void clickOk() {
         layout_result.setVisibility(View.GONE);
         btn_walk.setVisibility(View.VISIBLE);
-        latLngList = null;
+        latLngList.clear();
         if (polyline != null)
             polyline.remove();
     }
 
     @OnClick(R.id.btn_capture)
     public void clickCapture() {
+        setCaptureMarker();
+
         GoogleMap.SnapshotReadyCallback callback = new GoogleMap.SnapshotReadyCallback() {
             @Override
             public void onSnapshotReady(Bitmap bitmap) {
@@ -386,7 +356,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         layout_result.setVisibility(View.GONE);
         btn_walk.setVisibility(View.VISIBLE);
         Toast.makeText(this.getContext(), "저장되었습니다", Toast.LENGTH_LONG).show();
-        latLngList = null;
+        latLngList.clear();
+        marker1.remove();
+        marker2.remove();
         if (polyline != null)
             polyline.remove();
     }
@@ -412,6 +384,24 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         return strFilePath;
     }
 
+    private void setCaptureMarker() {
+        if (totDistance >= 0.1) {
+            Bitmap bitmap1 = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("marker_home", "drawable", getContext().getPackageName()));
+            bitmap1 = bitmap1.createScaledBitmap(bitmap1, 120, 120, false);
+            Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("marker_dog", "drawable", getContext().getPackageName()));
+            bitmap2 = bitmap2.createScaledBitmap(bitmap2, 120, 120, false);
+           MarkerOptions markerOptions1 = new MarkerOptions()
+                    .position(latLngList.get(0))
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap1));
+            MarkerOptions markerOptions2 = new MarkerOptions()
+                    .position(latLngList.get(latLngList.size()-1))
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap2));
+
+            marker1 = googleMap.addMarker(markerOptions1);
+            marker2 = googleMap.addMarker(markerOptions2);
+            }
+    }
+
 
     @OnClick({R.id.btn_cafe, R.id.btn_hotel, R.id.btn_hospital, R.id.btn_salon, R.id.btn_trail})
     void clickSearch(View view) {
@@ -420,7 +410,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         googleMap.clear();
         marker = null;
         setCurMarker();
-        if (latLngList != null)
+        if (latLngList != null && latLngList.size() != 0)
             drawPolyline(latLngList);
 
         if (view.isSelected()) {
