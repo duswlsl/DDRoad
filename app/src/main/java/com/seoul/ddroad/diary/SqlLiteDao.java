@@ -30,7 +30,7 @@ public class SqlLiteDao {
         int diaryId = 0;
         if (database != null) {
 
-            String sql = "insert into diary(title, content, imgstr, regdt) values('오늘의 산책','\n" + content + "', '@drawable/diary_walk', datetime('now','localtime'))";
+            String sql = "insert into diary(title, content, imgstr, regdt) values('오늘의 산책','" + content + "', '@drawable/diary_walk', datetime('now','localtime'))";
             database.execSQL(sql);
 
             Cursor cur = database.rawQuery("SELECT MAX(diaryId) FROM diary", null);
