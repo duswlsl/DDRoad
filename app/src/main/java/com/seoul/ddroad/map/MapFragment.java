@@ -360,10 +360,6 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                 String imgPath = screenshot(bitmap);
                 String content = "\n";
                 dogname = getDogName();
-                Log.d(TAG, dogname+"ss");
-
-                dogname.replace("\n", "");
-                Log.d(TAG, dogname+"ss");
                 if (!dogname.equals(""))
                     content += (dogname + "와 ");
                 if (hour > 0)
@@ -536,7 +532,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
                     (new InputStreamReader(fis));
             String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
             while (str != null) {
-                data.append(str + "\n");
+                data.append(str);
                 str = buffer.readLine();
             }
             retStr = data.toString();
