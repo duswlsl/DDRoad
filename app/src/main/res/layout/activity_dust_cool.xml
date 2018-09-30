@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="온도 34"
+            android:text=""
             android:textColor="#3d536a"
             android:textSize="80px" />
 
@@ -79,7 +79,7 @@
             android:layout_marginRight="20dp"
             android:layout_weight="1"
             android:gravity="left"
-            android:text="미세먼지 좋음"
+            android:text=""
             android:textColor="#476600"
             android:textSize="80px" />
     </LinearLayout>
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_weight="1"
-            android:text="콩이♡ 456d"
+            android:text=""
             android:textColor="#274668"
             android:textSize="80px" />
     </LinearLayout>

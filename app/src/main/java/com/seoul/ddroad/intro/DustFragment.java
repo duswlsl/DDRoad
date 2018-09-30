@@ -96,7 +96,7 @@ public class DustFragment extends Fragment {
         inputTime = "";
         inputNx = "";
         inputNy = "";
-        location = "금천구";
+        location = "";
         dustLocation = 0;
         temperature = 0.0;
         fineDust = 0;
@@ -277,7 +277,6 @@ public class DustFragment extends Fragment {
 
     }
 
-
     public void setNxNy(String location) {
 
         if (location.equals("서울시")) {
@@ -431,7 +430,7 @@ public class DustFragment extends Fragment {
     public void setDustApi() {
 
         String searchUrl = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureSidoLIst?";
-        String serviceKey = "serviceKey=DgPFrzzGO9aHn5QtBPF80nYkh88aX8rz6DbddIYvZqyKTg1tcBN8c4u5p66zyw5bWdA5xUuBo7pnjzTNOex63w%3D%3D";
+        String serviceKey = "serviceKey=6HQWWR6iibX4NvJpYaP%2BP%2Blivy9AiBISgqmHA%2FxT4vsJKPwxr%2BRIMG%2BNFDhz3ZWkSJHoyDp3cTjzF2dfuXG84w%3D%3D";
         String lastText = "&numOfRows=24&pageSize=10&pageNo=1&startPage=1&sidoName=%EC%84%9C%EC%9A%B8&searchCondition=DAILY&_returnType=json";
         String requestUrl = searchUrl + serviceKey + lastText;
 
@@ -511,12 +510,8 @@ public class DustFragment extends Fragment {
                                     text_temperature.setTextColor(Color.parseColor("#FF3D536A"));
                                 }
                             }
-
                         });
-
                     }
-
-
                 } else if (funcFlag == 2) {
 
                     fineDust = dustJsonParser(result);
@@ -534,7 +529,7 @@ public class DustFragment extends Fragment {
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
                                     mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
-                                        text_finddust.setTextColor(Color.parseColor(findDustColor));
+                                    text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
@@ -547,8 +542,6 @@ public class DustFragment extends Fragment {
                             }
                         });
                     }
-
-
                 }
             }
 
@@ -604,6 +597,7 @@ public class DustFragment extends Fragment {
             return dustResult;
         } catch (JSONException e) {
 
+            dustResult = 0;
             Log.d("TAG", e.toString());
         }
 
@@ -632,29 +626,11 @@ public class DustFragment extends Fragment {
         } else if (fineDust > 150) {
             result = "매우나쁨";
             findDustColor = "#ED0000";
-
-        } else {
+        }else
+        {
 
         }
         return result;
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-//        //날짜시간설정
-//        setDateTime();
-//
-//        //임의로 주소입력
-//        setNxNy(location);
-//
-//        //온도API
-//        setTempApi(inputDate, inputTime, inputNx, inputNy);
-//
-//        //미세먼지
-//        setDustApi();
-
     }
 
     public void rainChange() {
@@ -675,7 +651,6 @@ public class DustFragment extends Fragment {
                     sun.setImageResource(R.drawable.weather_sun);
                 }
             }
-
         });
     }
 
@@ -698,7 +673,6 @@ public class DustFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return retStr;
 
     }

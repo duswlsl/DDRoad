@@ -117,6 +117,5 @@ public class IntroActivity extends Activity implements Animation.AnimationListen
             e.printStackTrace();
         }
     }
-
 }
 
