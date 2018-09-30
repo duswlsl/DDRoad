@@ -54,13 +54,14 @@ public class DustFragment extends Fragment {
     private TextView text_dropdown;
     private TextView text_finddust;
     private TextView text_dog_date;
+    private TextView text_dog_name;
     private String findDustResult;
     private String findDustColor;
     private String myDog;
     private int nYear;
     private int nMonth;
     private int nDay;
-    private int DogDate;
+    private int dogDate;
     private ImageButton mainDogImg;
 
     private Spinner spinner;
@@ -69,9 +70,11 @@ public class DustFragment extends Fragment {
     private ImageView rain;
     private ImageView sun;
     private int weatherFlag;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -97,13 +100,12 @@ public class DustFragment extends Fragment {
         dustLocation = 0;
         temperature = 0.0;
         fineDust = 0;
-        myDog = "콩이";
+        myDog = null;
         findDustResult = "";
         findDustColor = "";
-        nYear = 2018;
-        nMonth = 9;
-        nDay = 1;
-
+        nYear = 0;
+        nMonth = 0;
+        nDay = 0;
 
         super.onCreate(savedInstanceState);
 
@@ -139,7 +141,7 @@ public class DustFragment extends Fragment {
         }
 
         if(dateStr != null && !"".equals(dateStr)){
-            DogDate = Integer.valueOf(dateStr);
+            dogDate = Integer.valueOf(dateStr);
             text_dog_date.setText(myDog + " ♡ " + DogDate);
         }else{
             text_dog_date.setText("이름과 D-day 설정 필요!!");
@@ -690,7 +692,7 @@ public class DustFragment extends Fragment {
                     (new InputStreamReader(fis));
             String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
             while (str != null) {
-                data.append(str + "");
+                data.append(str);
                 str = buffer.readLine();
             }
             retStr = data.toString();
