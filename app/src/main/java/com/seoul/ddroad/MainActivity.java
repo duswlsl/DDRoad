@@ -1,5 +1,6 @@
 package com.seoul.ddroad;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -18,12 +19,24 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
     int tabNo = 0;
+    private BackPressCloseHandler backPressCloseHandler;
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        callFragment(1);
+        backPressCloseHandler = new BackPressCloseHandler(this);
+        Intent intent = getIntent();
+
+        String action = intent.getStringExtra("action");
+        if("diary".equals(action)){
+            callFragment(3);
+        }else{
+            callFragment(1);
+        }
+
+
         ButterKnife.bind(this);
     }
 
@@ -65,4 +78,10 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
 
     }
+
+    @Override public void onBackPressed() {
+        //super.onBackPressed();
+        backPressCloseHandler.onBackPressed();
+    }
+
 }
