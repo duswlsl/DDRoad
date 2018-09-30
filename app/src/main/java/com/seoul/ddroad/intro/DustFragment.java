@@ -509,7 +509,7 @@ public class DustFragment extends Fragment {
                                     text_temperature.setText("온도 " + String.valueOf(temperature));
                                 } else {
                                     text_temperature.setText("시간을 대한민국 기준으로");
-                                    text_temperature.setTextColor(Color.parseColor("FF3D536A"));
+                                    text_temperature.setTextColor(Color.parseColor("#FF3D536A"));
                                 }
                             }
 
