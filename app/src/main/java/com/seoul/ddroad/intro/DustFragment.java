@@ -500,7 +500,6 @@ public class DustFragment extends Fragment {
                 if (funcFlag == 1) {
                     temperature = tempJsonParser(result);
                     if (temperature != null) {
-
                         getActivity().runOnUiThread(new Runnable() {
 
                             public void run() {
@@ -660,7 +659,7 @@ public class DustFragment extends Fragment {
 
     public void rainChange() {
         weatherFlag = 0;
-        //SUNNY 1, RAIN2
+        //SUNNY 1, RAIN2시
         getActivity().runOnUiThread(new Runnable() {
 
             public void run() {
