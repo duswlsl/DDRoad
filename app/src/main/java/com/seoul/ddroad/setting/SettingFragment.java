@@ -62,14 +62,13 @@ public class SettingFragment extends Fragment {
     private Button btn_CertainDog;
     private EditText edt_dogname;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    private String strDogName;
+
+
     ArrayList<ListItem> list = new ArrayList<>();
 
 
     // 출처: http://tlshenm.tistory.com/45 [No Job Of Star]
     //public static final String CACHE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "ddroad" + File.separator + ".cache"; //캐시 기본폴더
-
-
 
 
     Bundle bundle = new Bundle(1);
@@ -169,13 +168,13 @@ public class SettingFragment extends Fragment {
                         dialogPicker.show();
                         break;
                     case 2:
-                        //AlertDialog.Builder mBuilder = new AlertDialog.Builder(getContext());
-                        //View mView = getLayoutInflater().inflate(R.layout.dialog_mydog, null);
+                        AlertDialog.Builder mBuilder_source = new AlertDialog.Builder(getContext());
+                        View mView_source = getLayoutInflater().inflate(R.layout.dialog_source, null);
 
 
-                        //mBuilder.setView(mView);
-                        //AlertDialog dialog = mBuilder.create();
-                        //dialog.show();
+                        mBuilder_source.setView(mView_source);
+                        AlertDialog dialog_source = mBuilder_source.create();
+                        dialog_source.show();
                         break;
                 }
             }
@@ -268,7 +267,6 @@ public class SettingFragment extends Fragment {
         return retStr;
 
     }
-
 
     public void checkFunction(){
         int permissioninfo = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
