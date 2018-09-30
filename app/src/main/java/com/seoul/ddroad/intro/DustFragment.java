@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -61,7 +62,7 @@ public class DustFragment extends Fragment {
     private int nYear;
     private int nMonth;
     private int nDay;
-    private int nDogDate;
+    private String dogDate;
     private ImageButton mainDogImg;
 
     private Spinner spinner;
@@ -74,6 +75,7 @@ public class DustFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -99,13 +101,13 @@ public class DustFragment extends Fragment {
         dustLocation = 0;
         temperature = 0.0;
         fineDust = 0;
-        myDog = "";
+        dogDate = null;
+        myDog = null;
         findDustResult = "";
         findDustColor = "";
-        nYear = 2018;
-        nMonth = 9;
-        nDay = 1;
-
+        nYear = 0;
+        nMonth = 0;
+        nDay = 0;
 
         super.onCreate(savedInstanceState);
 
@@ -117,6 +119,7 @@ public class DustFragment extends Fragment {
         spinner = getView().findViewById(R.id.spinner);
         rain = getView().findViewById(R.id.rain);
         sun = getView().findViewById(R.id.sun);
+
 
         //폰트설정
         fontChange();
@@ -133,12 +136,14 @@ public class DustFragment extends Fragment {
         setDustApi();
 
 
+        //Log.d("설정", "설정네임"+ "이름:" + myDog +"일수:"+ dogDate);
 
-        nDogDate = countDday(nYear, nMonth, nDay);
+        //text_dog_date.setText(myDog + " ♡ " + dogDate);
+            myDog = getFileDate("dogname");
+            //text_dog_date.setText(myDog + " ♡ " + dogDate);
+            dogDate = getFileDate("dogdate");
 
-        text_dog_date.setText(myDog + " ♡ " + nDogDate);
-
-
+            text_dog_date.setText(myDog + " ♡ " + dogDate);
         setSpinner();
     }
 
@@ -179,7 +184,6 @@ public class DustFragment extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity().getApplicationContext(), "선택된 아이템 :" + spinner.getItemAtPosition(position), Toast.LENGTH_LONG).show();
                 location = spinner.getItemAtPosition(position).toString();
 
                 //날짜시간설정
@@ -515,9 +519,7 @@ public class DustFragment extends Fragment {
 
                     if (fineDust != 0) {
                         findDustResult = setFineDustResult(fineDust);
-                    }
-                    else
-                    {
+                    } else {
                         getActivity().runOnUiThread(new Runnable() {
 
                             public void run() {
@@ -528,7 +530,7 @@ public class DustFragment extends Fragment {
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
                                     mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
-                                //    text_finddust.setTextColor(Color.parseColor(findDustColor));
+                                    //    text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
@@ -673,7 +675,6 @@ public class DustFragment extends Fragment {
         });
     }
 
-
     private String getFileDate(String textName) {
         String retStr = "";
         try {
@@ -684,7 +685,7 @@ public class DustFragment extends Fragment {
                     (new InputStreamReader(fis));
             String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
             while (str != null) {
-                data.append(str + "");
+                data.append(str);
                 str = buffer.readLine();
             }
             retStr = data.toString();
