@@ -284,103 +284,103 @@ public class DustFragment extends Fragment {
             inputNx = "60";
             inputNy = "127";
             dustLocation = 22;
-        } else if (location.equals("종로구")) {
+        } else if (location.equals("서울시 종로구")) {
             inputNx = "60";
             inputNy = "127";
             dustLocation = 22;
-        } else if (location.equals("중구")) {
+        } else if (location.equals("서울시 중구")) {
             inputNx = "60";
             inputNy = "127";
             dustLocation = 23;
-        } else if (location.equals("용산구")) {
+        } else if (location.equals("서울시 용산구")) {
             inputNx = "60";
             inputNy = "126";
             dustLocation = 20;
-        } else if (location.equals("성동구")) {
+        } else if (location.equals("서울시 성동구")) {
             inputNx = "61";
             inputNy = "127";
             dustLocation = 15;
-        } else if (location.equals("광진구")) {
+        } else if (location.equals("서울시 광진구")) {
             inputNx = "62";
             inputNy = "126";
             dustLocation = 5;
-        } else if (location.equals("동대문구")) {
+        } else if (location.equals("서울시 동대문구")) {
             inputNx = "61";
             inputNy = "127";
             dustLocation = 10;
-        } else if (location.equals("중랑구")) {
+        } else if (location.equals("서울시 중랑구")) {
             inputNx = "62";
             inputNy = "128";
             dustLocation = 24;
-        } else if (location.equals("성북구")) {
+        } else if (location.equals("서울시 성북구")) {
             inputNx = "61";
             inputNy = "127";
             dustLocation = 16;
-        } else if (location.equals("강북구")) {
+        } else if (location.equals("서울시 강북구")) {
             inputNx = "61";
             inputNy = "128";
             dustLocation = 2;
-        } else if (location.equals("도봉구")) {
+        } else if (location.equals("서울시 도봉구")) {
             inputNx = "61";
             inputNy = "129";
             dustLocation = 9;
-        } else if (location.equals("노원구")) {
+        } else if (location.equals("서울시 노원구")) {
             inputNx = "61";
             inputNy = "129";
             dustLocation = 8;
-        } else if (location.equals("은평구")) {
+        } else if (location.equals("서울시 은평구")) {
             inputNx = "59";
             inputNy = "127";
             dustLocation = 21;
-        } else if (location.equals("서대문구")) {
+        } else if (location.equals("서울시 서대문구")) {
             inputNx = "59";
             inputNy = "127";
             dustLocation = 13;
-        } else if (location.equals("마포구")) {
+        } else if (location.equals("서울시 마포구")) {
             inputNx = "59";
             inputNy = "127";
             dustLocation = 12;
-        } else if (location.equals("양천구")) {
+        } else if (location.equals("서울시 양천구")) {
             inputNx = "58";
             inputNy = "126";
             dustLocation = 18;
-        } else if (location.equals("강서구")) {
+        } else if (location.equals("서울시 강서구")) {
             inputNx = "58";
             inputNy = "126";
             dustLocation = 3;
-        } else if (location.equals("구로구")) {
+        } else if (location.equals("서울시 구로구")) {
             inputNx = "58";
             inputNy = "125";
             dustLocation = 6;
-        } else if (location.equals("금천구")) {
+        } else if (location.equals("서울시 금천구")) {
             inputNx = "59";
             inputNy = "124";
             dustLocation = 7;
-        } else if (location.equals("영등포구")) {
+        } else if (location.equals("서울시 영등포구")) {
             inputNx = "58";
             inputNy = "126";
             dustLocation = 19;
-        } else if (location.equals("동작구")) {
+        } else if (location.equals("서울시 동작구")) {
             inputNx = "59";
             inputNy = "125";
             dustLocation = 11;
-        } else if (location.equals("관악구")) {
+        } else if (location.equals("서울시 관악구")) {
             inputNx = "59";
             inputNy = "125";
             dustLocation = 4;
-        } else if (location.equals("서초구")) {
+        } else if (location.equals("서울시 서초구")) {
             inputNx = "61";
             inputNy = "125";
             dustLocation = 14;
-        } else if (location.equals("강남구")) {
+        } else if (location.equals("서울시 강남구")) {
             inputNx = "61";
             inputNy = "126";
             dustLocation = 0;
-        } else if (location.equals("송파구")) {
+        } else if (location.equals("서울시 송파구")) {
             inputNx = "62";
             inputNy = "126";
             dustLocation = 17;
-        } else if (location.equals("강동구")) {
+        } else if (location.equals("서울시 강동구")) {
             inputNx = "62";
             inputNy = "126";
             dustLocation = 1;
@@ -509,7 +509,7 @@ public class DustFragment extends Fragment {
                                     text_temperature.setText("온도 " + String.valueOf(temperature));
                                 } else {
                                     text_temperature.setText("시간을 대한민국 기준으로");
-                                    text_temperature.setTextColor(Color.parseColor("#FF0000"));
+                                    text_temperature.setTextColor(Color.parseColor("#FF3D536A"));
                                 }
                             }
 
@@ -524,7 +524,7 @@ public class DustFragment extends Fragment {
 
                     if (fineDust != 0) {
                         findDustResult = setFineDustResult(fineDust);
-                    } else {
+
                         getActivity().runOnUiThread(new Runnable() {
 
                             public void run() {
@@ -535,7 +535,7 @@ public class DustFragment extends Fragment {
                                     text_finddust.setTextColor(Color.parseColor("#FF0000"));
                                     mainDogImg.setImageResource(R.drawable.dogface_2);
                                 } else {
-                                    //    text_finddust.setTextColor(Color.parseColor(findDustColor));
+                                        text_finddust.setTextColor(Color.parseColor(findDustColor));
                                     text_finddust.setText("미세먼지 " + findDustResult);
                                     Log.d("sss", findDustColor);
 
@@ -644,17 +644,17 @@ public class DustFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //날짜시간설정
-        setDateTime();
-
-        //임의로 주소입력
-        setNxNy(location);
-
-        //온도API
-        setTempApi(inputDate, inputTime, inputNx, inputNy);
-
-        //미세먼지
-        setDustApi();
+//        //날짜시간설정
+//        setDateTime();
+//
+//        //임의로 주소입력
+//        setNxNy(location);
+//
+//        //온도API
+//        setTempApi(inputDate, inputTime, inputNx, inputNy);
+//
+//        //미세먼지
+//        setDustApi();
 
     }
 
