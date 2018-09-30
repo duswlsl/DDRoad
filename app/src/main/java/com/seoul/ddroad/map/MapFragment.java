@@ -6,6 +6,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
@@ -46,9 +47,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.seoul.ddroad.diary.SqlLiteDao;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +66,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private LatLng SEOUL = new LatLng(37.56, 126.97);
     private MapView mapView;
     private LatLng curLatlng;
-    private ArrayList<LatLng> latLngList;
+    private ArrayList<LatLng> latLngList = new ArrayList<>();
     private Polyline polyline;
     private LocationRequest locRequest;
     private FusedLocationProviderClient fusedLocClient;
@@ -73,7 +77,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     private int hour, min;
     private float km;
     private double totDistance = 0;
-
+    private String dogname;
+    private BitmapDescriptor marker_dog;
 
     @BindView(R.id.btn_walk)
     Button btn_walk;
@@ -126,26 +131,28 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
     void startWalk(View view) {
         view.setSelected(!view.isSelected());
         if (view.isSelected()) { //산책 시작
+            latLngList.clear();
             start = System.currentTimeMillis();
-            latLngList = new ArrayList<>();
             changeCallback(locCallback, locCallback_walk, true);
         } else { //산책 끝
             end = System.currentTimeMillis();
-            changeCallback(locCallback_walk, locCallback, false);
 
             if (latLngList.size() != 0 && end != start) {
-                calcResult(latLngList);
+                if (calcResult(latLngList)) {
+                    Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.translate);
+                    btn_walk.setVisibility(View.GONE);
+                    layout_result.setVisibility(View.VISIBLE);
+                    layout_result.startAnimation(anim);
+                }
+            } else
+                Toast.makeText(this.getContext(), "산책을 하지 않았습니다", Toast.LENGTH_LONG).show();
+            changeCallback(locCallback_walk, locCallback, false);
 
-                Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.translate);
-                btn_walk.setVisibility(View.GONE);
-                layout_result.setVisibility(View.VISIBLE);
-                layout_result.startAnimation(anim);
-            }
         }
     }
 
 
-    private void calcResult(ArrayList<LatLng> latLngList) {
+    private boolean calcResult(ArrayList<LatLng> latLngList) {
         totDistance = 0;
         Log.d(TAG, String.valueOf(latLngList.size()));
         LatLng prev = latLngList.get(0);
@@ -154,6 +161,10 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             prev = latLng;
         }
         totDistance /= 1000;
+        if (totDistance <= 0.01) {
+            Toast.makeText(this.getContext(), "산책을 하지 않았습니다", Toast.LENGTH_LONG).show();
+            return false;
+        }
         km = Float.parseFloat(String.format("%.1f", totDistance));
         tv_km.setText(String.valueOf(km));
 
@@ -167,6 +178,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         }
         tv_hour.setText(String.valueOf(hour));
         tv_minute.setText(String.valueOf(min));
+        return true;
     }
 
 
@@ -185,8 +197,8 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         if (polyline != null)
             polyline.remove();
         PolylineOptions polylineOptions = new PolylineOptions()
-                .color(Color.argb(255, 64, 129, 145))
-                .width(15)
+                .color(Color.argb(255, 107, 190, 212))
+                .width(20)
                 .addAll(pointList)
                 .geodesic(true);
         polyline = googleMap.addPolyline(polylineOptions);
@@ -263,6 +275,9 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         this.googleMap = googleMap;
         googleMap.setOnInfoWindowClickListener(this);
         setDefaultLoc(this.getContext());
+        Bitmap bitmap_dog = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("marker_dogdog2", "drawable", getContext().getPackageName()));
+        bitmap_dog = bitmap_dog.createScaledBitmap(bitmap_dog, 120, 120, false);
+        marker_dog = BitmapDescriptorFactory.fromBitmap(bitmap_dog);
         setCurMarker();
     }
 
@@ -302,12 +317,12 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             marker.setPosition(curLatlng);
         else {
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(curLatlng);
+            markerOptions.position(curLatlng)
+                    .icon(marker_dog);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curLatlng, 16));
             marker = googleMap.addMarker(markerOptions);
             marker.showInfoWindow();
         }
-
     }
 
 
@@ -343,7 +358,14 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
             @Override
             public void onSnapshotReady(Bitmap bitmap) {
                 String imgPath = screenshot(bitmap);
-                String content = "";
+                String content = "\n";
+                dogname = getDogName();
+                Log.d(TAG, dogname+"ss");
+
+                dogname.replace("\n", "");
+                Log.d(TAG, dogname+"ss");
+                if (!dogname.equals(""))
+                    content += (dogname + "와 ");
                 if (hour > 0)
                     content += String.valueOf(hour) + "시간 ";
                 content = content + String.valueOf(min) + "분 동안 " + String.valueOf(km) + "km 걸었어요";
@@ -414,7 +436,7 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         googleMap.clear();
         marker = null;
         setCurMarker();
-        if (latLngList != null && latLngList.size() != 0)
+        if (latLngList.size() != 0)
             drawPolyline(latLngList);
 
         if (view.isSelected()) {
@@ -481,5 +503,50 @@ public class MapFragment extends Fragment implements LocationListener, OnMapRead
         return false;
     }
 
+    private String getFileDate(String textName) {
+        String retStr = "";
+        try {
+            // 파일에서 읽은 데이터를 저장하기 위해서 만든 변수
+            StringBuffer data = new StringBuffer();
+            FileInputStream fis = getActivity().openFileInput(textName + ".txt");//파일명
+            BufferedReader buffer = new BufferedReader
+                    (new InputStreamReader(fis));
+            String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
+            while (str != null) {
+                data.append(str + "\n");
+                str = buffer.readLine();
+            }
+            retStr = data.toString();
+            buffer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return retStr;
+
+    }
+
+    private String getDogName() {
+        String retStr = "";
+        try {
+            // 파일에서 읽은 데이터를 저장하기 위해서 만든 변수
+            StringBuffer data = new StringBuffer();
+            FileInputStream fis = getActivity().openFileInput("dogname.txt");//파일명
+            BufferedReader buffer = new BufferedReader
+                    (new InputStreamReader(fis));
+            String str = buffer.readLine(); // 파일에서 한줄을 읽어옴
+            while (str != null) {
+                data.append(str + "\n");
+                str = buffer.readLine();
+            }
+            retStr = data.toString();
+            buffer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return retStr;
+
+    }
 
 }
