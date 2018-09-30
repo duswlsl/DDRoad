@@ -320,7 +320,7 @@ public class DiaryRegActivity extends AppCompatActivity{
                     mImgStr = "@drawable/hospital";
                 }else if(position == 13){
                     mImgStr = "@drawable/pills";
-                }else if(position == 1){
+                }else if(position == 14){
                     mImgStr = "@drawable/diary_walk";
                 }else{
                     mImgStr = "";
