@@ -139,10 +139,9 @@ public class DustFragment extends Fragment {
         if("".equals(dateStr)){
             text_dog_date.setText("이름과 D-day 설정 필요!!");
         }
-
         if(dateStr != null && !"".equals(dateStr)){
             dogDate = Integer.valueOf(dateStr);
-            text_dog_date.setText(myDog + " ♡ " + DogDate);
+            text_dog_date.setText(myDog + " ♡ " + dogDate);
         }else{
             text_dog_date.setText("이름과 D-day 설정 필요!!");
         }
