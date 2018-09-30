@@ -133,8 +133,20 @@ public class DustFragment extends Fragment {
 
         myDog = getFileDate("dogname");
         Log.d("TestDogname", ""+myDog);
-        DogDate = Integer.valueOf(getFileDate("dogdate"));
-        text_dog_date.setText(myDog + " ♡ " + DogDate);
+        String dateStr = getFileDate("dogdate");
+        if("".equals(dateStr)){
+            text_dog_date.setText("이름과 D-day 설정 필요!!");
+        }
+
+        if(dateStr != null && !"".equals(dateStr)){
+            DogDate = Integer.valueOf(dateStr);
+            text_dog_date.setText(myDog + " ♡ " + DogDate);
+        }else{
+            text_dog_date.setText("이름과 D-day 설정 필요!!");
+        }
+
+
+
 
 
         setSpinner();
